@@ -58,6 +58,7 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     return saved ? JSON.parse(saved) : [];
   });
 
+  // Sync to localStorage
   useEffect(() => {
     localStorage.setItem("waffle-da-orders", JSON.stringify(orders));
   }, [orders]);
@@ -65,6 +66,42 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   useEffect(() => {
     localStorage.setItem("waffle-da-offers", JSON.stringify(offers));
   }, [offers]);
+
+  // Cross-tab sync: listen for localStorage changes from other tabs
+  useEffect(() => {
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === "waffle-da-orders" && e.newValue) {
+        try {
+          const parsed = JSON.parse(e.newValue);
+          setOrders(parsed);
+        } catch {}
+      }
+      if (e.key === "waffle-da-offers" && e.newValue) {
+        try {
+          const parsed = JSON.parse(e.newValue);
+          setOffers(parsed);
+        } catch {}
+      }
+    };
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
+  }, []);
+
+  // Polling fallback: check localStorage every 3 seconds for same-tab iframe scenarios
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const savedOrders = localStorage.getItem("waffle-da-orders");
+      if (savedOrders) {
+        try {
+          const parsed = JSON.parse(savedOrders);
+          if (parsed.length !== orders.length) {
+            setOrders(parsed);
+          }
+        } catch {}
+      }
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [orders.length]);
 
   const addOrder = (orderData: Omit<Order, "id" | "status" | "createdAt" | "seen">) => {
     const id = `WD-${Date.now().toString(36).toUpperCase()}`;
