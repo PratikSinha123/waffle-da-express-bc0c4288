@@ -143,9 +143,11 @@ const NotificationBanner = () => {
 };
 
 const OrdersPanel = () => {
-  const { orders, updateOrderStatus } = useOrders();
+  const { orders, updateOrderStatus, deleteOrder } = useOrders();
+  const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
 
   const filteredOrders = orders.filter(
     (o) =>
@@ -153,6 +155,13 @@ const OrdersPanel = () => {
       o.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       o.phone.includes(searchQuery)
   );
+
+  const handleDelete = (id: string) => {
+    deleteOrder(id);
+    setConfirmDelete(null);
+    setExpandedOrder(null);
+    toast({ title: "Order deleted" });
+  };
 
   const downloadCSV = () => {
     const headers = ["Order ID", "Customer Name", "Phone Number", "Address", "Order Type", "Items Ordered", "Add-ons", "Total Price", "Payment Method", "Order Status", "Order Date"];
@@ -184,6 +193,16 @@ const OrdersPanel = () => {
 
   return (
     <div>
+      {/* Live indicator */}
+      <div className="flex items-center gap-2 mb-4">
+        <span className="relative flex h-3 w-3">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+        </span>
+        <span className="text-sm text-muted-foreground">Live — Auto-updating every 3s</span>
+        <span className="ml-auto text-sm font-medium text-foreground">{orders.length} total orders</span>
+      </div>
+
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -191,7 +210,7 @@ const OrdersPanel = () => {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search orders..."
+            placeholder="Search by name, phone, or order ID..."
             className="w-full pl-10 pr-4 py-3 rounded-xl bg-card border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
           />
         </div>
@@ -278,6 +297,34 @@ const OrdersPanel = () => {
                         </button>
                       ))}
                     </div>
+                  </div>
+
+                  {/* Delete order */}
+                  <div className="pt-2 border-t border-border">
+                    {confirmDelete === order.id ? (
+                      <div className="flex items-center gap-3">
+                        <p className="text-sm text-destructive font-medium">Are you sure?</p>
+                        <button
+                          onClick={() => handleDelete(order.id)}
+                          className="px-4 py-1.5 rounded-full text-xs font-medium bg-destructive text-destructive-foreground hover:opacity-90"
+                        >
+                          Yes, Delete
+                        </button>
+                        <button
+                          onClick={() => setConfirmDelete(null)}
+                          className="px-4 py-1.5 rounded-full text-xs font-medium border border-border text-muted-foreground hover:bg-secondary"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => setConfirmDelete(order.id)}
+                        className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-medium text-destructive border border-destructive/30 hover:bg-destructive/10 transition-colors"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" /> Delete Order
+                      </button>
+                    )}
                   </div>
                 </div>
               )}
