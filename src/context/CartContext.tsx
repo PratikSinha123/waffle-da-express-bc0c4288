@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from "react";
+import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
 import { MenuItem, AddOn } from "@/data/menuData";
 import { OrderType } from "./OrderContext";
 
@@ -27,9 +27,31 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
+const DEFAULT_DELIVERY_FEE = 40;
+
+export const getDeliveryFeeAmount = (): number => {
+  try {
+    const stored = localStorage.getItem("waffle-da-delivery-fee");
+    if (stored !== null) return Number(stored);
+  } catch {}
+  return DEFAULT_DELIVERY_FEE;
+};
+
+export const setDeliveryFeeAmount = (fee: number) => {
+  localStorage.setItem("waffle-da-delivery-fee", String(fee));
+  window.dispatchEvent(new Event("delivery-fee-change"));
+};
+
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [items, setItems] = useState<CartItem[]>([]);
   const [orderType, setOrderType] = useState<OrderType>("Delivery");
+  const [deliveryFeeRate, setDeliveryFeeRate] = useState(getDeliveryFeeAmount);
+
+  useEffect(() => {
+    const handler = () => setDeliveryFeeRate(getDeliveryFeeAmount());
+    window.addEventListener("delivery-fee-change", handler);
+    return () => window.removeEventListener("delivery-fee-change", handler);
+  }, []);
 
   const addToCart = useCallback((item: CartItem) => {
     setItems((prev) => [...prev, { ...item, id: `${item.menuItem.id}-${Date.now()}` }]);
@@ -54,7 +76,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const addOnsTotal = item.selectedAddOns.reduce((a, ao) => a + ao.price, 0);
     return sum + (item.selectedPrice + addOnsTotal) * item.quantity;
   }, 0);
-  const deliveryFee = orderType === "Delivery" && subtotal > 0 ? 40 : 0;
+  const deliveryFee = orderType === "Delivery" && subtotal > 0 ? deliveryFeeRate : 0;
   const total = subtotal + deliveryFee;
 
   return (
