@@ -38,38 +38,29 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Hero */}
-      <section className="relative overflow-hidden">
+      {/* Hero - Full screen */}
+      <section className="relative h-[100vh] -mt-20 overflow-hidden">
         <div className="absolute inset-0">
           <img src={heroImage} alt="Delicious waffles" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
         </div>
 
-        <div className="relative max-w-7xl mx-auto text-center px-4 py-24 sm:py-36">
-          <img src={logo} alt="Waffle Da! Logo" className="w-28 h-28 sm:w-36 sm:h-36 mx-auto mb-6 drop-shadow-lg" />
-          <div className="inline-block mb-4 px-4 py-1.5 rounded-full bg-primary/20 backdrop-blur-sm text-primary text-sm font-medium">
-            🧇 Freshly Made Waffles
+        <div className="relative h-full max-w-7xl mx-auto px-6 sm:px-10 flex flex-col justify-center">
+          <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-primary/90 text-primary-foreground text-sm font-medium w-fit">
+            📍 Now in Bidholi
           </div>
-          <h1 className="text-5xl sm:text-7xl font-extrabold text-foreground mb-6 leading-tight drop-shadow-sm">
-            Waffle <span className="text-accent">Da!</span>
+          <h1 className="text-5xl sm:text-7xl lg:text-8xl font-bold text-white mb-6 leading-[1.1] italic">
+            Waffle Da
           </h1>
-          <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
-            Delicious waffles, pancakes & shakes made with love in Bidholi.
+          <p className="text-base sm:text-lg text-white/70 max-w-lg mb-10 leading-relaxed">
+            Handcrafted waffles, fluffy pancakes & creamy shakes — made fresh, served with love. 🧇
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to="/menu"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl waffle-gradient text-primary-foreground font-semibold text-lg hover:opacity-95 transition-opacity shadow-lg"
-            >
-              View Menu <ArrowRight className="w-5 h-5" />
-            </Link>
-            <Link
-              to="/track-order"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl border-2 border-border bg-card/80 backdrop-blur-sm text-foreground font-semibold text-lg hover:bg-secondary transition-colors"
-            >
-              Track Order
-            </Link>
-          </div>
+          <Link
+            to="/menu"
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-primary text-primary-foreground font-semibold text-lg hover:opacity-90 transition-opacity w-fit shadow-lg"
+          >
+            Order Now <ArrowRight className="w-5 h-5" />
+          </Link>
         </div>
       </section>
 
