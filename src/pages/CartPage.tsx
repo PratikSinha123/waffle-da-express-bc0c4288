@@ -1,9 +1,16 @@
 import { useCart } from "@/context/CartContext";
 import { Link } from "react-router-dom";
-import { Plus, Minus, Trash2, ShoppingBag } from "lucide-react";
+import { Plus, Minus, Trash2, ShoppingBag, Truck, Store, UtensilsCrossed } from "lucide-react";
+import { OrderType } from "@/context/OrderContext";
+
+const orderTypeOptions: { type: OrderType; icon: typeof Truck; label: string }[] = [
+  { type: "Delivery", icon: Truck, label: "Delivery" },
+  { type: "Pickup", icon: Store, label: "Pickup" },
+  { type: "Dine-in", icon: UtensilsCrossed, label: "Dine-in" },
+];
 
 const CartPage = () => {
-  const { items, updateQuantity, removeFromCart, subtotal, deliveryFee, total } = useCart();
+  const { items, updateQuantity, removeFromCart, subtotal, deliveryFee, total, orderType, setOrderType } = useCart();
 
   if (items.length === 0) {
     return (
