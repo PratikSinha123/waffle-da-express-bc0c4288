@@ -36,6 +36,7 @@ interface OrderContextType {
   orders: Order[];
   addOrder: (order: Omit<Order, "id" | "status" | "createdAt" | "seen">) => string;
   updateOrderStatus: (id: string, status: OrderStatus) => void;
+  deleteOrder: (id: string) => void;
   getOrder: (id: string) => Order | undefined;
   getOrdersByPhone: (phone: string) => Order[];
   unseenCount: number;
@@ -129,6 +130,10 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setOrders((prev) => prev.map((o) => (o.id === id ? { ...o, status } : o)));
   };
 
+  const deleteOrder = (id: string) => {
+    setOrders((prev) => prev.filter((o) => o.id !== id));
+  };
+
   const getOrder = (id: string) => orders.find((o) => o.id === id);
 
   const getOrdersByPhone = (phone: string) => 
@@ -155,7 +160,7 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   return (
-    <OrderContext.Provider value={{ orders, addOrder, updateOrderStatus, getOrder, getOrdersByPhone, unseenCount, markAllSeen, offers, addOffer, updateOffer, deleteOffer }}>
+    <OrderContext.Provider value={{ orders, addOrder, updateOrderStatus, deleteOrder, getOrder, getOrdersByPhone, unseenCount, markAllSeen, offers, addOffer, updateOffer, deleteOffer }}>
       {children}
     </OrderContext.Provider>
   );
