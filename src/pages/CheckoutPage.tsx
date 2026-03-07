@@ -3,7 +3,8 @@ import { useCart } from "@/context/CartContext";
 import { useOrders, OrderType } from "@/context/OrderContext";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { Truck, Store, UtensilsCrossed } from "lucide-react";
+import { Truck, Store, UtensilsCrossed, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const orderTypeOptions: { type: OrderType; icon: typeof Truck; label: string; desc: string }[] = [
   { type: "Delivery", icon: Truck, label: "Delivery", desc: "Delivered to your doorstep" },
