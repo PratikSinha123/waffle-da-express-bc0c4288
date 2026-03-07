@@ -89,21 +89,35 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     return () => window.removeEventListener("storage", handleStorage);
   }, []);
 
-  // Polling fallback: check localStorage every 3 seconds for same-tab iframe scenarios
+  // Polling fallback: check localStorage every 2 seconds for any changes
   useEffect(() => {
     const interval = setInterval(() => {
       const savedOrders = localStorage.getItem("waffle-da-orders");
       if (savedOrders) {
         try {
-          const parsed = JSON.parse(savedOrders);
-          if (parsed.length !== orders.length) {
+          const parsed: Order[] = JSON.parse(savedOrders);
+          // Deep compare using JSON string to catch status updates, deletions, etc.
+          const currentStr = JSON.stringify(orders);
+          const savedStr = JSON.stringify(parsed);
+          if (currentStr !== savedStr) {
             setOrders(parsed);
           }
         } catch {}
       }
-    }, 3000);
+      const savedOffers = localStorage.getItem("waffle-da-offers");
+      if (savedOffers) {
+        try {
+          const parsed: Offer[] = JSON.parse(savedOffers);
+          const currentStr = JSON.stringify(offers);
+          const savedStr = JSON.stringify(parsed);
+          if (currentStr !== savedStr) {
+            setOffers(parsed);
+          }
+        } catch {}
+      }
+    }, 2000);
     return () => clearInterval(interval);
-  }, [orders.length]);
+  }, [orders, offers]);
 
   const addOrder = (orderData: Omit<Order, "id" | "status" | "createdAt" | "seen">) => {
     const id = `WD-${Date.now().toString(36).toUpperCase()}`;
