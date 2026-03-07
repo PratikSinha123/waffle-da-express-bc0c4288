@@ -130,6 +130,10 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setOrders((prev) => prev.map((o) => (o.id === id ? { ...o, status } : o)));
   };
 
+  const deleteOrder = (id: string) => {
+    setOrders((prev) => prev.filter((o) => o.id !== id));
+  };
+
   const getOrder = (id: string) => orders.find((o) => o.id === id);
 
   const getOrdersByPhone = (phone: string) => 
