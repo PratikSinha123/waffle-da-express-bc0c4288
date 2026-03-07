@@ -13,6 +13,9 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ['Poppins', 'sans-serif'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -46,6 +49,13 @@ export default {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
+        },
+        waffle: {
+          brown: "hsl(var(--waffle-brown))",
+          cream: "hsl(var(--waffle-cream))",
+          gold: "hsl(var(--waffle-gold))",
+          light: "hsl(var(--waffle-light))",
+          dark: "hsl(var(--waffle-dark))",
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
