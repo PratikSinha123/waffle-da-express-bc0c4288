@@ -2,8 +2,9 @@ import { useState, useEffect, useRef } from "react";
 import { useOrders, OrderStatus, Offer } from "@/context/OrderContext";
 import { useMenu } from "@/context/MenuContext";
 import { useToast } from "@/hooks/use-toast";
-import { Download, Search, Plus, Pencil, Trash2, LogIn, LogOut, ChevronDown, Bell, Tag } from "lucide-react";
+import { Download, Search, Plus, Pencil, Trash2, LogIn, LogOut, ChevronDown, Bell, Tag, Settings } from "lucide-react";
 import { MenuItem } from "@/data/menuData";
+import { getDeliveryFeeAmount, setDeliveryFeeAmount } from "@/context/CartContext";
 
 const ADMIN_PASSWORD = "waffle123";
 
@@ -148,6 +149,8 @@ const OrdersPanel = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
+  const [deliveryFee, setDeliveryFeeLocal] = useState(() => getDeliveryFeeAmount());
+  const [editingFee, setEditingFee] = useState(false);
 
   const filteredOrders = orders.filter(
     (o) =>
@@ -203,6 +206,44 @@ const OrdersPanel = () => {
         <span className="ml-auto text-sm font-medium text-foreground">{orders.length} total orders</span>
       </div>
 
+      {/* Delivery Fee Setting */}
+      <div className="waffle-card p-4 mb-4 flex items-center gap-3">
+        <Settings className="w-4 h-4 text-muted-foreground" />
+        <span className="text-sm font-medium text-foreground">Delivery Fee:</span>
+        {editingFee ? (
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">₹</span>
+            <input
+              type="number"
+              value={deliveryFee}
+              onChange={(e) => setDeliveryFeeLocal(Number(e.target.value))}
+              className="w-20 px-3 py-1.5 rounded-lg bg-background border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+              min={0}
+            />
+            <button
+              onClick={() => {
+                setDeliveryFeeAmount(deliveryFee);
+                setEditingFee(false);
+                toast({ title: `Delivery fee updated to ₹${deliveryFee}` });
+              }}
+              className="px-3 py-1.5 rounded-lg text-xs font-medium waffle-gradient text-primary-foreground"
+            >
+              Save
+            </button>
+            <button onClick={() => { setDeliveryFeeLocal(getDeliveryFeeAmount()); setEditingFee(false); }} className="px-3 py-1.5 rounded-lg text-xs font-medium border border-border text-muted-foreground">
+              Cancel
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-foreground font-semibold">₹{deliveryFee}</span>
+            <button onClick={() => setEditingFee(true)} className="px-3 py-1.5 rounded-lg text-xs font-medium border border-border text-muted-foreground hover:bg-secondary">
+              <Pencil className="w-3 h-3 inline mr-1" /> Change
+            </button>
+          </div>
+        )}
+      </div>
+
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -239,6 +280,11 @@ const OrdersPanel = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
+                  <span className={`text-xs px-2 py-1 rounded-full font-medium ${
+                    order.paymentMethod === "Cashfree" ? "bg-green-100 text-green-700" : "bg-amber-100 text-amber-700"
+                  }`}>
+                    {order.paymentMethod === "Cashfree" ? "💳 Paid" : "💵 COD"}
+                  </span>
                   <span className="text-xs px-2 py-1 rounded-full bg-secondary text-secondary-foreground font-medium">
                     {order.orderType || "Delivery"}
                   </span>
