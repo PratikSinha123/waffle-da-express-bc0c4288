@@ -131,6 +131,9 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const getOrder = (id: string) => orders.find((o) => o.id === id);
 
+  const getOrdersByPhone = (phone: string) => 
+    orders.filter((o) => o.phone.replace(/\s+/g, "").includes(phone.replace(/\s+/g, "")));
+
   const unseenCount = orders.filter((o) => !o.seen).length;
 
   const markAllSeen = () => {
