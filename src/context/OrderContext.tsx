@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { CartItem } from "./CartContext";
 
 export type OrderStatus = "Order Received" | "Preparing" | "Out for Delivery" | "Delivered";
+export type OrderType = "Delivery" | "Pickup" | "Dine-in";
 
 export interface Order {
   id: string;
@@ -11,18 +12,37 @@ export interface Order {
   address: string;
   notes: string;
   paymentMethod: "Paytm" | "Cash On Delivery";
+  orderType: OrderType;
   status: OrderStatus;
   subtotal: number;
   deliveryFee: number;
   total: number;
   createdAt: string;
+  seen?: boolean;
+}
+
+export interface Offer {
+  id: string;
+  title: string;
+  description: string;
+  discountPercent?: number;
+  discountFlat?: number;
+  code: string;
+  isActive: boolean;
+  validUntil: string;
 }
 
 interface OrderContextType {
   orders: Order[];
-  addOrder: (order: Omit<Order, "id" | "status" | "createdAt">) => string;
+  addOrder: (order: Omit<Order, "id" | "status" | "createdAt" | "seen">) => string;
   updateOrderStatus: (id: string, status: OrderStatus) => void;
   getOrder: (id: string) => Order | undefined;
+  unseenCount: number;
+  markAllSeen: () => void;
+  offers: Offer[];
+  addOffer: (offer: Omit<Offer, "id">) => void;
+  updateOffer: (id: string, updates: Partial<Offer>) => void;
+  deleteOffer: (id: string) => void;
 }
 
 const OrderContext = createContext<OrderContextType | undefined>(undefined);
@@ -33,19 +53,37 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     return saved ? JSON.parse(saved) : [];
   });
 
+  const [offers, setOffers] = useState<Offer[]>(() => {
+    const saved = localStorage.getItem("waffle-da-offers");
+    return saved ? JSON.parse(saved) : [];
+  });
+
   useEffect(() => {
     localStorage.setItem("waffle-da-orders", JSON.stringify(orders));
   }, [orders]);
 
-  const addOrder = (orderData: Omit<Order, "id" | "status" | "createdAt">) => {
+  useEffect(() => {
+    localStorage.setItem("waffle-da-offers", JSON.stringify(offers));
+  }, [offers]);
+
+  const addOrder = (orderData: Omit<Order, "id" | "status" | "createdAt" | "seen">) => {
     const id = `WD-${Date.now().toString(36).toUpperCase()}`;
     const order: Order = {
       ...orderData,
       id,
       status: "Order Received",
       createdAt: new Date().toISOString(),
+      seen: false,
     };
     setOrders((prev) => [order, ...prev]);
+
+    // Play notification sound
+    try {
+      const audio = new Audio("data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdW+Jj4yKg3xzb3N8hoyQjomDfHRwc3yEjJCOiIN8dHBzfISMkI6Ig3x0cHN8hIyQjoiDfHRwc3yEjJCOiIN8dHBzfA==");
+      audio.volume = 0.3;
+      audio.play().catch(() => {});
+    } catch {}
+
     return id;
   };
 
@@ -55,8 +93,28 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const getOrder = (id: string) => orders.find((o) => o.id === id);
 
+  const unseenCount = orders.filter((o) => !o.seen).length;
+
+  const markAllSeen = () => {
+    setOrders((prev) => prev.map((o) => ({ ...o, seen: true })));
+  };
+
+  // Offers
+  const addOffer = (offerData: Omit<Offer, "id">) => {
+    const id = `offer-${Date.now()}`;
+    setOffers((prev) => [...prev, { ...offerData, id }]);
+  };
+
+  const updateOffer = (id: string, updates: Partial<Offer>) => {
+    setOffers((prev) => prev.map((o) => (o.id === id ? { ...o, ...updates } : o)));
+  };
+
+  const deleteOffer = (id: string) => {
+    setOffers((prev) => prev.filter((o) => o.id !== id));
+  };
+
   return (
-    <OrderContext.Provider value={{ orders, addOrder, updateOrderStatus, getOrder }}>
+    <OrderContext.Provider value={{ orders, addOrder, updateOrderStatus, getOrder, unseenCount, markAllSeen, offers, addOffer, updateOffer, deleteOffer }}>
       {children}
     </OrderContext.Provider>
   );

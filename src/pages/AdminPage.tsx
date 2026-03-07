@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { useOrders, OrderStatus } from "@/context/OrderContext";
+import { useState, useEffect, useRef } from "react";
+import { useOrders, OrderStatus, Offer } from "@/context/OrderContext";
 import { useMenu } from "@/context/MenuContext";
 import { useToast } from "@/hooks/use-toast";
-import { Download, Search, Plus, Pencil, Trash2, LogIn, LogOut, ChevronDown } from "lucide-react";
+import { Download, Search, Plus, Pencil, Trash2, LogIn, LogOut, ChevronDown, Bell, Tag } from "lucide-react";
 import { MenuItem } from "@/data/menuData";
 
 const ADMIN_PASSWORD = "waffle123";
@@ -10,8 +10,9 @@ const ADMIN_PASSWORD = "waffle123";
 const AdminPage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [password, setPassword] = useState("");
-  const [activeTab, setActiveTab] = useState<"orders" | "menu">("orders");
+  const [activeTab, setActiveTab] = useState<"orders" | "menu" | "offers">("orders");
   const { toast } = useToast();
+  const { unseenCount, markAllSeen } = useOrders();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,27 +48,96 @@ const AdminPage = () => {
     <div className="min-h-screen max-w-7xl mx-auto px-4 py-6">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold text-foreground">Admin Panel</h1>
-        <button onClick={() => setIsLoggedIn(false)} className="px-4 py-2 rounded-xl border border-border text-sm font-medium text-foreground hover:bg-secondary">
-          <LogOut className="w-4 h-4 inline mr-1" /> Logout
-        </button>
+        <div className="flex items-center gap-3">
+          {/* Notification bell */}
+          <button
+            onClick={() => { setActiveTab("orders"); markAllSeen(); }}
+            className="relative p-2 rounded-full hover:bg-secondary transition-colors"
+          >
+            <Bell className="w-5 h-5 text-foreground" />
+            {unseenCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center animate-pulse">
+                {unseenCount}
+              </span>
+            )}
+          </button>
+          <button onClick={() => setIsLoggedIn(false)} className="px-4 py-2 rounded-xl border border-border text-sm font-medium text-foreground hover:bg-secondary">
+            <LogOut className="w-4 h-4 inline mr-1" /> Logout
+          </button>
+        </div>
       </div>
+
+      {/* Notification banner */}
+      <NotificationBanner />
 
       {/* Tabs */}
       <div className="flex gap-2 mb-6">
-        {(["orders", "menu"] as const).map((tab) => (
+        {(["orders", "menu", "offers"] as const).map((tab) => (
           <button
             key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all ${
+            onClick={() => { setActiveTab(tab); if (tab === "orders") markAllSeen(); }}
+            className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all relative ${
               activeTab === tab ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"
             }`}
           >
-            {tab === "orders" ? "Orders" : "Menu Management"}
+            {tab === "orders" ? "Orders" : tab === "menu" ? "Menu" : "Offers"}
+            {tab === "orders" && unseenCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-xs font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                {unseenCount}
+              </span>
+            )}
           </button>
         ))}
       </div>
 
-      {activeTab === "orders" ? <OrdersPanel /> : <MenuPanel />}
+      {activeTab === "orders" ? <OrdersPanel /> : activeTab === "menu" ? <MenuPanel /> : <OffersPanel />}
+    </div>
+  );
+};
+
+// Real-time notification banner
+const NotificationBanner = () => {
+  const { orders, unseenCount } = useOrders();
+  const [showBanner, setShowBanner] = useState(false);
+  const [latestOrder, setLatestOrder] = useState<string | null>(null);
+  const prevCountRef = useRef(orders.length);
+
+  useEffect(() => {
+    if (orders.length > prevCountRef.current) {
+      const newest = orders[0];
+      setLatestOrder(newest.id);
+      setShowBanner(true);
+
+      // Auto-hide after 8 seconds
+      const timer = setTimeout(() => setShowBanner(false), 8000);
+      return () => clearTimeout(timer);
+    }
+    prevCountRef.current = orders.length;
+  }, [orders]);
+
+  if (!showBanner || !latestOrder) return null;
+
+  const order = orders.find((o) => o.id === latestOrder);
+  if (!order) return null;
+
+  return (
+    <div className="mb-4 p-4 rounded-2xl bg-accent/10 border-2 border-accent animate-in slide-in-from-top-2">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full waffle-gradient flex items-center justify-center">
+            <Bell className="w-5 h-5 text-primary-foreground" />
+          </div>
+          <div>
+            <p className="font-semibold text-foreground">🔔 New Order Received!</p>
+            <p className="text-sm text-muted-foreground">
+              {order.id} • {order.customerName} • {order.orderType} • ₹{order.total}
+            </p>
+          </div>
+        </div>
+        <button onClick={() => setShowBanner(false)} className="text-muted-foreground hover:text-foreground text-sm">
+          Dismiss
+        </button>
+      </div>
     </div>
   );
 };
@@ -85,12 +155,13 @@ const OrdersPanel = () => {
   );
 
   const downloadCSV = () => {
-    const headers = ["Order ID", "Customer Name", "Phone Number", "Address", "Items Ordered", "Add-ons", "Total Price", "Payment Method", "Order Status", "Order Date"];
+    const headers = ["Order ID", "Customer Name", "Phone Number", "Address", "Order Type", "Items Ordered", "Add-ons", "Total Price", "Payment Method", "Order Status", "Order Date"];
     const rows = orders.map((o) => [
       o.id,
       o.customerName,
       o.phone,
       o.address,
+      o.orderType || "Delivery",
       o.items.map((i) => `${i.quantity}x ${i.menuItem.name}`).join("; "),
       o.items.map((i) => i.selectedAddOns.map((a) => a.name).join(", ")).filter(Boolean).join("; "),
       o.total,
@@ -136,16 +207,22 @@ const OrdersPanel = () => {
       ) : (
         <div className="space-y-3">
           {filteredOrders.map((order) => (
-            <div key={order.id} className="waffle-card">
+            <div key={order.id} className={`waffle-card ${!order.seen ? "ring-2 ring-accent" : ""}`}>
               <div
                 className="flex items-center justify-between cursor-pointer"
                 onClick={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
               >
-                <div>
-                  <span className="font-semibold text-foreground">{order.id}</span>
-                  <span className="text-sm text-muted-foreground ml-3">{order.customerName}</span>
+                <div className="flex items-center gap-2">
+                  {!order.seen && <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />}
+                  <div>
+                    <span className="font-semibold text-foreground">{order.id}</span>
+                    <span className="text-sm text-muted-foreground ml-3">{order.customerName}</span>
+                  </div>
                 </div>
                 <div className="flex items-center gap-3">
+                  <span className="text-xs px-2 py-1 rounded-full bg-secondary text-secondary-foreground font-medium">
+                    {order.orderType || "Delivery"}
+                  </span>
                   <span className="text-sm font-medium text-primary">₹{order.total}</span>
                   <span className={`text-xs px-2 py-1 rounded-full font-medium ${
                     order.status === "Delivered" ? "bg-green-100 text-green-700" :
@@ -164,7 +241,10 @@ const OrdersPanel = () => {
                   <div className="grid grid-cols-2 gap-2 text-sm">
                     <div><span className="text-muted-foreground">Phone:</span> <span className="text-foreground">{order.phone}</span></div>
                     <div><span className="text-muted-foreground">Payment:</span> <span className="text-foreground">{order.paymentMethod}</span></div>
-                    <div className="col-span-2"><span className="text-muted-foreground">Address:</span> <span className="text-foreground">{order.address}</span></div>
+                    <div><span className="text-muted-foreground">Order Type:</span> <span className="text-foreground font-medium">{order.orderType || "Delivery"}</span></div>
+                    {order.orderType === "Delivery" && (
+                      <div className="col-span-2"><span className="text-muted-foreground">Address:</span> <span className="text-foreground">{order.address}</span></div>
+                    )}
                     {order.notes && <div className="col-span-2"><span className="text-muted-foreground">Notes:</span> <span className="text-foreground">{order.notes}</span></div>}
                     <div className="col-span-2"><span className="text-muted-foreground">Date:</span> <span className="text-foreground">{new Date(order.createdAt).toLocaleString()}</span></div>
                   </div>
@@ -255,24 +335,15 @@ const MenuPanel = () => {
 
   return (
     <div className="space-y-6">
-      {/* Add category */}
       <div className="waffle-card p-4">
         <h3 className="font-semibold text-foreground mb-3">Add New Category</h3>
         <div className="flex gap-3">
-          <input
-            type="text"
-            value={newCategory}
-            onChange={(e) => setNewCategory(e.target.value)}
-            placeholder="Category name"
-            className="flex-1 px-4 py-2 rounded-xl bg-background border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
-          />
-          <button onClick={handleAddCategory} className="px-4 py-2 rounded-xl waffle-gradient text-primary-foreground font-medium">
-            Add
-          </button>
+          <input type="text" value={newCategory} onChange={(e) => setNewCategory(e.target.value)} placeholder="Category name"
+            className="flex-1 px-4 py-2 rounded-xl bg-background border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30" />
+          <button onClick={handleAddCategory} className="px-4 py-2 rounded-xl waffle-gradient text-primary-foreground font-medium">Add</button>
         </div>
       </div>
 
-      {/* Add item */}
       <div className="waffle-card p-4">
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-semibold text-foreground">Menu Items ({menuItems.length})</h3>
@@ -299,13 +370,10 @@ const MenuPanel = () => {
               <input type="checkbox" checked={form.isVeg} onChange={(e) => setForm({ ...form, isVeg: e.target.checked })} className="rounded" />
               Vegetarian
             </label>
-            <button onClick={handleAdd} className="px-4 py-2 rounded-xl waffle-gradient text-primary-foreground font-medium text-sm">
-              Add to Menu
-            </button>
+            <button onClick={handleAdd} className="px-4 py-2 rounded-xl waffle-gradient text-primary-foreground font-medium text-sm">Add to Menu</button>
           </div>
         )}
 
-        {/* Menu items list */}
         <div className="space-y-2 max-h-[60vh] overflow-y-auto">
           {menuItems.map((item) => (
             <div key={item.id} className="flex items-center justify-between p-3 rounded-xl bg-background border border-border">
@@ -350,6 +418,128 @@ const MenuPanel = () => {
             </div>
           ))}
         </div>
+      </div>
+    </div>
+  );
+};
+
+const OffersPanel = () => {
+  const { offers, addOffer, updateOffer, deleteOffer } = useOrders();
+  const { toast } = useToast();
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [form, setForm] = useState({
+    title: "",
+    description: "",
+    discountPercent: 0,
+    discountFlat: 0,
+    code: "",
+    isActive: true,
+    validUntil: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+  });
+
+  const handleAdd = () => {
+    if (!form.title.trim() || !form.code.trim()) {
+      toast({ title: "Title and code are required", variant: "destructive" });
+      return;
+    }
+    addOffer({
+      title: form.title,
+      description: form.description,
+      discountPercent: form.discountPercent || undefined,
+      discountFlat: form.discountFlat || undefined,
+      code: form.code.toUpperCase(),
+      isActive: form.isActive,
+      validUntil: form.validUntil,
+    });
+    setForm({ title: "", description: "", discountPercent: 0, discountFlat: 0, code: "", isActive: true, validUntil: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0] });
+    setShowAddForm(false);
+    toast({ title: "Offer created!" });
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="waffle-card p-4">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-semibold text-foreground">Offers ({offers.length})</h3>
+          <button onClick={() => setShowAddForm(!showAddForm)} className="px-4 py-2 rounded-xl waffle-gradient text-primary-foreground font-medium text-sm flex items-center gap-1">
+            <Plus className="w-4 h-4" /> Add Offer
+          </button>
+        </div>
+
+        {showAddForm && (
+          <div className="p-4 rounded-xl bg-secondary/50 mb-4 space-y-3">
+            <input type="text" placeholder="Offer title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })}
+              className="w-full px-3 py-2 rounded-lg bg-background border border-border text-foreground text-sm focus:outline-none" />
+            <input type="text" placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })}
+              className="w-full px-3 py-2 rounded-lg bg-background border border-border text-foreground text-sm focus:outline-none" />
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-xs text-muted-foreground">Discount %</label>
+                <input type="number" value={form.discountPercent || ""} onChange={(e) => setForm({ ...form, discountPercent: Number(e.target.value), discountFlat: 0 })}
+                  className="w-full px-3 py-2 rounded-lg bg-background border border-border text-foreground text-sm focus:outline-none" />
+              </div>
+              <div>
+                <label className="text-xs text-muted-foreground">Flat ₹ Off</label>
+                <input type="number" value={form.discountFlat || ""} onChange={(e) => setForm({ ...form, discountFlat: Number(e.target.value), discountPercent: 0 })}
+                  className="w-full px-3 py-2 rounded-lg bg-background border border-border text-foreground text-sm focus:outline-none" />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-xs text-muted-foreground">Coupon Code</label>
+                <input type="text" value={form.code} onChange={(e) => setForm({ ...form, code: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg bg-background border border-border text-foreground text-sm focus:outline-none uppercase" />
+              </div>
+              <div>
+                <label className="text-xs text-muted-foreground">Valid Until</label>
+                <input type="date" value={form.validUntil} onChange={(e) => setForm({ ...form, validUntil: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg bg-background border border-border text-foreground text-sm focus:outline-none" />
+              </div>
+            </div>
+            <button onClick={handleAdd} className="px-4 py-2 rounded-xl waffle-gradient text-primary-foreground font-medium text-sm">Create Offer</button>
+          </div>
+        )}
+
+        {offers.length === 0 ? (
+          <p className="text-center text-muted-foreground py-8">No offers yet. Create your first one!</p>
+        ) : (
+          <div className="space-y-3">
+            {offers.map((offer) => (
+              <div key={offer.id} className="p-4 rounded-xl bg-background border border-border">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <Tag className="w-4 h-4 text-primary" />
+                      <span className="font-semibold text-foreground">{offer.title}</span>
+                      <span className={`text-xs px-2 py-0.5 rounded-full ${offer.isActive ? "bg-green-100 text-green-700" : "bg-secondary text-muted-foreground"}`}>
+                        {offer.isActive ? "Active" : "Inactive"}
+                      </span>
+                    </div>
+                    <p className="text-sm text-muted-foreground">{offer.description}</p>
+                    <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
+                      <span className="font-mono font-bold text-primary">{offer.code}</span>
+                      <span>•</span>
+                      <span>{offer.discountPercent ? `${offer.discountPercent}% off` : `₹${offer.discountFlat} off`}</span>
+                      <span>•</span>
+                      <span>Until {new Date(offer.validUntil).toLocaleDateString()}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => updateOffer(offer.id, { isActive: !offer.isActive })}
+                      className={`px-3 py-1 rounded-lg text-xs font-medium ${offer.isActive ? "bg-secondary text-secondary-foreground" : "bg-primary/10 text-primary"}`}
+                    >
+                      {offer.isActive ? "Deactivate" : "Activate"}
+                    </button>
+                    <button onClick={() => { deleteOffer(offer.id); toast({ title: "Offer deleted" }); }} className="p-1.5 rounded-lg hover:bg-destructive/10">
+                      <Trash2 className="w-3.5 h-3.5 text-destructive" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
