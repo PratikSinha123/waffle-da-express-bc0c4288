@@ -226,9 +226,19 @@ const CheckoutPage = () => {
 
         <button
           type="submit"
-          className="w-full py-4 rounded-2xl waffle-gradient text-primary-foreground font-semibold text-lg hover:opacity-95 transition-opacity"
+          disabled={isProcessing}
+          className="w-full py-4 rounded-2xl waffle-gradient text-primary-foreground font-semibold text-lg hover:opacity-95 transition-opacity disabled:opacity-60 flex items-center justify-center gap-2"
         >
-          Place Order
+          {isProcessing ? (
+            <>
+              <Loader2 className="w-5 h-5 animate-spin" />
+              Processing...
+            </>
+          ) : paymentMethod === "Cashfree" ? (
+            "Pay Now"
+          ) : (
+            "Place Order"
+          )}
         </button>
       </form>
     </div>
