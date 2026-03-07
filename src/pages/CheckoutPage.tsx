@@ -29,7 +29,7 @@ const CheckoutPage = () => {
 
   const needsAddress = orderType === "Delivery";
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!form.name.trim() || !form.phone.trim()) {
@@ -59,6 +59,36 @@ const CheckoutPage = () => {
       deliveryFee,
       total,
     });
+
+    if (paymentMethod === "Cashfree") {
+      setIsProcessing(true);
+      try {
+        const returnUrl = `${window.location.origin}/payment-status?order_id=${orderId}`;
+        
+        const { data, error } = await supabase.functions.invoke("cashfree-create-order", {
+          body: {
+            orderId,
+            orderAmount: total,
+            customerName: form.name.trim(),
+            customerPhone: form.phone.trim(),
+            returnUrl,
+          },
+        });
+
+        if (error || !data?.paymentLink) {
+          throw new Error(error?.message || "Failed to create payment session");
+        }
+
+        clearCart();
+        // Redirect to Cashfree payment page
+        window.location.href = data.paymentLink;
+        return;
+      } catch (err: any) {
+        setIsProcessing(false);
+        toast({ title: "Payment failed", description: err.message, variant: "destructive" });
+        return;
+      }
+    }
 
     clearCart();
     toast({ title: "Order placed!", description: `Your order ID is ${orderId}` });
