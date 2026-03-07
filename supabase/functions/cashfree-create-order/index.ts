@@ -59,10 +59,15 @@ Deno.serve(async (req) => {
       });
     }
 
+    console.log('Cashfree response:', JSON.stringify(data));
+
+    // Build the Cashfree hosted checkout URL
+    const checkoutUrl = `https://payments.cashfree.com/pgappsdo498/order?token=${data.payment_session_id}`;
+
     return new Response(JSON.stringify({
       paymentSessionId: data.payment_session_id,
       orderId: data.order_id,
-      paymentLink: data.payment_link,
+      paymentLink: data.payment_link || checkoutUrl,
     }), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

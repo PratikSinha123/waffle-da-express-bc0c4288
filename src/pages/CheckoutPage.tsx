@@ -75,13 +75,18 @@ const CheckoutPage = () => {
           },
         });
 
-        if (error || !data?.paymentLink) {
+        if (error || !data?.paymentSessionId) {
           throw new Error(error?.message || "Failed to create payment session");
         }
 
         clearCart();
-        // Redirect to Cashfree payment page
-        window.location.href = data.paymentLink;
+        
+        // Use Cashfree JS SDK for checkout
+        const cashfree = (window as any).Cashfree({ mode: "production" });
+        await cashfree.checkout({
+          paymentSessionId: data.paymentSessionId,
+          redirectTarget: "_self",
+        });
         return;
       } catch (err: any) {
         setIsProcessing(false);
