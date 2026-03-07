@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useCallback } from "react";
 import { MenuItem, AddOn } from "@/data/menuData";
+import { OrderType } from "./OrderContext";
 
 export interface CartItem {
   id: string;
@@ -20,12 +21,15 @@ interface CartContextType {
   subtotal: number;
   deliveryFee: number;
   total: number;
+  orderType: OrderType;
+  setOrderType: (type: OrderType) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [orderType, setOrderType] = useState<OrderType>("Delivery");
 
   const addToCart = useCallback((item: CartItem) => {
     setItems((prev) => [...prev, { ...item, id: `${item.menuItem.id}-${Date.now()}` }]);
@@ -50,11 +54,11 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const addOnsTotal = item.selectedAddOns.reduce((a, ao) => a + ao.price, 0);
     return sum + (item.selectedPrice + addOnsTotal) * item.quantity;
   }, 0);
-  const deliveryFee = subtotal > 0 ? 40 : 0;
+  const deliveryFee = orderType === "Delivery" && subtotal > 0 ? 40 : 0;
   const total = subtotal + deliveryFee;
 
   return (
-    <CartContext.Provider value={{ items, addToCart, removeFromCart, updateQuantity, clearCart, totalItems, subtotal, deliveryFee, total }}>
+    <CartContext.Provider value={{ items, addToCart, removeFromCart, updateQuantity, clearCart, totalItems, subtotal, deliveryFee, total, orderType, setOrderType }}>
       {children}
     </CartContext.Provider>
   );

@@ -1,11 +1,18 @@
 import { useState } from "react";
 import { useCart } from "@/context/CartContext";
-import { useOrders } from "@/context/OrderContext";
+import { useOrders, OrderType } from "@/context/OrderContext";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { Truck, Store, UtensilsCrossed } from "lucide-react";
+
+const orderTypeOptions: { type: OrderType; icon: typeof Truck; label: string; desc: string }[] = [
+  { type: "Delivery", icon: Truck, label: "Delivery", desc: "Delivered to your doorstep" },
+  { type: "Pickup", icon: Store, label: "Pickup", desc: "Pick up from our store" },
+  { type: "Dine-in", icon: UtensilsCrossed, label: "Dine-in", desc: "Eat at our restaurant" },
+];
 
 const CheckoutPage = () => {
-  const { items, subtotal, deliveryFee, total, clearCart } = useCart();
+  const { items, subtotal, deliveryFee, total, clearCart, orderType, setOrderType } = useCart();
   const { addOrder } = useOrders();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -18,11 +25,18 @@ const CheckoutPage = () => {
   });
   const [paymentMethod, setPaymentMethod] = useState<"Paytm" | "Cash On Delivery">("Cash On Delivery");
 
+  const needsAddress = orderType === "Delivery";
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!form.name.trim() || !form.phone.trim() || !form.address.trim()) {
-      toast({ title: "Please fill all required fields", variant: "destructive" });
+    if (!form.name.trim() || !form.phone.trim()) {
+      toast({ title: "Please fill name and phone number", variant: "destructive" });
+      return;
+    }
+
+    if (needsAddress && !form.address.trim()) {
+      toast({ title: "Please fill delivery address", variant: "destructive" });
       return;
     }
 
@@ -35,9 +49,10 @@ const CheckoutPage = () => {
       items,
       customerName: form.name.trim(),
       phone: form.phone.trim(),
-      address: form.address.trim(),
+      address: needsAddress ? form.address.trim() : `${orderType} - No address needed`,
       notes: form.notes.trim(),
       paymentMethod,
+      orderType,
       subtotal,
       deliveryFee,
       total,
@@ -53,8 +68,34 @@ const CheckoutPage = () => {
       <h1 className="text-3xl font-bold text-foreground mb-6">Checkout</h1>
 
       <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Order Type */}
         <div className="waffle-card space-y-4">
-          <h2 className="font-semibold text-foreground text-lg">Delivery Details</h2>
+          <h2 className="font-semibold text-foreground text-lg">Order Type</h2>
+          <div className="grid grid-cols-3 gap-3">
+            {orderTypeOptions.map((opt) => (
+              <button
+                key={opt.type}
+                type="button"
+                onClick={() => setOrderType(opt.type)}
+                className={`flex flex-col items-center p-4 rounded-xl border-2 transition-all ${
+                  orderType === opt.type
+                    ? "border-primary bg-primary/10"
+                    : "border-border hover:border-primary/30"
+                }`}
+              >
+                <opt.icon className={`w-6 h-6 mb-2 ${orderType === opt.type ? "text-primary" : "text-muted-foreground"}`} />
+                <span className={`text-sm font-semibold ${orderType === opt.type ? "text-primary" : "text-foreground"}`}>{opt.label}</span>
+                <span className="text-xs text-muted-foreground text-center mt-1">{opt.desc}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Customer Details */}
+        <div className="waffle-card space-y-4">
+          <h2 className="font-semibold text-foreground text-lg">
+            {orderType === "Delivery" ? "Delivery Details" : "Your Details"}
+          </h2>
 
           <div>
             <label className="block text-sm font-medium text-foreground mb-1">Name *</label>
@@ -78,16 +119,18 @@ const CheckoutPage = () => {
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-1">Delivery Address *</label>
-            <textarea
-              value={form.address}
-              onChange={(e) => setForm({ ...form, address: e.target.value })}
-              rows={3}
-              className="w-full px-4 py-3 rounded-xl bg-background border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
-              placeholder="Full delivery address"
-            />
-          </div>
+          {needsAddress && (
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-1">Delivery Address *</label>
+              <textarea
+                value={form.address}
+                onChange={(e) => setForm({ ...form, address: e.target.value })}
+                rows={3}
+                className="w-full px-4 py-3 rounded-xl bg-background border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
+                placeholder="Full delivery address"
+              />
+            </div>
+          )}
 
           <div>
             <label className="block text-sm font-medium text-foreground mb-1">Order Notes</label>
@@ -123,14 +166,26 @@ const CheckoutPage = () => {
         {/* Order summary */}
         <div className="waffle-card space-y-3">
           <h2 className="font-semibold text-foreground text-lg">Order Summary</h2>
+          <div className="flex justify-between text-sm text-muted-foreground">
+            <span>Order Type</span>
+            <span className="font-medium text-foreground">{orderType}</span>
+          </div>
           <div className="flex justify-between text-muted-foreground">
             <span>Subtotal ({items.length} items)</span>
             <span>₹{subtotal}</span>
           </div>
-          <div className="flex justify-between text-muted-foreground">
-            <span>Delivery Fee</span>
-            <span>₹{deliveryFee}</span>
-          </div>
+          {orderType === "Delivery" && (
+            <div className="flex justify-between text-muted-foreground">
+              <span>Delivery Fee</span>
+              <span>₹{deliveryFee}</span>
+            </div>
+          )}
+          {orderType !== "Delivery" && (
+            <div className="flex justify-between text-muted-foreground">
+              <span>Delivery Fee</span>
+              <span className="text-green-600 font-medium">FREE</span>
+            </div>
+          )}
           <div className="border-t border-border pt-3 flex justify-between text-lg font-bold text-foreground">
             <span>Total</span>
             <span>₹{total}</span>
