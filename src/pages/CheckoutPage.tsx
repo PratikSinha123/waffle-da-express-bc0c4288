@@ -3,7 +3,8 @@ import { useCart } from "@/context/CartContext";
 import { useOrders, OrderType } from "@/context/OrderContext";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { Truck, Store, UtensilsCrossed } from "lucide-react";
+import { Truck, Store, UtensilsCrossed, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const orderTypeOptions: { type: OrderType; icon: typeof Truck; label: string; desc: string }[] = [
   { type: "Delivery", icon: Truck, label: "Delivery", desc: "Delivered to your doorstep" },
@@ -23,11 +24,12 @@ const CheckoutPage = () => {
     address: "",
     notes: "",
   });
-  const [paymentMethod, setPaymentMethod] = useState<"Paytm" | "Cash On Delivery">("Cash On Delivery");
+  const [paymentMethod, setPaymentMethod] = useState<"Cashfree" | "Cash On Delivery">("Cash On Delivery");
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const needsAddress = orderType === "Delivery";
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!form.name.trim() || !form.phone.trim()) {
@@ -57,6 +59,36 @@ const CheckoutPage = () => {
       deliveryFee,
       total,
     });
+
+    if (paymentMethod === "Cashfree") {
+      setIsProcessing(true);
+      try {
+        const returnUrl = `${window.location.origin}/payment-status?order_id=${orderId}`;
+        
+        const { data, error } = await supabase.functions.invoke("cashfree-create-order", {
+          body: {
+            orderId,
+            orderAmount: total,
+            customerName: form.name.trim(),
+            customerPhone: form.phone.trim(),
+            returnUrl,
+          },
+        });
+
+        if (error || !data?.paymentLink) {
+          throw new Error(error?.message || "Failed to create payment session");
+        }
+
+        clearCart();
+        // Redirect to Cashfree payment page
+        window.location.href = data.paymentLink;
+        return;
+      } catch (err: any) {
+        setIsProcessing(false);
+        toast({ title: "Payment failed", description: err.message, variant: "destructive" });
+        return;
+      }
+    }
 
     clearCart();
     toast({ title: "Order placed!", description: `Your order ID is ${orderId}` });
@@ -147,7 +179,7 @@ const CheckoutPage = () => {
         {/* Payment */}
         <div className="waffle-card space-y-4">
           <h2 className="font-semibold text-foreground text-lg">Payment Method</h2>
-          {(["Paytm", "Cash On Delivery"] as const).map((method) => (
+          {(["Cashfree", "Cash On Delivery"] as const).map((method) => (
             <button
               key={method}
               type="button"
@@ -158,7 +190,7 @@ const CheckoutPage = () => {
                   : "border-border text-foreground hover:border-primary/30"
               }`}
             >
-              {method === "Paytm" ? "💳 Paytm Payment Gateway" : "💵 Cash On Delivery"}
+              {method === "Cashfree" ? "💳 Pay Online (UPI / Cards / Netbanking)" : "💵 Cash On Delivery"}
             </button>
           ))}
         </div>
@@ -194,9 +226,19 @@ const CheckoutPage = () => {
 
         <button
           type="submit"
-          className="w-full py-4 rounded-2xl waffle-gradient text-primary-foreground font-semibold text-lg hover:opacity-95 transition-opacity"
+          disabled={isProcessing}
+          className="w-full py-4 rounded-2xl waffle-gradient text-primary-foreground font-semibold text-lg hover:opacity-95 transition-opacity disabled:opacity-60 flex items-center justify-center gap-2"
         >
-          Place Order
+          {isProcessing ? (
+            <>
+              <Loader2 className="w-5 h-5 animate-spin" />
+              Processing...
+            </>
+          ) : paymentMethod === "Cashfree" ? (
+            "Pay Now"
+          ) : (
+            "Place Order"
+          )}
         </button>
       </form>
     </div>
