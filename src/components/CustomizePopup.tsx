@@ -115,51 +115,56 @@ const CustomizePopup = ({ item, onClose }: CustomizePopupProps) => {
             </div>
           </div>
 
-          {/* ₹20 Add-ons */}
-          <div>
-            <h3 className="font-semibold text-foreground mb-3">Add-ons @ ₹20</h3>
-            <div className="grid grid-cols-2 gap-2">
-              {addOns20.map((addOn) => {
-                const isSelected = selectedAddOns.find((a) => a.id === addOn.id);
-                return (
-                  <button
-                    key={addOn.id}
-                    onClick={() => toggleAddOn(addOn)}
-                    className={`px-3 py-2.5 rounded-xl text-sm font-medium border-2 transition-all text-left ${
-                      isSelected
-                        ? "border-primary bg-primary/10 text-primary"
-                        : "border-border text-foreground hover:border-primary/30"
-                    }`}
-                  >
-                    {addOn.name}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
+          {/* Add-ons - Only for Waffles, Waffle Cakes, and Sweet Dish */}
+          {["Waffles", "Waffle Cakes", "Sweet Dish"].includes(item.category) && (
+            <>
+              {/* ₹20 Add-ons */}
+              <div>
+                <h3 className="font-semibold text-foreground mb-3">Add-ons @ ₹20</h3>
+                <div className="grid grid-cols-2 gap-2">
+                  {addOns20.map((addOn) => {
+                    const isSelected = selectedAddOns.find((a) => a.id === addOn.id);
+                    return (
+                      <button
+                        key={addOn.id}
+                        onClick={() => toggleAddOn(addOn)}
+                        className={`px-3 py-2.5 rounded-xl text-sm font-medium border-2 transition-all text-left ${
+                          isSelected
+                            ? "border-primary bg-primary/10 text-primary"
+                            : "border-border text-foreground hover:border-primary/30"
+                        }`}
+                      >
+                        {addOn.name}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
 
-          {/* ₹30 Add-ons */}
-          <div>
-            <h3 className="font-semibold text-foreground mb-3">Add-ons @ ₹30</h3>
-            <div className="grid grid-cols-2 gap-2">
-              {addOns30.map((addOn) => {
-                const isSelected = selectedAddOns.find((a) => a.id === addOn.id);
-                return (
-                  <button
-                    key={addOn.id}
-                    onClick={() => toggleAddOn(addOn)}
-                    className={`px-3 py-2.5 rounded-xl text-sm font-medium border-2 transition-all text-left ${
-                      isSelected
-                        ? "border-primary bg-primary/10 text-primary"
-                        : "border-border text-foreground hover:border-primary/30"
-                    }`}
-                  >
-                    {addOn.name}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
+              {/* ₹30 Add-ons */}
+              <div>
+                <h3 className="font-semibold text-foreground mb-3">Add-ons @ ₹30</h3>
+                <div className="grid grid-cols-2 gap-2">
+                  {addOns30.map((addOn) => {
+                    const isSelected = selectedAddOns.find((a) => a.id === addOn.id);
+                    return (
+                      <button
+                        key={addOn.id}
+                        onClick={() => toggleAddOn(addOn)}
+                        className={`px-3 py-2.5 rounded-xl text-sm font-medium border-2 transition-all text-left ${
+                          isSelected
+                            ? "border-primary bg-primary/10 text-primary"
+                            : "border-border text-foreground hover:border-primary/30"
+                        }`}
+                      >
+                        {addOn.name}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </>
+          )}
         </div>
 
         {/* Footer */}
