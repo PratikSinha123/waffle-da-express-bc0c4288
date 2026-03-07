@@ -39,7 +39,7 @@ const Index = () => {
   return (
     <div className="min-h-screen">
       {/* Hero - Full screen */}
-      <section className="relative h-[100vh] -mt-20 overflow-hidden">
+      <section className="relative h-[100vh] -mt-[4.25rem] overflow-hidden">
         <div className="absolute inset-0">
           <img src={heroImage} alt="Delicious waffles" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
@@ -49,7 +49,10 @@ const Index = () => {
           <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-primary/90 text-primary-foreground text-sm font-medium w-fit">
             📍 Now in Bidholi
           </div>
-          <h1 className="text-5xl sm:text-7xl lg:text-8xl font-bold text-white mb-6 leading-[1.1] italic">
+          <h1
+            className="text-5xl sm:text-7xl lg:text-8xl font-bold text-white mb-6 leading-[1.1] italic"
+            style={{ fontFamily: "'Playfair Display', serif" }}
+          >
             Waffle Da
           </h1>
           <p className="text-base sm:text-lg text-white/70 max-w-lg mb-10 leading-relaxed">
