@@ -81,6 +81,27 @@ const CartPage = () => {
         })}
       </div>
 
+      {/* Order type selector */}
+      <div className="waffle-card mb-4">
+        <h3 className="font-semibold text-foreground mb-3">Order Type</h3>
+        <div className="flex gap-2">
+          {orderTypeOptions.map((opt) => (
+            <button
+              key={opt.type}
+              onClick={() => setOrderType(opt.type)}
+              className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border-2 text-sm font-medium transition-all ${
+                orderType === opt.type
+                  ? "border-primary bg-primary/10 text-primary"
+                  : "border-border text-muted-foreground hover:border-primary/30"
+              }`}
+            >
+              <opt.icon className="w-4 h-4" />
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Summary */}
       <div className="waffle-card space-y-3 mb-6">
         <div className="flex justify-between text-muted-foreground">
@@ -89,7 +110,7 @@ const CartPage = () => {
         </div>
         <div className="flex justify-between text-muted-foreground">
           <span>Delivery Fee</span>
-          <span>₹{deliveryFee}</span>
+          {orderType === "Delivery" ? <span>₹{deliveryFee}</span> : <span className="text-green-600 font-medium">FREE</span>}
         </div>
         <div className="border-t border-border pt-3 flex justify-between text-lg font-bold text-foreground">
           <span>Total</span>
