@@ -160,7 +160,7 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   return (
-    <OrderContext.Provider value={{ orders, addOrder, updateOrderStatus, getOrder, getOrdersByPhone, unseenCount, markAllSeen, offers, addOffer, updateOffer, deleteOffer }}>
+    <OrderContext.Provider value={{ orders, addOrder, updateOrderStatus, deleteOrder, getOrder, getOrdersByPhone, unseenCount, markAllSeen, offers, addOffer, updateOffer, deleteOffer }}>
       {children}
     </OrderContext.Provider>
   );
