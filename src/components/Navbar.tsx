@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { ShoppingCart, Menu, X } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useState } from "react";
+import logo from "@/assets/waffle-da-logo.png";
 
 const Navbar = () => {
   const { totalItems } = useCart();
