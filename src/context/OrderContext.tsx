@@ -12,7 +12,7 @@ export interface Order {
   phone: string;
   address: string;
   notes: string;
-  paymentMethod: "Paytm" | "Cash On Delivery";
+  paymentMethod: "Cashfree" | "Cash On Delivery";
   orderType: OrderType;
   status: OrderStatus;
   subtotal: number;
