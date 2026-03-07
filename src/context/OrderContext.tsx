@@ -37,6 +37,7 @@ interface OrderContextType {
   addOrder: (order: Omit<Order, "id" | "status" | "createdAt" | "seen">) => string;
   updateOrderStatus: (id: string, status: OrderStatus) => void;
   getOrder: (id: string) => Order | undefined;
+  getOrdersByPhone: (phone: string) => Order[];
   unseenCount: number;
   markAllSeen: () => void;
   offers: Offer[];
