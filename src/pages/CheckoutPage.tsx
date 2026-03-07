@@ -80,10 +80,13 @@ const CheckoutPage = () => {
         }
 
         clearCart();
-        // Redirect to Cashfree hosted checkout
-        const checkoutUrl = data.paymentLink || 
-          `https://payments.cashfree.com/pgbillpay/order?token=${data.paymentSessionId}`;
-        window.location.href = checkoutUrl;
+        
+        // Use Cashfree JS SDK for checkout
+        const cashfree = (window as any).Cashfree({ mode: "production" });
+        await cashfree.checkout({
+          paymentSessionId: data.paymentSessionId,
+          redirectTarget: "_self",
+        });
         return;
       } catch (err: any) {
         setIsProcessing(false);
