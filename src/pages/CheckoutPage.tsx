@@ -24,7 +24,8 @@ const CheckoutPage = () => {
     address: "",
     notes: "",
   });
-  const [paymentMethod, setPaymentMethod] = useState<"Paytm" | "Cash On Delivery">("Cash On Delivery");
+  const [paymentMethod, setPaymentMethod] = useState<"Cashfree" | "Cash On Delivery">("Cash On Delivery");
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const needsAddress = orderType === "Delivery";
 
