@@ -206,7 +206,43 @@ const OrdersPanel = () => {
         <span className="ml-auto text-sm font-medium text-foreground">{orders.length} total orders</span>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-3 mb-6">
+      {/* Delivery Fee Setting */}
+      <div className="waffle-card p-4 mb-4 flex items-center gap-3">
+        <Settings className="w-4 h-4 text-muted-foreground" />
+        <span className="text-sm font-medium text-foreground">Delivery Fee:</span>
+        {editingFee ? (
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">₹</span>
+            <input
+              type="number"
+              value={deliveryFee}
+              onChange={(e) => setDeliveryFeeLocal(Number(e.target.value))}
+              className="w-20 px-3 py-1.5 rounded-lg bg-background border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+              min={0}
+            />
+            <button
+              onClick={() => {
+                setDeliveryFeeAmount(deliveryFee);
+                setEditingFee(false);
+                toast({ title: `Delivery fee updated to ₹${deliveryFee}` });
+              }}
+              className="px-3 py-1.5 rounded-lg text-xs font-medium waffle-gradient text-primary-foreground"
+            >
+              Save
+            </button>
+            <button onClick={() => { setDeliveryFeeLocal(getDeliveryFeeAmount()); setEditingFee(false); }} className="px-3 py-1.5 rounded-lg text-xs font-medium border border-border text-muted-foreground">
+              Cancel
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-foreground font-semibold">₹{deliveryFee}</span>
+            <button onClick={() => setEditingFee(true)} className="px-3 py-1.5 rounded-lg text-xs font-medium border border-border text-muted-foreground hover:bg-secondary">
+              <Pencil className="w-3 h-3 inline mr-1" /> Change
+            </button>
+          </div>
+        )}
+      </div>
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <input
