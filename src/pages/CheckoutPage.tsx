@@ -75,13 +75,15 @@ const CheckoutPage = () => {
           },
         });
 
-        if (error || !data?.paymentLink) {
+        if (error || !data?.paymentSessionId) {
           throw new Error(error?.message || "Failed to create payment session");
         }
 
         clearCart();
-        // Redirect to Cashfree payment page
-        window.location.href = data.paymentLink;
+        // Redirect to Cashfree hosted checkout
+        const checkoutUrl = data.paymentLink || 
+          `https://payments.cashfree.com/pgbillpay/order?token=${data.paymentSessionId}`;
+        window.location.href = checkoutUrl;
         return;
       } catch (err: any) {
         setIsProcessing(false);
