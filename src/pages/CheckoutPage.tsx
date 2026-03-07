@@ -179,7 +179,7 @@ const CheckoutPage = () => {
         {/* Payment */}
         <div className="waffle-card space-y-4">
           <h2 className="font-semibold text-foreground text-lg">Payment Method</h2>
-          {(["Paytm", "Cash On Delivery"] as const).map((method) => (
+          {(["Cashfree", "Cash On Delivery"] as const).map((method) => (
             <button
               key={method}
               type="button"
@@ -190,7 +190,7 @@ const CheckoutPage = () => {
                   : "border-border text-foreground hover:border-primary/30"
               }`}
             >
-              {method === "Paytm" ? "💳 Paytm Payment Gateway" : "💵 Cash On Delivery"}
+              {method === "Cashfree" ? "💳 Pay Online (UPI / Cards / Netbanking)" : "💵 Cash On Delivery"}
             </button>
           ))}
         </div>
