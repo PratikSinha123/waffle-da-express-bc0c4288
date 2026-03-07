@@ -239,6 +239,11 @@ const OrdersPanel = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
+                  <span className={`text-xs px-2 py-1 rounded-full font-medium ${
+                    order.paymentMethod === "Cashfree" ? "bg-green-100 text-green-700" : "bg-amber-100 text-amber-700"
+                  }`}>
+                    {order.paymentMethod === "Cashfree" ? "💳 Paid" : "💵 COD"}
+                  </span>
                   <span className="text-xs px-2 py-1 rounded-full bg-secondary text-secondary-foreground font-medium">
                     {order.orderType || "Delivery"}
                   </span>
