@@ -2,8 +2,9 @@ import { useState, useEffect, useRef } from "react";
 import { useOrders, OrderStatus, Offer } from "@/context/OrderContext";
 import { useMenu } from "@/context/MenuContext";
 import { useToast } from "@/hooks/use-toast";
-import { Download, Search, Plus, Pencil, Trash2, LogIn, LogOut, ChevronDown, Bell, Tag } from "lucide-react";
+import { Download, Search, Plus, Pencil, Trash2, LogIn, LogOut, ChevronDown, Bell, Tag, Settings } from "lucide-react";
 import { MenuItem } from "@/data/menuData";
+import { getDeliveryFeeAmount, setDeliveryFeeAmount } from "@/context/CartContext";
 
 const ADMIN_PASSWORD = "waffle123";
 
