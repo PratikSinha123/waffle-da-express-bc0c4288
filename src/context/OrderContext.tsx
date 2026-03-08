@@ -102,8 +102,12 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     fetchAll();
   }, []);
 
-  // Realtime subscription for orders
+  // Realtime subscription for orders + fallback polling
   useEffect(() => {
+    let isActive = true;
+    let pollInterval = 3000;
+    let timeoutId: ReturnType<typeof setTimeout>;
+
     const channel = supabase
       .channel("orders-realtime")
       .on("postgres_changes", { event: "*", schema: "public", table: "orders" }, (payload) => {
@@ -113,23 +117,70 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             if (prev.find((o) => o.id === newOrder.id)) return prev;
             return [newOrder, ...prev];
           });
-          // Play notification sound
           try {
             const audio = new Audio("data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdW+Jj4yKg3xzb3N8hoyQjomDfHRwc3yEjJCOiIN8dHBzfISMkI6Ig3x0cHN8hIyQjoiDfHRwc3yEjJCOiIN8dHBzfA==");
             audio.volume = 0.3;
             audio.play().catch(() => {});
           } catch {}
+          pollInterval = 3000;
         } else if (payload.eventType === "UPDATE") {
           const updated = rowToOrder(payload.new);
           setOrders((prev) => prev.map((o) => (o.id === updated.id ? updated : o)));
+          pollInterval = 3000;
         } else if (payload.eventType === "DELETE") {
           const deletedId = (payload.old as any).id;
           setOrders((prev) => prev.filter((o) => o.id !== deletedId));
+          pollInterval = 3000;
         }
       })
-      .subscribe();
+      .subscribe((status, err) => {
+        if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT' || status === 'CLOSED') {
+          console.error('Realtime orders channel error:', status, err);
+        }
+      });
 
-    return () => { supabase.removeChannel(channel); };
+    // Fallback polling to catch missed events
+    const poll = async () => {
+      if (!isActive) return;
+      try {
+        const { data } = await supabase
+          .from("orders")
+          .select("*")
+          .order("created_at", { ascending: false });
+        if (data) {
+          setOrders((prev) => {
+            const newOrders = data.map(rowToOrder);
+            // Check if data actually changed
+            if (JSON.stringify(prev.map(o => o.id + o.status + o.seen)) !== 
+                JSON.stringify(newOrders.map(o => o.id + o.status + o.seen))) {
+              // Play sound if new order appeared
+              if (newOrders.length > prev.length) {
+                try {
+                  const audio = new Audio("data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdW+Jj4yKg3xzb3N8hoyQjomDfHRwc3yEjJCOiIN8dHBzfISMkI6Ig3x0cHN8hIyQjoiDfHRwc3yEjJCOiIN8dHBzfA==");
+                  audio.volume = 0.3;
+                  audio.play().catch(() => {});
+                } catch {}
+              }
+              return newOrders;
+            }
+            return prev;
+          });
+        }
+      } catch (e) {
+        console.error("Orders polling error:", e);
+      }
+      if (isActive) {
+        timeoutId = setTimeout(poll, pollInterval);
+      }
+    };
+
+    timeoutId = setTimeout(poll, pollInterval);
+
+    return () => {
+      isActive = false;
+      clearTimeout(timeoutId);
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   // Realtime subscription for offers
