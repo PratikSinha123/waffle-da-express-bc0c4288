@@ -1,13 +1,16 @@
 import { useOrders, Offer } from "@/context/OrderContext";
 import { Link } from "react-router-dom";
 import { Tag, Percent, Sparkles } from "lucide-react";
+import wafflePatternBg from "@/assets/waffle-pattern-bg.jpg";
 
 const OffersPage = () => {
   const { offers } = useOrders();
   const activeOffers = offers.filter((o) => o.isActive && new Date(o.validUntil) >= new Date());
 
   return (
-    <div className="min-h-screen bg-pattern-dots">
+    <div className="min-h-screen relative">
+      <div className="fixed inset-0 -z-10" style={{ backgroundImage: `url(${wafflePatternBg})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+      <div className="fixed inset-0 -z-10 bg-background/92 backdrop-blur-sm" />
       <div className="max-w-4xl mx-auto px-4 py-6">
         <div className="page-header">
           <div className="flex items-center gap-2 mb-1">

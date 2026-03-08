@@ -1,7 +1,10 @@
 import { MapPin, Phone, Clock3, Mail } from "lucide-react";
+import wafflePatternBg from "@/assets/waffle-pattern-bg.jpg";
 
 const ContactPage = () => (
-  <div className="min-h-screen bg-pattern-dots">
+  <div className="min-h-screen relative">
+    <div className="fixed inset-0 -z-10" style={{ backgroundImage: `url(${wafflePatternBg})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+    <div className="fixed inset-0 -z-10 bg-background/92 backdrop-blur-sm" />
     <div className="max-w-4xl mx-auto px-4 py-12">
       <div className="rounded-2xl waffle-gradient-soft p-8 sm:p-10 mb-10">
         <span className="text-sm font-medium text-accent uppercase tracking-widest">Get in Touch</span>
