@@ -161,8 +161,10 @@ const Index = () => {
 
       {/* Features */}
       <section className="py-20 px-4 relative overflow-hidden">
-        <div className="absolute inset-0 waffle-gradient-soft" />
-        <div className="absolute inset-0 bg-pattern-waffle" />
+        <div className="absolute inset-0">
+          <img src={wafflePatternBg} alt="" className="w-full h-full object-cover" />
+        </div>
+        <div className="absolute inset-0 bg-background/80 backdrop-blur-[2px]" />
         <div className="relative max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6">
           {[
             { icon: UtensilsCrossed, title: "Fresh & Tasty", desc: "Made with premium ingredients, prepared fresh for every order", emoji: "✨" },
