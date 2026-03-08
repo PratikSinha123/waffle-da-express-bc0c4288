@@ -14,7 +14,6 @@ const TrackOrderPage = () => {
   const [searchParams] = useSearchParams();
   const [phoneNumber, setPhoneNumber] = useState("");
   const [searched, setSearched] = useState(false);
-  const [isNewOrder, setIsNewOrder] = useState(false);
   const { getOrdersByPhone, getOrder } = useOrders();
   const [matchedOrders, setMatchedOrders] = useState<Order[]>([]);
 
