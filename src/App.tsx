@@ -17,6 +17,9 @@ import TrackOrderPage from "./pages/TrackOrderPage";
 import AdminPage from "./pages/AdminPage";
 import OffersPage from "./pages/OffersPage";
 import PaymentStatusPage from "./pages/PaymentStatusPage";
+import ContactPage from "./pages/ContactPage";
+import TermsPage from "./pages/TermsPage";
+import RefundsPage from "./pages/RefundsPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -34,6 +37,9 @@ const AnimatedRoutes = () => {
         <Route path="/offers" element={<PageTransition><OffersPage /></PageTransition>} />
         <Route path="/payment-status" element={<PageTransition><PaymentStatusPage /></PageTransition>} />
         <Route path="/admin" element={<PageTransition><AdminPage /></PageTransition>} />
+        <Route path="/contact" element={<PageTransition><ContactPage /></PageTransition>} />
+        <Route path="/terms" element={<PageTransition><TermsPage /></PageTransition>} />
+        <Route path="/refunds" element={<PageTransition><RefundsPage /></PageTransition>} />
         <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
       </Routes>
     </AnimatePresence>
