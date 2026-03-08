@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, UtensilsCrossed, Truck, Clock, MapPin, Phone, Clock3, Sparkles, CalendarDays } from "lucide-react";
+import { motion } from "framer-motion";
 import heroImage from "@/assets/hero-waffles.jpg";
 import { useMenu } from "@/context/MenuContext";
 
@@ -22,32 +23,56 @@ const Index = () => {
     <div className="min-h-screen">
       {/* Hero - Full screen */}
       <section className="relative h-[100vh] -mt-[4.25rem] overflow-hidden">
-        <div className="absolute inset-0">
-          <img src={heroImage} alt="Delicious waffles" className="w-full h-full object-cover scale-105" />
+        <motion.div
+          className="absolute inset-0"
+          initial={{ scale: 1.2 }}
+          animate={{ scale: 1.05 }}
+          transition={{ duration: 1.8, ease: "easeOut" }}
+        >
+          <img src={heroImage} alt="Delicious waffles" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/20" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-        </div>
+        </motion.div>
 
         <div className="relative h-full max-w-7xl mx-auto px-6 sm:px-10 flex flex-col justify-center">
-          <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-primary/90 text-primary-foreground text-sm font-medium w-fit backdrop-blur-sm glow-accent">
+          <motion.div
+            className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-primary/90 text-primary-foreground text-sm font-medium w-fit backdrop-blur-sm glow-accent"
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
             <Sparkles className="w-4 h-4" />
             Now in Bidholi
-          </div>
-          <h1
+          </motion.div>
+          <motion.h1
             className="text-5xl sm:text-7xl lg:text-8xl font-bold text-white mb-6 leading-[1.1] italic drop-shadow-lg"
             style={{ fontFamily: "'Playfair Display', serif" }}
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
           >
             Waffle Da
-          </h1>
-          <p className="text-base sm:text-lg text-white/80 max-w-lg mb-10 leading-relaxed">
-            Handcrafted waffles, fluffy pancakes & creamy shakes — made fresh, served with love. 🧇
-          </p>
-          <Link
-            to="/menu"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-full waffle-gradient-warm text-primary-foreground font-semibold text-lg hover:opacity-90 transition-all w-fit shadow-lg glow-accent hover:scale-[1.02]"
+          </motion.h1>
+          <motion.p
+            className="text-base sm:text-lg text-white/80 max-w-lg mb-10 leading-relaxed"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.8 }}
           >
-            Order Now <ArrowRight className="w-5 h-5" />
-          </Link>
+            Handcrafted waffles, fluffy pancakes & creamy shakes — made fresh, served with love. 🧇
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 1.1, type: "spring", stiffness: 200 }}
+          >
+            <Link
+              to="/menu"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-full waffle-gradient-warm text-primary-foreground font-semibold text-lg hover:opacity-90 transition-all w-fit shadow-lg glow-accent hover:scale-[1.02]"
+            >
+              Order Now <ArrowRight className="w-5 h-5" />
+            </Link>
+          </motion.div>
         </div>
 
         {/* Scroll indicator */}
