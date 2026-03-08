@@ -7,67 +7,72 @@
 
 @layer base {
   :root {
-    --background: 36 30% 96%;
-    --foreground: 25 20% 22%;
+    --background: 38 28% 96%;
+    --foreground: 28 22% 20%;
 
-    --card: 38 25% 98%;
-    --card-foreground: 25 20% 22%;
+    --card: 40 22% 98%;
+    --card-foreground: 28 22% 20%;
 
-    --popover: 36 20% 99%;
-    --popover-foreground: 25 20% 22%;
+    --popover: 40 20% 99%;
+    --popover-foreground: 28 22% 20%;
 
-    --primary: 25 40% 38%;
-    --primary-foreground: 38 30% 97%;
+    --primary: 32 50% 42%;
+    --primary-foreground: 40 30% 97%;
 
-    --secondary: 34 22% 92%;
-    --secondary-foreground: 25 20% 25%;
+    --secondary: 36 20% 91%;
+    --secondary-foreground: 28 22% 22%;
 
-    --muted: 35 18% 93%;
-    --muted-foreground: 25 12% 48%;
+    --muted: 37 16% 92%;
+    --muted-foreground: 28 10% 46%;
 
-    --accent: 28 45% 42%;
-    --accent-foreground: 38 30% 97%;
+    --accent: 36 60% 50%;
+    --accent-foreground: 28 30% 15%;
 
-    --destructive: 0 65% 55%;
+    --destructive: 0 60% 52%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 32 16% 89%;
-    --input: 32 16% 89%;
-    --ring: 25 35% 40%;
+    --border: 35 14% 88%;
+    --input: 35 14% 88%;
+    --ring: 32 45% 44%;
 
     --radius: 0.75rem;
 
-    --waffle-brown: 25 40% 38%;
-    --waffle-cream: 36 30% 96%;
-    --waffle-gold: 35 55% 52%;
-    --waffle-light: 38 25% 98%;
-    --waffle-dark: 25 22% 18%;
-    --waffle-amber: 30 55% 50%;
-    --waffle-honey: 35 60% 54%;
+    --waffle-brown: 32 50% 42%;
+    --waffle-cream: 38 28% 96%;
+    --waffle-gold: 36 60% 50%;
+    --waffle-light: 40 22% 98%;
+    --waffle-dark: 28 24% 16%;
+    --waffle-amber: 34 65% 48%;
+    --waffle-honey: 38 70% 52%;
   }
 
   .dark {
-    --background: 25 18% 11%;
-    --foreground: 36 25% 92%;
-    --card: 25 16% 15%;
-    --card-foreground: 36 25% 92%;
-    --popover: 25 16% 15%;
-    --popover-foreground: 36 25% 92%;
-    --primary: 35 45% 52%;
-    --primary-foreground: 25 18% 11%;
-    --secondary: 25 14% 20%;
-    --secondary-foreground: 36 25% 92%;
-    --muted: 25 12% 20%;
-    --muted-foreground: 35 12% 58%;
-    --accent: 35 50% 48%;
-    --accent-foreground: 25 18% 11%;
-    --destructive: 0 55% 35%;
+    --background: 28 20% 9%;
+    --foreground: 38 22% 90%;
+    --card: 28 18% 13%;
+    --card-foreground: 38 22% 90%;
+    --popover: 28 18% 13%;
+    --popover-foreground: 38 22% 90%;
+    --primary: 36 55% 50%;
+    --primary-foreground: 28 20% 9%;
+    --secondary: 28 16% 18%;
+    --secondary-foreground: 38 22% 88%;
+    --muted: 28 14% 17%;
+    --muted-foreground: 36 14% 55%;
+    --accent: 36 60% 48%;
+    --accent-foreground: 28 20% 9%;
+    --destructive: 0 50% 40%;
     --destructive-foreground: 0 0% 100%;
-    --border: 25 12% 22%;
-    --input: 25 12% 22%;
-    --ring: 35 45% 52%;
-    --waffle-amber: 30 55% 50%;
-    --waffle-honey: 35 60% 54%;
+    --border: 28 14% 20%;
+    --input: 28 14% 20%;
+    --ring: 36 55% 50%;
+    --waffle-brown: 32 45% 38%;
+    --waffle-cream: 38 20% 18%;
+    --waffle-gold: 36 55% 50%;
+    --waffle-light: 28 18% 13%;
+    --waffle-dark: 28 24% 8%;
+    --waffle-amber: 34 60% 46%;
+    --waffle-honey: 38 65% 50%;
   }
 }
 
