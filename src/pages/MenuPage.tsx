@@ -35,12 +35,12 @@ const MenuPage = () => {
       <div className="fixed inset-0 -z-10 bg-background/90 backdrop-blur-sm" />
       <div className="max-w-7xl mx-auto px-4 py-6">
         {/* Page Header */}
-        <div className="relative overflow-hidden rounded-3xl mb-8 p-8 sm:p-10 waffle-gradient-warm">
-          <span className="text-sm font-medium text-white/80 uppercase tracking-widest mb-1 block">Waffle Da</span>
-          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
-            Our <span className="italic">Menu</span>
+        <div className="relative overflow-hidden rounded-3xl mb-8 p-8 sm:p-10 bg-secondary border border-border">
+          <span className="text-sm font-medium text-muted-foreground uppercase tracking-widest mb-1 block">Waffle Da</span>
+          <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
+            Our <span className="text-gradient italic">Menu</span>
           </h1>
-          <p className="text-white/70">Choose from our wide variety of items</p>
+          <p className="text-muted-foreground">Choose from our wide variety of items</p>
         </div>
 
         {/* Search */}
