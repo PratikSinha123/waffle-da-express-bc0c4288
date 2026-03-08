@@ -156,8 +156,8 @@
 
   .bg-pattern-waffle {
     background-image: 
-      linear-gradient(hsl(25 60% 35% / 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, hsl(25 60% 35% / 0.03) 1px, transparent 1px);
+      linear-gradient(hsl(25 40% 38% / 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(25 40% 38% / 0.02) 1px, transparent 1px);
     background-size: 32px 32px;
   }
 
