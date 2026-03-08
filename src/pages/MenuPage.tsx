@@ -35,7 +35,7 @@ const MenuPage = () => {
       <div className="fixed inset-0 -z-10 bg-background/90 backdrop-blur-sm" />
       <div className="max-w-7xl mx-auto px-4 py-6">
         {/* Page Header */}
-        <div className="page-header waffle-gradient !bg-none" style={{ background: 'linear-gradient(135deg, hsl(25 60% 35%), hsl(35 70% 50%))' }}>
+        <div className="relative overflow-hidden rounded-3xl mb-8 p-8 sm:p-10" style={{ background: 'linear-gradient(135deg, hsl(25, 60%, 35%), hsl(35, 70%, 50%))' }}>
           <span className="text-sm font-medium text-white/80 uppercase tracking-widest mb-1 block">Waffle Da</span>
           <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
             Our <span className="italic">Menu</span>
