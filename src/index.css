@@ -42,6 +42,8 @@
     --waffle-gold: 40 80% 50%;
     --waffle-light: 35 40% 98%;
     --waffle-dark: 25 30% 20%;
+    --waffle-amber: 30 85% 55%;
+    --waffle-honey: 38 90% 58%;
   }
 
   .dark {
@@ -64,6 +66,8 @@
     --border: 25 15% 22%;
     --input: 25 15% 22%;
     --ring: 35 60% 55%;
+    --waffle-amber: 30 85% 55%;
+    --waffle-honey: 38 90% 58%;
   }
 }
 
@@ -83,8 +87,27 @@
     background: linear-gradient(135deg, hsl(25 60% 35%), hsl(35 70% 50%));
   }
 
+  .waffle-gradient-warm {
+    background: linear-gradient(135deg, hsl(25 60% 35%), hsl(30 85% 55%), hsl(38 90% 58%));
+  }
+
+  .waffle-gradient-soft {
+    background: linear-gradient(160deg, hsl(35 40% 98%), hsl(35 30% 95%), hsl(30 20% 92%));
+  }
+
   .waffle-card {
-    @apply bg-card rounded-2xl shadow-sm border border-border p-4 transition-all duration-200 hover:shadow-md;
+    @apply bg-card rounded-2xl shadow-sm border border-border p-4 transition-all duration-300 hover:shadow-lg;
+    backdrop-filter: blur(8px);
+  }
+
+  .waffle-card-elevated {
+    @apply bg-card rounded-2xl border border-border p-4 transition-all duration-300;
+    box-shadow: 0 4px 20px -4px hsl(25 60% 35% / 0.1), 0 2px 8px -2px hsl(25 60% 35% / 0.06);
+  }
+
+  .waffle-card-elevated:hover {
+    box-shadow: 0 8px 30px -4px hsl(25 60% 35% / 0.18), 0 4px 12px -2px hsl(25 60% 35% / 0.1);
+    transform: translateY(-2px);
   }
 
   .category-chip {
@@ -93,9 +116,74 @@
 
   .category-chip-active {
     @apply bg-primary text-primary-foreground shadow-sm;
+    box-shadow: 0 4px 12px -2px hsl(25 60% 35% / 0.4);
   }
 
   .category-chip-inactive {
     @apply bg-secondary text-secondary-foreground hover:bg-primary/10;
   }
+
+  .page-header {
+    @apply relative overflow-hidden rounded-3xl mb-8 p-8 sm:p-10;
+    background: linear-gradient(135deg, hsl(25 60% 35% / 0.08), hsl(40 80% 50% / 0.06), hsl(35 40% 98%));
+  }
+
+  .page-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, hsl(40 80% 50% / 0.1), transparent 70%);
+    pointer-events: none;
+  }
+
+  .section-divider {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, hsl(25 60% 35% / 0.15), hsl(40 80% 50% / 0.15), transparent);
+  }
+
+  .glow-accent {
+    box-shadow: 0 0 20px hsl(40 80% 50% / 0.15), 0 0 40px hsl(25 60% 35% / 0.05);
+  }
+
+  .bg-pattern-dots {
+    background-image: radial-gradient(hsl(25 60% 35% / 0.04) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  .bg-pattern-waffle {
+    background-image: 
+      linear-gradient(hsl(25 60% 35% / 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(25 60% 35% / 0.03) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  .text-gradient {
+    background: linear-gradient(135deg, hsl(25 60% 35%), hsl(40 80% 50%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
 }
