@@ -516,7 +516,7 @@ const OrdersPanel = () => {
               {expandedOrder === order.id && (
                 <div className="mt-4 pt-4 border-t border-border space-y-3">
                   <div className="grid grid-cols-2 gap-2 text-sm">
-                    <div><span className="text-muted-foreground">Phone:</span> <span className="text-foreground">{order.phone}</span></div>
+                    <div><span className="text-muted-foreground">Phone:</span> <a href={`tel:${order.phone}`} className="text-primary underline hover:text-primary/80">{order.phone}</a></div>
                     <div><span className="text-muted-foreground">Payment:</span> <span className="text-foreground">{order.paymentMethod}</span></div>
                     <div><span className="text-muted-foreground">Order Type:</span> <span className="text-foreground font-medium">{order.orderType || "Delivery"}</span></div>
                     {order.orderType === "Delivery" && (
