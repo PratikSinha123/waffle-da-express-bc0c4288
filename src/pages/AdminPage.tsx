@@ -189,7 +189,7 @@ const AdminPage = () => {
               </span>
             )}
           </button>
-          <button onClick={() => setIsLoggedIn(false)} className="px-3 sm:px-4 py-2 rounded-xl border border-border text-sm font-medium text-foreground hover:bg-secondary">
+          <button onClick={() => { setIsLoggedIn(false); localStorage.removeItem("waffle_admin"); }} className="px-3 sm:px-4 py-2 rounded-xl border border-border text-sm font-medium text-foreground hover:bg-secondary">
             <LogOut className="w-4 h-4 inline mr-1" /> Logout
           </button>
         </div>
