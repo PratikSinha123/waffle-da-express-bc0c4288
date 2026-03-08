@@ -96,25 +96,77 @@ const AdminPage = () => {
   );
 };
 
+// Ringtone notification sound hook
+const useOrderRingtone = () => {
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const startRinging = () => {
+    stopRinging();
+    const playTone = () => {
+      try {
+        const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+        // First beep
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.frequency.value = 880;
+        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+        osc.start(audioCtx.currentTime);
+        osc.stop(audioCtx.currentTime + 0.4);
+        // Second beep (higher pitch)
+        const osc2 = audioCtx.createOscillator();
+        const gain2 = audioCtx.createGain();
+        osc2.connect(gain2);
+        gain2.connect(audioCtx.destination);
+        osc2.frequency.value = 1100;
+        gain2.gain.setValueAtTime(0.3, audioCtx.currentTime + 0.2);
+        gain2.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
+        osc2.start(audioCtx.currentTime + 0.2);
+        osc2.stop(audioCtx.currentTime + 0.6);
+      } catch {}
+    };
+    playTone();
+    intervalRef.current = setInterval(playTone, 2500);
+  };
+
+  const stopRinging = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  };
+
+  useEffect(() => () => stopRinging(), []);
+
+  return { startRinging, stopRinging };
+};
+
 // Real-time notification banner
 const NotificationBanner = () => {
   const { orders, unseenCount } = useOrders();
   const [showBanner, setShowBanner] = useState(false);
   const [latestOrder, setLatestOrder] = useState<string | null>(null);
   const prevCountRef = useRef(orders.length);
+  const { startRinging, stopRinging } = useOrderRingtone();
 
   useEffect(() => {
     if (orders.length > prevCountRef.current) {
       const newest = orders[0];
       setLatestOrder(newest.id);
       setShowBanner(true);
-
-      // Auto-hide after 8 seconds
-      const timer = setTimeout(() => setShowBanner(false), 8000);
+      startRinging();
+      const timer = setTimeout(() => stopRinging(), 30000);
       return () => clearTimeout(timer);
     }
     prevCountRef.current = orders.length;
   }, [orders]);
+
+  const handleDismiss = () => {
+    setShowBanner(false);
+    stopRinging();
+  };
 
   if (!showBanner || !latestOrder) return null;
 
@@ -125,7 +177,7 @@ const NotificationBanner = () => {
     <div className="mb-4 p-4 rounded-2xl bg-accent/10 border-2 border-accent animate-in slide-in-from-top-2">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full waffle-gradient flex items-center justify-center">
+          <div className="w-10 h-10 rounded-full waffle-gradient flex items-center justify-center animate-pulse">
             <Bell className="w-5 h-5 text-primary-foreground" />
           </div>
           <div>
@@ -135,8 +187,8 @@ const NotificationBanner = () => {
             </p>
           </div>
         </div>
-        <button onClick={() => setShowBanner(false)} className="text-muted-foreground hover:text-foreground text-sm">
-          Dismiss
+        <button onClick={handleDismiss} className="px-4 py-2 rounded-xl bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity">
+          ✓ Acknowledge
         </button>
       </div>
     </div>
