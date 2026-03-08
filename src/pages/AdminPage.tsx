@@ -83,6 +83,55 @@ const subscribeToPush = async () => {
   }
 };
 
+// Push notification subscribe button
+const PushSubscribeButton = () => {
+  const [subscribed, setSubscribed] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    // Check if already subscribed
+    if ("serviceWorker" in navigator && "PushManager" in window) {
+      navigator.serviceWorker.ready.then((reg) => {
+        reg.pushManager.getSubscription().then((sub) => {
+          if (sub) setSubscribed(true);
+        });
+      }).catch(() => {});
+    }
+  }, []);
+
+  const handleSubscribe = async () => {
+    setLoading(true);
+    const result = await subscribeToPush();
+    setLoading(false);
+    if (result.success) {
+      setSubscribed(true);
+      toast({ title: "🔔 Push notifications enabled!", description: "You'll receive alerts even when this tab is closed." });
+    } else {
+      toast({ title: "Could not enable notifications", description: result.error, variant: "destructive" });
+    }
+  };
+
+  if (subscribed) {
+    return (
+      <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/10 text-green-500 text-xs font-medium">
+        <BellRing className="w-3.5 h-3.5" /> Push ON
+      </span>
+    );
+  }
+
+  return (
+    <button
+      onClick={handleSubscribe}
+      disabled={loading}
+      className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-primary/30 text-primary text-xs font-medium hover:bg-primary/10 transition-colors disabled:opacity-50"
+    >
+      <BellRing className="w-3.5 h-3.5" />
+      {loading ? "Enabling..." : "Enable Push"}
+    </button>
+  );
+};
+
 const AdminPage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [password, setPassword] = useState("");
