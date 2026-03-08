@@ -102,7 +102,7 @@
 
   .waffle-card-elevated {
     @apply bg-card rounded-2xl border border-border p-4 transition-all duration-300;
-    box-shadow: 0 4px 20px -4px hsl(25 60% 35% / 0.1), 0 2px 8px -2px hsl(25 60% 35% / 0.06);
+    box-shadow: 0 4px 20px -4px hsl(25 40% 38% / 0.08), 0 2px 8px -2px hsl(25 40% 38% / 0.04);
   }
 
   .waffle-card-elevated:hover {
