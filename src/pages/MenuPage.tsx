@@ -5,6 +5,7 @@ import CategoryFilter from "@/components/CategoryFilter";
 import CustomizePopup from "@/components/CustomizePopup";
 import { MenuItem } from "@/data/menuData";
 import { Search } from "lucide-react";
+import heroImage from "@/assets/hero-waffles.jpg";
 
 const MenuPage = () => {
   const { menuItems, categories } = useMenu();
@@ -23,7 +24,13 @@ const MenuPage = () => {
   }, [menuItems, activeCategory, search]);
 
   return (
-    <div className="min-h-screen bg-pattern-dots">
+    <div className="min-h-screen relative">
+      {/* Fixed background */}
+      <div
+        className="fixed inset-0 -z-10"
+        style={{ backgroundImage: `url(${heroImage})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }}
+      />
+      <div className="fixed inset-0 -z-10 bg-background/90 backdrop-blur-sm" />
       <div className="max-w-7xl mx-auto px-4 py-6">
         {/* Page Header */}
         <div className="page-header">
