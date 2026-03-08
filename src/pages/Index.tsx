@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, UtensilsCrossed, Truck, Clock, MapPin, Phone, Clock3, Sparkles } from "lucide-react";
+import { ArrowRight, UtensilsCrossed, Truck, Clock, MapPin, Phone, Clock3, Sparkles, CalendarDays } from "lucide-react";
 import heroImage from "@/assets/hero-waffles.jpg";
 import { useMenu } from "@/context/MenuContext";
 
@@ -55,6 +55,28 @@ const Index = () => {
           <div className="w-6 h-10 rounded-full border-2 border-white/40 flex items-start justify-center p-2">
             <div className="w-1.5 h-3 rounded-full bg-white/60" />
           </div>
+        </div>
+      </section>
+
+      {/* Pop-Up Stall Banner */}
+      <section className="py-6 px-4 relative overflow-hidden waffle-gradient-warm">
+        <div className="absolute inset-0 bg-pattern-waffle opacity-10" />
+        <div className="relative max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-4 text-center sm:text-left">
+          <div className="w-12 h-12 rounded-full bg-primary-foreground/20 flex items-center justify-center shrink-0 backdrop-blur-sm">
+            <CalendarDays className="w-6 h-6 text-primary-foreground" />
+          </div>
+          <div>
+            <h3 className="text-lg sm:text-xl font-bold text-primary-foreground italic" style={{ fontFamily: "'Playfair Display', serif" }}>
+              🎉 Waffle Da 7-Day Pop-Up Stall at UPES — 20 to 26 March
+            </h3>
+            <p className="text-primary-foreground/80 text-sm mt-1">Come visit us on campus! Fresh waffles, shakes & more 🧇</p>
+          </div>
+          <Link
+            to="/menu"
+            className="shrink-0 inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-card text-foreground font-semibold text-sm hover:bg-card/90 transition-all shadow-md hover:scale-[1.02]"
+          >
+            Pre-order <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
       </section>
 
