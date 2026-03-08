@@ -161,8 +161,8 @@ const CustomizePopup = ({ item, onClose }: CustomizePopupProps) => {
                         onClick={() => toggleAddOn(addOn)}
                         className={`px-4 py-3 rounded-xl text-sm font-medium border-2 transition-all text-left ${
                           isSelected
-                            ? "border-accent bg-gradient-to-r from-accent/15 to-accent/5 text-accent shadow-sm"
-                            : "border-[hsl(30,20%,88%)] text-foreground hover:border-accent/40 hover:bg-[hsl(35,30%,96%)]"
+                            ? "border-accent bg-accent/10 text-accent shadow-sm"
+                            : "border-border text-foreground hover:border-accent/40 hover:bg-secondary"
                         }`}
                       >
                         {addOn.name}
