@@ -149,8 +149,12 @@ const OrdersPanel = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
-  const [deliveryFee, setDeliveryFeeLocal] = useState(() => getDeliveryFeeAmount());
+  const [deliveryFee, setDeliveryFeeLocal] = useState(40);
   const [editingFee, setEditingFee] = useState(false);
+
+  useEffect(() => {
+    getDeliveryFeeAmount().then(setDeliveryFeeLocal);
+  }, []);
 
   const filteredOrders = orders.filter(
     (o) =>
@@ -221,8 +225,8 @@ const OrdersPanel = () => {
               min={0}
             />
             <button
-              onClick={() => {
-                setDeliveryFeeAmount(deliveryFee);
+              onClick={async () => {
+                await setDeliveryFeeAmount(deliveryFee);
                 setEditingFee(false);
                 toast({ title: `Delivery fee updated to ₹${deliveryFee}` });
               }}
@@ -230,7 +234,7 @@ const OrdersPanel = () => {
             >
               Save
             </button>
-            <button onClick={() => { setDeliveryFeeLocal(getDeliveryFeeAmount()); setEditingFee(false); }} className="px-3 py-1.5 rounded-lg text-xs font-medium border border-border text-muted-foreground">
+            <button onClick={() => { getDeliveryFeeAmount().then(setDeliveryFeeLocal); setEditingFee(false); }} className="px-3 py-1.5 rounded-lg text-xs font-medium border border-border text-muted-foreground">
               Cancel
             </button>
           </div>
