@@ -150,7 +150,7 @@
   }
 
   .bg-pattern-dots {
-    background-image: radial-gradient(hsl(25 60% 35% / 0.04) 1px, transparent 1px);
+    background-image: radial-gradient(hsl(25 40% 38% / 0.03) 1px, transparent 1px);
     background-size: 24px 24px;
   }
 
