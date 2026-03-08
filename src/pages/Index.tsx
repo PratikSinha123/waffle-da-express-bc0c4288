@@ -32,7 +32,7 @@ const Index = () => {
           animate={{ scale: 1.05 }}
           transition={{ duration: 1.8, ease: "easeOut" }}
         >
-          <img src={heroImage} alt="Delicious waffles" className="w-full h-full object-cover" />
+          <img src={wafflePatternBg} alt="Delicious waffles" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 to-black/30" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-black/20" />
         </motion.div>
@@ -161,10 +161,8 @@ const Index = () => {
 
       {/* Features */}
       <section className="py-20 px-4 relative overflow-hidden">
-        <div className="absolute inset-0">
-          <img src={wafflePatternBg} alt="" className="w-full h-full object-cover" />
-        </div>
-        <div className="absolute inset-0 bg-background/80 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 waffle-gradient-soft" />
+        <div className="absolute inset-0 bg-pattern-waffle" />
         <div className="relative max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6">
           {[
             { icon: UtensilsCrossed, title: "Fresh & Tasty", desc: "Made with premium ingredients, prepared fresh for every order", emoji: "✨" },
