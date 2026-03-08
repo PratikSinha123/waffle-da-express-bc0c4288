@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
 import { MenuItem, AddOn } from "@/data/menuData";
 import { OrderType } from "./OrderContext";
+import { supabase } from "@/integrations/supabase/client";
 
 export interface CartItem {
   id: string;
@@ -29,26 +30,34 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 const DEFAULT_DELIVERY_FEE = 40;
 
-export const getDeliveryFeeAmount = (): number => {
+export const getDeliveryFeeAmount = async (): Promise<number> => {
   try {
-    const stored = localStorage.getItem("waffle-da-delivery-fee");
-    if (stored !== null) return Number(stored);
+    const { data } = await supabase
+      .from("settings" as any)
+      .select("value")
+      .eq("key", "delivery_fee")
+      .single();
+    if (data && (data as any).value) return Number((data as any).value);
   } catch {}
   return DEFAULT_DELIVERY_FEE;
 };
 
-export const setDeliveryFeeAmount = (fee: number) => {
-  localStorage.setItem("waffle-da-delivery-fee", String(fee));
+export const setDeliveryFeeAmount = async (fee: number) => {
+  await supabase
+    .from("settings" as any)
+    .update({ value: String(fee), updated_at: new Date().toISOString() } as any)
+    .eq("key", "delivery_fee");
   window.dispatchEvent(new Event("delivery-fee-change"));
 };
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [items, setItems] = useState<CartItem[]>([]);
   const [orderType, setOrderType] = useState<OrderType>("Delivery");
-  const [deliveryFeeRate, setDeliveryFeeRate] = useState(getDeliveryFeeAmount);
+  const [deliveryFeeRate, setDeliveryFeeRate] = useState(DEFAULT_DELIVERY_FEE);
 
   useEffect(() => {
-    const handler = () => setDeliveryFeeRate(getDeliveryFeeAmount());
+    getDeliveryFeeAmount().then(setDeliveryFeeRate);
+    const handler = () => { getDeliveryFeeAmount().then(setDeliveryFeeRate); };
     window.addEventListener("delivery-fee-change", handler);
     return () => window.removeEventListener("delivery-fee-change", handler);
   }, []);
