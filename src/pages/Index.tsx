@@ -22,6 +22,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
+      <SEOHead title="Waffle Da! - Freshly Made Waffles & More | Order Online" description="Order delicious freshly made waffles, burgers, pizzas, and more from Waffle Da! Fast delivery to your doorstep. Browse our menu and order now." />
       {/* Hero - Full screen */}
       <section className="relative h-[100vh] -mt-[4.25rem] overflow-hidden">
         <motion.div
