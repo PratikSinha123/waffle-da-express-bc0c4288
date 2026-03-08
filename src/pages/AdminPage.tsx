@@ -366,6 +366,8 @@ const OrdersPanel = () => {
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
   const [deliveryFee, setDeliveryFeeLocal] = useState(40);
   const [editingFee, setEditingFee] = useState(false);
+  const [csvFromDate, setCsvFromDate] = useState("");
+  const [csvToDate, setCsvToDate] = useState("");
 
   useEffect(() => {
     getDeliveryFeeAmount().then(setDeliveryFeeLocal);
