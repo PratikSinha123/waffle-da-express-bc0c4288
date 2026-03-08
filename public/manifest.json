@@ -1,0 +1,23 @@
+{
+  "name": "Waffle Da Express",
+  "short_name": "Waffle Da",
+  "description": "Fresh waffles delivered to your door",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a1a2e",
+  "theme_color": "#f59e0b",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon",
+      "purpose": "maskable"
+    }
+  ]
+}
