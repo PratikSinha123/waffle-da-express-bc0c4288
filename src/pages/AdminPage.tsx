@@ -910,7 +910,7 @@ const DeletedOrdersPanel = () => {
                       <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-muted text-muted-foreground">{order.order_type}</span>
                     </div>
                     <p className="text-sm text-muted-foreground mt-1">
-                      {order.customer_name} • {order.phone} • ₹{order.total}
+                      {order.customer_name} • <a href={`tel:${order.phone}`} className="text-primary underline hover:text-primary/80" onClick={(e) => e.stopPropagation()}>{order.phone}</a> • ₹{order.total}
                     </p>
                     <p className="text-xs text-muted-foreground">
                       Ordered: {new Date(order.created_at).toLocaleString()} • Deleted: {new Date(order.deleted_at).toLocaleString()}
