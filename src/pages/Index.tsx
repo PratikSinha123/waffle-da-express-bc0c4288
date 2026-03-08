@@ -30,8 +30,8 @@ const Index = () => {
           transition={{ duration: 1.8, ease: "easeOut" }}
         >
           <img src={heroImage} alt="Delicious waffles" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/20" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 to-black/30" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-black/20" />
         </motion.div>
 
         <div className="relative h-full max-w-7xl mx-auto px-6 sm:px-10 flex flex-col justify-center">
