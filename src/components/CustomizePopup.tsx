@@ -176,7 +176,7 @@ const CustomizePopup = ({ item, onClose }: CustomizePopupProps) => {
         </div>
 
         {/* Footer */}
-        <div className="p-6 border-t border-[hsl(30,30%,88%)] bg-[hsl(35,35%,97%)]">
+        <div className="p-6 border-t border-border bg-secondary/50">
           <div className="flex items-center justify-between mb-4">
             <span className="text-muted-foreground font-medium">Total</span>
             <span className="text-2xl font-bold text-foreground" style={{ fontFamily: "'Playfair Display', serif" }}>₹{totalPrice}</span>
