@@ -245,61 +245,56 @@ if (typeof window !== "undefined") {
   document.addEventListener("click", initAudio);
 }
 
-// Ringtone notification sound hook
+// Ringtone notification sound hook - uses Web Worker to avoid background tab throttling
 const useOrderRingtone = () => {
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const workerRef = useRef<Worker | null>(null);
+
+  const playTone = () => {
+    try {
+      const audioCtx = getAudioContext();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.frequency.value = 880;
+      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+      osc.start(audioCtx.currentTime);
+      osc.stop(audioCtx.currentTime + 0.4);
+      const osc2 = audioCtx.createOscillator();
+      const gain2 = audioCtx.createGain();
+      osc2.connect(gain2);
+      gain2.connect(audioCtx.destination);
+      osc2.frequency.value = 1100;
+      gain2.gain.setValueAtTime(0.3, audioCtx.currentTime + 0.2);
+      gain2.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
+      osc2.start(audioCtx.currentTime + 0.2);
+      osc2.stop(audioCtx.currentTime + 0.6);
+    } catch (e) {
+      console.error("Audio playback error:", e);
+    }
+  };
 
   const startRinging = () => {
     stopRinging();
-    const playTone = () => {
-      try {
-        const audioCtx = getAudioContext();
-        // First beep
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.frequency.value = 880;
-        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-        osc.start(audioCtx.currentTime);
-        osc.stop(audioCtx.currentTime + 0.4);
-        // Second beep (higher pitch)
-        const osc2 = audioCtx.createOscillator();
-        const gain2 = audioCtx.createGain();
-        osc2.connect(gain2);
-        gain2.connect(audioCtx.destination);
-        osc2.frequency.value = 1100;
-        gain2.gain.setValueAtTime(0.3, audioCtx.currentTime + 0.2);
-        gain2.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
-        osc2.start(audioCtx.currentTime + 0.2);
-        osc2.stop(audioCtx.currentTime + 0.6);
-      } catch (e) {
-        console.error("Audio playback error:", e);
-      }
-    };
-    playTone();
-    // Beep every 1.5 seconds for 20 beeps (30 seconds total)
-    let beepCount = 1;
-    intervalRef.current = setInterval(() => {
-      beepCount++;
-      if (beepCount >= 20) {
-        stopRinging();
-        return;
-      }
+    try {
+      const worker = new Worker("/ringtone-worker.js");
+      workerRef.current = worker;
+      worker.onmessage = (e) => {
+        if (e.data === 'beep') playTone();
+        else if (e.data === 'done') stopRinging();
+      };
+      worker.postMessage('start');
+    } catch {
       playTone();
-    }, 1500);
+    }
   };
 
   const stopRinging = () => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = null;
+    if (workerRef.current) {
+      workerRef.current.postMessage('stop');
+      workerRef.current.terminate();
+      workerRef.current = null;
     }
   };
 
