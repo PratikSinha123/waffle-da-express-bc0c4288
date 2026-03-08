@@ -143,7 +143,7 @@ const Index = () => {
                 transition={{ duration: 0.4, delay: 0.05 * i }}
               >
                 <Link
-                  to="/menu"
+                  to={`/menu?category=${encodeURIComponent(cat)}`}
                   className="waffle-card-elevated p-5 text-center group block"
                 >
                   <span className="text-3xl mb-2 block group-hover:scale-125 transition-transform duration-300 animate-float" style={{ animationDelay: `${Math.random() * 2}s` }}>
