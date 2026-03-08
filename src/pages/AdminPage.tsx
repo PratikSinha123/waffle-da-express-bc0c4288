@@ -315,8 +315,6 @@ const NotificationBanner = () => {
       setLatestOrder(newest.id);
       setShowBanner(true);
       startRinging();
-      const timer = setTimeout(() => stopRinging(), 30000);
-      return () => clearTimeout(timer);
     }
     prevCountRef.current = orders.length;
   }, [orders]);
