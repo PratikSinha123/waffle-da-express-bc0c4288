@@ -254,7 +254,9 @@ const useOrderRingtone = () => {
       } catch {}
     };
     playTone();
-    intervalRef.current = setInterval(playTone, 2500);
+    // Beep every 800ms for 10 seconds continuous
+    intervalRef.current = setInterval(playTone, 800);
+    setTimeout(() => stopRinging(), 10000);
   };
 
   const stopRinging = () => {
