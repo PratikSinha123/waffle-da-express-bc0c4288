@@ -116,7 +116,7 @@
 
   .category-chip-active {
     @apply bg-primary text-primary-foreground shadow-sm;
-    box-shadow: 0 4px 12px -2px hsl(25 60% 35% / 0.4);
+    box-shadow: 0 4px 12px -2px hsl(25 40% 38% / 0.3);
   }
 
   .category-chip-inactive {
