@@ -71,12 +71,6 @@ const Index = () => {
             </h3>
             <p className="text-primary-foreground/80 text-sm mt-1">Come visit us on campus! Fresh waffles, shakes & more 🧇</p>
           </div>
-          <Link
-            to="/menu"
-            className="shrink-0 inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-card text-foreground font-semibold text-sm hover:bg-card/90 transition-all shadow-md hover:scale-[1.02]"
-          >
-            Pre-order <ArrowRight className="w-4 h-4" />
-          </Link>
         </div>
       </section>
 
