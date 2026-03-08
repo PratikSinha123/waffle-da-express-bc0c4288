@@ -173,6 +173,12 @@ const Index = () => {
               <Link to="/cart" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Cart</Link>
               <Link to="/offers" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Offers</Link>
             </div>
+            <h3 className="text-lg font-bold text-foreground mb-4 mt-6">Policies</h3>
+            <div className="space-y-2">
+              <Link to="/contact" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Contact Us</Link>
+              <Link to="/terms" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Terms & Conditions</Link>
+              <Link to="/refunds" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Refunds & Cancellations</Link>
+            </div>
           </div>
           <div>
             <h3 className="text-lg font-bold text-foreground mb-4">Contact & Timing</h3>
