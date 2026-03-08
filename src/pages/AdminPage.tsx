@@ -149,7 +149,7 @@ const OrdersPanel = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
-  const [deliveryFee, setDeliveryFeeLocal] = useState(DEFAULT_DELIVERY_FEE);
+  const [deliveryFee, setDeliveryFeeLocal] = useState(40);
   const [editingFee, setEditingFee] = useState(false);
 
   useEffect(() => {
