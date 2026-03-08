@@ -480,7 +480,7 @@ const OrdersPanel = () => {
         )}
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-3 mb-6">
+      <div className="flex flex-col sm:flex-row gap-3 mb-3">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <input
@@ -491,9 +491,34 @@ const OrdersPanel = () => {
             className="w-full pl-10 pr-4 py-3 rounded-xl bg-card border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
           />
         </div>
-        <button onClick={downloadCSV} className="px-5 py-3 rounded-xl waffle-gradient text-primary-foreground font-medium flex items-center gap-2 whitespace-nowrap">
-          <Download className="w-4 h-4" /> Download CSV
+      </div>
+      <div className="flex flex-col sm:flex-row gap-3 mb-6 items-end">
+        <div className="flex flex-col gap-1">
+          <label className="text-xs text-muted-foreground font-medium">From Date</label>
+          <input
+            type="date"
+            value={csvFromDate}
+            onChange={(e) => setCsvFromDate(e.target.value)}
+            className="px-3 py-2.5 rounded-xl bg-card border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+          />
+        </div>
+        <div className="flex flex-col gap-1">
+          <label className="text-xs text-muted-foreground font-medium">To Date</label>
+          <input
+            type="date"
+            value={csvToDate}
+            onChange={(e) => setCsvToDate(e.target.value)}
+            className="px-3 py-2.5 rounded-xl bg-card border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+          />
+        </div>
+        <button onClick={downloadCSV} className="px-5 py-2.5 rounded-xl waffle-gradient text-primary-foreground font-medium flex items-center gap-2 whitespace-nowrap">
+          <Download className="w-4 h-4" /> Export CSV
         </button>
+        {(csvFromDate || csvToDate) && (
+          <button onClick={() => { setCsvFromDate(""); setCsvToDate(""); }} className="px-3 py-2.5 rounded-xl bg-muted text-muted-foreground text-sm font-medium hover:bg-muted/80 transition-colors">
+            Clear Dates
+          </button>
+        )}
       </div>
 
       {filteredOrders.length === 0 ? (
