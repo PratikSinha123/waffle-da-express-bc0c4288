@@ -89,11 +89,19 @@
 
 @layer components {
   .waffle-gradient {
-    background: linear-gradient(135deg, hsl(32 50% 42%), hsl(36 60% 50%));
+    background: linear-gradient(135deg, hsl(40 30% 72%), hsl(45 35% 78%));
   }
 
   .waffle-gradient-warm {
-    background: linear-gradient(135deg, hsl(28 45% 36%), hsl(34 65% 48%), hsl(38 70% 52%));
+    background: linear-gradient(135deg, hsl(38 28% 62%), hsl(44 32% 72%), hsl(48 36% 78%));
+  }
+
+  .dark .waffle-gradient {
+    background: linear-gradient(135deg, hsl(36 30% 32%), hsl(40 35% 38%));
+  }
+
+  .dark .waffle-gradient-warm {
+    background: linear-gradient(135deg, hsl(34 25% 28%), hsl(38 30% 34%), hsl(42 32% 40%));
   }
 
   .waffle-gradient-soft {
