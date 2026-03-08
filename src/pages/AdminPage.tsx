@@ -135,7 +135,7 @@ const PushSubscribeButton = () => {
 const AdminPage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [password, setPassword] = useState("");
-  const [activeTab, setActiveTab] = useState<"orders" | "menu" | "offers">("orders");
+  const [activeTab, setActiveTab] = useState<"orders" | "menu" | "offers" | "history">("orders");
   const { toast } = useToast();
   const { unseenCount, markAllSeen } = useOrders();
 
