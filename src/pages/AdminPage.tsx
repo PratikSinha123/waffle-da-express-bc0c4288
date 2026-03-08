@@ -516,7 +516,7 @@ const OrdersPanel = () => {
               {expandedOrder === order.id && (
                 <div className="mt-4 pt-4 border-t border-border space-y-3">
                   <div className="grid grid-cols-2 gap-2 text-sm">
-                    <div><span className="text-muted-foreground">Phone:</span> <span className="text-foreground">{order.phone}</span></div>
+                    <div><span className="text-muted-foreground">Phone:</span> <a href={`tel:${order.phone}`} className="text-primary underline hover:text-primary/80">{order.phone}</a></div>
                     <div><span className="text-muted-foreground">Payment:</span> <span className="text-foreground">{order.paymentMethod}</span></div>
                     <div><span className="text-muted-foreground">Order Type:</span> <span className="text-foreground font-medium">{order.orderType || "Delivery"}</span></div>
                     {order.orderType === "Delivery" && (
@@ -910,7 +910,7 @@ const DeletedOrdersPanel = () => {
                       <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-muted text-muted-foreground">{order.order_type}</span>
                     </div>
                     <p className="text-sm text-muted-foreground mt-1">
-                      {order.customer_name} • {order.phone} • ₹{order.total}
+                      {order.customer_name} • <a href={`tel:${order.phone}`} className="text-primary underline hover:text-primary/80" onClick={(e) => e.stopPropagation()}>{order.phone}</a> • ₹{order.total}
                     </p>
                     <p className="text-xs text-muted-foreground">
                       Ordered: {new Date(order.created_at).toLocaleString()} • Deleted: {new Date(order.deleted_at).toLocaleString()}
@@ -922,7 +922,7 @@ const DeletedOrdersPanel = () => {
                 {expandedOrder === order.id && (
                   <div className="px-4 pb-4 border-t border-border pt-3 space-y-3">
                     <div className="grid grid-cols-2 gap-2 text-sm">
-                      <div><span className="text-muted-foreground">Phone:</span> <span className="text-foreground">{order.phone}</span></div>
+                      <div><span className="text-muted-foreground">Phone:</span> <a href={`tel:${order.phone}`} className="text-primary underline hover:text-primary/80">{order.phone}</a></div>
                       <div><span className="text-muted-foreground">Payment:</span> <span className="text-foreground">{order.payment_method}</span></div>
                       {order.address && <div className="col-span-2"><span className="text-muted-foreground">Address:</span> <span className="text-foreground">{order.address}</span></div>}
                       {order.notes && <div className="col-span-2"><span className="text-muted-foreground">Notes:</span> <span className="text-foreground">{order.notes}</span></div>}
