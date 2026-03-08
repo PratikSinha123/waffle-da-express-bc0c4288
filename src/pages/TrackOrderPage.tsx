@@ -94,22 +94,8 @@ const TrackOrderPage = () => {
                     </div>
                   </div>
 
-                  {/* WhatsApp notify button for new orders */}
-                  {isNewOrder && (
-                    <a
-                      href={(() => {
-                        const itemsList = order.items.map((i: any) => `• ${i.menuItem.name} x${i.quantity} - ₹${i.selectedPrice * i.quantity}`).join('\n');
-                        const msg = `🧇 *New Order from Waffle Da!*\n\n*Order ID:* ${order.id}\n*Customer:* ${order.customerName}\n*Phone:* ${order.phone}\n*Type:* ${order.orderType}\n*Payment:* ${order.paymentMethod}\n\n*Items:*\n${itemsList}\n\n*Subtotal:* ₹${order.subtotal}\n*Delivery Fee:* ₹${order.deliveryFee}\n*Total:* ₹${order.total}${order.notes ? `\n\n*Notes:* ${order.notes}` : ''}${order.orderType === 'Delivery' ? `\n*Address:* ${order.address}` : ''}`;
-                        return `https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(msg)}`;
-                      })()}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 w-full py-4 rounded-2xl bg-[#25D366] text-white font-semibold text-lg hover:opacity-90 transition-all"
-                    >
-                      <MessageCircle className="w-5 h-5" />
-                      Notify Shop via WhatsApp
-                    </a>
-                  )}
+
+
 
                   <div className="waffle-card-elevated p-6 space-y-3">
                     <h2 className="font-semibold text-foreground text-lg">Order Details</h2>
