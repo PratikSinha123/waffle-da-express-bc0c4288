@@ -143,6 +143,7 @@ const AdminPage = () => {
     e.preventDefault();
     if (password === ADMIN_PASSWORD) {
       setIsLoggedIn(true);
+      localStorage.setItem("waffle_admin", "true");
       toast({ title: "Welcome, Admin!" });
     } else {
       toast({ title: "Wrong password", variant: "destructive" });
