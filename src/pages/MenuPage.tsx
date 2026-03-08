@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useMenu } from "@/context/MenuContext";
 import MenuCard from "@/components/MenuCard";
 import CategoryFilter from "@/components/CategoryFilter";
@@ -10,7 +11,11 @@ import SEOHead from "@/components/SEOHead";
 
 const MenuPage = () => {
   const { menuItems, categories } = useMenu();
-  const [activeCategory, setActiveCategory] = useState("All");
+  const [searchParams] = useSearchParams();
+  const [activeCategory, setActiveCategory] = useState(() => {
+    const cat = searchParams.get("category");
+    return cat && categories.includes(cat) ? cat : "All";
+  });
   const [customizeItem, setCustomizeItem] = useState<MenuItem | null>(null);
   const [search, setSearch] = useState("");
   const [dietFilter, setDietFilter] = useState<"all" | "veg" | "nonveg">("all");
