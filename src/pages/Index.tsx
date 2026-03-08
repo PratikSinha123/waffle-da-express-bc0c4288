@@ -87,7 +87,7 @@ const Index = () => {
       </section>
 
       {/* Pop-Up Stall Banner */}
-      <section className="py-6 px-4 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, hsl(25, 60%, 35%), hsl(35, 70%, 50%))' }} 'linear-gradient(135deg, hsl(25, 60%, 35%), hsl(35, 70%, 50%))' }}>
+      <section className="py-6 px-4 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, hsl(25, 60%, 35%), hsl(35, 70%, 50%))' }}>
         <div className="absolute inset-0 bg-pattern-waffle opacity-10" />
         <div className="relative max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-4 text-center sm:text-left">
           <div className="w-12 h-12 rounded-full bg-primary-foreground/20 flex items-center justify-center shrink-0 backdrop-blur-sm">
