@@ -79,8 +79,8 @@ const CustomizePopup = ({ item, onClose }: CustomizePopupProps) => {
                   onClick={() => setSelectedPrice(item.price)}
                   className={`flex-1 py-3 rounded-xl text-sm font-medium border-2 transition-all ${
                     selectedPrice === item.price
-                      ? "border-accent bg-accent/15 text-accent shadow-sm"
-                      : "border-[hsl(30,20%,88%)] text-muted-foreground hover:border-accent/40"
+                      ? "border-accent bg-accent/10 text-accent shadow-sm"
+                      : "border-border text-muted-foreground hover:border-accent/40"
                   }`}
                 >
                   {item.priceLabel} - ₹{item.price}
