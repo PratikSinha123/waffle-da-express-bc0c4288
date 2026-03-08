@@ -103,24 +103,54 @@ const Index = () => {
       <section className="py-20 px-4 bg-pattern-dots relative">
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
         <div className="max-w-5xl mx-auto text-center">
-          <span className="text-sm font-medium text-accent uppercase tracking-widest mb-2 block">What we serve</span>
-          <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
+          <motion.span
+            className="text-sm font-medium text-accent uppercase tracking-widest mb-2 block"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.5 }}
+          >
+            What we serve
+          </motion.span>
+          <motion.h2
+            className="text-3xl sm:text-4xl font-bold text-foreground mb-2"
+            style={{ fontFamily: "'Playfair Display', serif" }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
             Explore Our <span className="text-gradient italic">Menu</span>
-          </h2>
-          <p className="text-muted-foreground mb-12">Tap a category to jump right in</p>
+          </motion.h2>
+          <motion.p
+            className="text-muted-foreground mb-12"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            Tap a category to jump right in
+          </motion.p>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {menuCategories.map((cat) => (
-              <Link
+            {menuCategories.map((cat, i) => (
+              <motion.div
                 key={cat}
-                to="/menu"
-                className="waffle-card-elevated p-5 text-center group"
+                initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, margin: "-30px" }}
+                transition={{ duration: 0.4, delay: 0.05 * i }}
               >
-                <span className="text-3xl mb-2 block group-hover:scale-125 transition-transform duration-300 animate-float" style={{ animationDelay: `${Math.random() * 2}s` }}>
-                  {categoryIcons[cat] || "🍽️"}
-                </span>
-                <span className="font-semibold text-foreground text-sm block">{cat}</span>
-                <span className="text-xs text-muted-foreground">{getCategoryCount(cat)} items</span>
-              </Link>
+                <Link
+                  to="/menu"
+                  className="waffle-card-elevated p-5 text-center group block"
+                >
+                  <span className="text-3xl mb-2 block group-hover:scale-125 transition-transform duration-300 animate-float" style={{ animationDelay: `${Math.random() * 2}s` }}>
+                    {categoryIcons[cat] || "🍽️"}
+                  </span>
+                  <span className="font-semibold text-foreground text-sm block">{cat}</span>
+                  <span className="text-xs text-muted-foreground">{getCategoryCount(cat)} items</span>
+                </Link>
+              </motion.div>
             ))}
           </div>
         </div>
