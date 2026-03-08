@@ -50,7 +50,7 @@ const CustomizePopup = ({ item, onClose }: CustomizePopupProps) => {
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-0 sm:p-4" onClick={onClose}>
       <div
-        className="bg-gradient-to-b from-[hsl(35,40%,99%)] to-[hsl(30,30%,94%)] w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl max-h-[85vh] flex flex-col shadow-[0_-10px_60px_-15px_rgba(0,0,0,0.3)] border border-[hsl(35,40%,90%)]"
+        className="bg-gradient-to-b from-card to-secondary w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl max-h-[85vh] flex flex-col shadow-[0_-10px_60px_-15px_rgba(0,0,0,0.2)] border border-border"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
