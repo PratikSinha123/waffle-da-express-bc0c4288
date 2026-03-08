@@ -12,3 +12,5 @@ Allow: /
 
 User-agent: *
 Allow: /
+
+Sitemap: https://waffle-da-express.lovable.app/sitemap.xml
