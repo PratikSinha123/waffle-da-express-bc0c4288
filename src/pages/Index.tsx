@@ -103,7 +103,7 @@ const Index = () => {
       </section>
 
       {/* Explore Our Menu */}
-     bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+      <section className="py-20 px-4 bg-pattern-dots relative">
         <div className="max-w-5xl mx-auto text-center">
           <motion.span
             className="text-sm font-medium text-accent uppercase tracking-widest mb-2 block"
