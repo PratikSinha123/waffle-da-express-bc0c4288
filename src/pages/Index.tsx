@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, UtensilsCrossed, Truck, Clock, MapPin, Phone, Clock3, Sparkles, CalendarDays } from "lucide-react";
 import { motion } from "framer-motion";
 import heroImage from "@/assets/hero-waffles.jpg";
+import wafflePatternBg from "@/assets/waffle-pattern-bg.jpg";
 import { useMenu } from "@/context/MenuContext";
 import SEOHead from "@/components/SEOHead";
 
