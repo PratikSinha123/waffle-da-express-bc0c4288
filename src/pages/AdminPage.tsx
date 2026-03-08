@@ -2,11 +2,86 @@ import { useState, useEffect, useRef } from "react";
 import { useOrders, OrderStatus, Offer } from "@/context/OrderContext";
 import { useMenu } from "@/context/MenuContext";
 import { useToast } from "@/hooks/use-toast";
-import { Download, Search, Plus, Pencil, Trash2, LogIn, LogOut, ChevronDown, Bell, Tag, Settings } from "lucide-react";
+import { Download, Search, Plus, Pencil, Trash2, LogIn, LogOut, ChevronDown, Bell, BellRing, Tag, Settings } from "lucide-react";
 import { MenuItem } from "@/data/menuData";
 import { getDeliveryFeeAmount, setDeliveryFeeAmount } from "@/context/CartContext";
+import { supabase } from "@/integrations/supabase/client";
 
 const ADMIN_PASSWORD = "waffle123";
+
+// Push notification subscription helper
+const subscribeToPush = async () => {
+  try {
+    if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
+      return { success: false, error: "Push notifications not supported on this browser" };
+    }
+
+    const permission = await Notification.requestPermission();
+    if (permission !== "granted") {
+      return { success: false, error: "Notification permission denied" };
+    }
+
+    // Register service worker
+    const registration = await navigator.serviceWorker.register("/sw.js");
+    await navigator.serviceWorker.ready;
+
+    // Get VAPID public key from edge function
+    const { data: vapidData, error: vapidError } = await supabase.functions.invoke("push-notify", {
+      body: null,
+      method: "GET",
+    });
+
+    // Try fetching VAPID key directly
+    const vapidRes = await fetch(
+      `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/push-notify?action=vapid-public-key`,
+      { headers: { "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY } }
+    );
+    const vapidJson = await vapidRes.json();
+    const vapidPublicKey = vapidJson.publicKey;
+
+    if (!vapidPublicKey) {
+      return { success: false, error: "Could not get VAPID key" };
+    }
+
+    // Convert VAPID key to Uint8Array
+    const urlBase64ToUint8Array = (base64String: string) => {
+      const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+      const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
+      const rawData = window.atob(base64);
+      return new Uint8Array([...rawData].map((char) => char.charCodeAt(0)));
+    };
+
+    // Subscribe to push
+    const subscription = await registration.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(vapidPublicKey),
+    });
+
+    const subJson = subscription.toJSON();
+
+    // Save subscription to backend
+    await fetch(
+      `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/push-notify?action=subscribe`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+        },
+        body: JSON.stringify({
+          endpoint: subJson.endpoint,
+          p256dh: subJson.keys?.p256dh,
+          auth: subJson.keys?.auth,
+        }),
+      }
+    );
+
+    return { success: true };
+  } catch (e: any) {
+    console.error("Push subscription error:", e);
+    return { success: false, error: e.message };
+  }
+};
 
 const AdminPage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
