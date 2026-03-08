@@ -142,7 +142,7 @@
 
   .section-divider {
     height: 2px;
-    background: linear-gradient(90deg, transparent, hsl(25 60% 35% / 0.15), hsl(40 80% 50% / 0.15), transparent);
+    background: linear-gradient(90deg, transparent, hsl(25 40% 38% / 0.1), hsl(35 55% 52% / 0.1), transparent);
   }
 
   .glow-accent {
