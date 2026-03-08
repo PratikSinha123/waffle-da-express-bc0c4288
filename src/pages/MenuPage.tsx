@@ -13,16 +13,19 @@ const MenuPage = () => {
   const [activeCategory, setActiveCategory] = useState("All");
   const [customizeItem, setCustomizeItem] = useState<MenuItem | null>(null);
   const [search, setSearch] = useState("");
+  const [dietFilter, setDietFilter] = useState<"all" | "veg" | "nonveg">("all");
 
   const filteredItems = useMemo(() => {
     let items = menuItems;
     if (activeCategory !== "All") items = items.filter((item) => item.category === activeCategory);
+    if (dietFilter === "veg") items = items.filter((item) => item.isVeg);
+    if (dietFilter === "nonveg") items = items.filter((item) => !item.isVeg);
     if (search.trim()) {
       const q = search.toLowerCase();
       items = items.filter((item) => item.name.toLowerCase().includes(q) || item.description.toLowerCase().includes(q));
     }
     return items;
-  }, [menuItems, activeCategory, search]);
+  }, [menuItems, activeCategory, search, dietFilter]);
 
   return (
     <div className="min-h-screen relative">
