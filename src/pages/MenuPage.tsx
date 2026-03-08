@@ -6,6 +6,7 @@ import CustomizePopup from "@/components/CustomizePopup";
 import { MenuItem } from "@/data/menuData";
 import { Search } from "lucide-react";
 import heroImage from "@/assets/hero-waffles.jpg";
+import SEOHead from "@/components/SEOHead";
 
 const MenuPage = () => {
   const { menuItems, categories } = useMenu();
@@ -25,6 +26,7 @@ const MenuPage = () => {
 
   return (
     <div className="min-h-screen relative">
+      <SEOHead title="Menu - Waffle Da! | Waffles, Burgers, Pizza & More" description="Browse our full menu of freshly made waffles, burgers, pizzas, sandwiches, shakes and more. Order online from Waffle Da!" />
       {/* Fixed background */}
       <div
         className="fixed inset-0 -z-10"

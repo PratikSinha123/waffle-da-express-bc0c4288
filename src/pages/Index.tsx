@@ -3,6 +3,7 @@ import { ArrowRight, UtensilsCrossed, Truck, Clock, MapPin, Phone, Clock3, Spark
 import { motion } from "framer-motion";
 import heroImage from "@/assets/hero-waffles.jpg";
 import { useMenu } from "@/context/MenuContext";
+import SEOHead from "@/components/SEOHead";
 
 const categoryIcons: Record<string, string> = {
   "Waffles": "🧇", "Waffle Cakes": "🎂", "Spiral Potatoes": "🥔",
@@ -21,6 +22,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
+      <SEOHead title="Waffle Da! - Freshly Made Waffles & More | Order Online" description="Order delicious freshly made waffles, burgers, pizzas, and more from Waffle Da! Fast delivery to your doorstep. Browse our menu and order now." />
       {/* Hero - Full screen */}
       <section className="relative h-[100vh] -mt-[4.25rem] overflow-hidden">
         <motion.div
