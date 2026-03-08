@@ -388,8 +388,23 @@ const OrdersPanel = () => {
   };
 
   const downloadCSV = () => {
+    let filtered = orders;
+    if (csvFromDate) {
+      const from = new Date(csvFromDate);
+      from.setHours(0, 0, 0, 0);
+      filtered = filtered.filter((o) => new Date(o.createdAt) >= from);
+    }
+    if (csvToDate) {
+      const to = new Date(csvToDate);
+      to.setHours(23, 59, 59, 999);
+      filtered = filtered.filter((o) => new Date(o.createdAt) <= to);
+    }
+    if (filtered.length === 0) {
+      toast({ title: "No orders found in selected date range" });
+      return;
+    }
     const headers = ["Order ID", "Customer Name", "Phone Number", "Address", "Order Type", "Items Ordered", "Add-ons", "Total Price", "Payment Method", "Order Status", "Order Date"];
-    const rows = orders.map((o) => [
+    const rows = filtered.map((o) => [
       o.id,
       o.customerName,
       o.phone,
@@ -408,7 +423,7 @@ const OrdersPanel = () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `waffle-da-orders-${new Date().toISOString().split("T")[0]}.csv`;
+    a.download = `waffle-da-orders-${csvFromDate || "all"}-to-${csvToDate || "now"}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   };
