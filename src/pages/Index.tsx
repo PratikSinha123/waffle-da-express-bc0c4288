@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, UtensilsCrossed, Truck, Clock, MapPin, Phone, Clock3, Sparkles } from "lucide-react";
+import { ArrowRight, UtensilsCrossed, Truck, Clock, MapPin, Phone, Clock3, Sparkles, CalendarDays } from "lucide-react";
 import heroImage from "@/assets/hero-waffles.jpg";
 import { useMenu } from "@/context/MenuContext";
 
