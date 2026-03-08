@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useOrders, OrderStatus, Order } from "@/context/OrderContext";
-import { Search, CheckCircle2, Clock, Truck, Package, Phone, MessageCircle } from "lucide-react";
-
-const ADMIN_WHATSAPP = "918979375554";
+import { Search, CheckCircle2, Clock, Truck, Package, Phone } from "lucide-react";
 
 const statusSteps: { status: OrderStatus; icon: typeof Package; label: string }[] = [
   { status: "Order Received", icon: Package, label: "Order Received" },
