@@ -54,8 +54,8 @@ const CustomizePopup = ({ item, onClose }: CustomizePopupProps) => {
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="relative flex items-center justify-between p-6 border-b border-[hsl(30,30%,88%)]">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-1.5 rounded-full bg-[hsl(30,20%,80%)] mt-2 sm:hidden" />
+        <div className="relative flex items-center justify-between p-6 border-b border-border">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-1.5 rounded-full bg-muted mt-2 sm:hidden" />
           <div>
             <h2 className="text-xl font-bold text-foreground" style={{ fontFamily: "'Playfair Display', serif" }}>{item.name}</h2>
             <p className="text-sm text-muted-foreground mt-0.5">Base price: ₹{item.price}</p>
