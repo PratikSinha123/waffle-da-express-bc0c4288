@@ -345,20 +345,30 @@ const NotificationBanner = () => {
   if (!order) return null;
 
   return (
-    <div className="mb-4 p-4 rounded-2xl bg-accent/10 border-2 border-accent animate-in slide-in-from-top-2">
+    <div className="mb-4 p-4 rounded-2xl border-2 border-red-500 animate-in slide-in-from-top-2 relative overflow-hidden"
+      style={{
+        animation: 'flash-red 1s ease-in-out infinite',
+        background: 'linear-gradient(135deg, hsl(0 80% 50% / 0.15), hsl(0 80% 40% / 0.25))',
+      }}>
+      <style>{`
+        @keyframes flash-red {
+          0%, 100% { border-color: hsl(0 80% 50%); box-shadow: 0 0 15px hsl(0 80% 50% / 0.4), inset 0 0 15px hsl(0 80% 50% / 0.1); }
+          50% { border-color: hsl(0 90% 60%); box-shadow: 0 0 30px hsl(0 80% 50% / 0.7), inset 0 0 30px hsl(0 80% 50% / 0.2); }
+        }
+      `}</style>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full waffle-gradient flex items-center justify-center animate-pulse">
-            <Bell className="w-5 h-5 text-primary-foreground" />
+          <div className="w-12 h-12 rounded-full bg-red-500 flex items-center justify-center animate-pulse shadow-lg shadow-red-500/50">
+            <Bell className="w-6 h-6 text-white" />
           </div>
           <div>
-            <p className="font-semibold text-foreground">🔔 New Order Received!</p>
-            <p className="text-sm text-muted-foreground">
+            <p className="font-bold text-red-400 text-lg">🚨 New Order Received!</p>
+            <p className="text-sm text-foreground font-medium">
               {order.id} • {order.customerName} • {order.orderType} • ₹{order.total}
             </p>
           </div>
         </div>
-        <button onClick={handleDismiss} className="px-4 py-2 rounded-xl bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity">
+        <button onClick={handleDismiss} className="px-5 py-2.5 rounded-xl bg-red-500 text-white text-sm font-bold hover:bg-red-600 transition-colors shadow-lg shadow-red-500/30 animate-pulse">
           ✓ Acknowledge
         </button>
       </div>
