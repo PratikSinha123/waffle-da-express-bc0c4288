@@ -183,7 +183,7 @@ const CustomizePopup = ({ item, onClose }: CustomizePopupProps) => {
           </div>
           <button
             onClick={handleAddToCart}
-            className="w-full py-4 rounded-2xl bg-gradient-to-r from-[hsl(var(--waffle-amber))] via-[hsl(var(--waffle-gold))] to-[hsl(var(--waffle-honey))] text-white font-semibold text-lg hover:opacity-95 transition-all shadow-lg hover:shadow-xl active:scale-[0.98]"
+            className="w-full py-4 rounded-2xl waffle-gradient-warm text-primary-foreground font-semibold text-lg hover:opacity-95 transition-all shadow-lg hover:shadow-xl active:scale-[0.98]"
           >
             Add to Cart
           </button>
