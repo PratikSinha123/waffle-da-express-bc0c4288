@@ -255,9 +255,15 @@ const TrackOrderPage = () => {
                         </div>
                       ))}
                     </div>
+
+                    <button
+                      onClick={() => handleReorder(items)}
+                      className="w-full py-3 rounded-xl waffle-gradient-warm text-primary-foreground font-semibold hover:opacity-95 transition-all flex items-center justify-center gap-2"
+                    >
+                      <RefreshCw className="w-4 h-4" /> Reorder
+                    </button>
                   </div>
                 );
-              })
             )}
           </div>
         )}
