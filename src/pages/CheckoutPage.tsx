@@ -118,12 +118,19 @@ const CheckoutPage = () => {
           <div className="waffle-card-elevated space-y-4">
             <h2 className="font-semibold text-foreground text-lg">Payment Method</h2>
             {(["Cashfree", "Cash On Delivery"] as const).map((method) => (
-              <button key={method} type="button" onClick={() => setPaymentMethod(method)}
-                className={`w-full px-4 py-4 rounded-xl border-2 text-left font-medium transition-all ${
-                  paymentMethod === method ? "border-primary bg-primary/10 text-primary" : "border-border text-foreground hover:border-primary/30"
-                }`}>
-                {method === "Cashfree" ? "💳 Pay Online (UPI / Cards / Netbanking)" : "💵 Cash On Delivery"}
-              </button>
+              <div key={method}>
+                <button type="button" onClick={() => method !== "Cashfree" && setPaymentMethod(method)}
+                  disabled={method === "Cashfree"}
+                  className={`w-full px-4 py-4 rounded-xl border-2 text-left font-medium transition-all ${
+                    method === "Cashfree" ? "border-border text-muted-foreground opacity-60 cursor-not-allowed" :
+                    paymentMethod === method ? "border-primary bg-primary/10 text-primary" : "border-border text-foreground hover:border-primary/30"
+                  }`}>
+                  {method === "Cashfree" ? "💳 Pay Online (UPI / Cards / Netbanking)" : "💵 Cash On Delivery"}
+                </button>
+                {method === "Cashfree" && (
+                  <p className="text-xs text-destructive mt-1.5 ml-1">⚠️ Temporarily unavailable due to technical issues</p>
+                )}
+              </div>
             ))}
           </div>
 
