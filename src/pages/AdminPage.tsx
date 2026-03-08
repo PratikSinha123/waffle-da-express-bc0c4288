@@ -252,24 +252,37 @@ const useOrderRingtone = () => {
   const playTone = () => {
     try {
       const audioCtx = getAudioContext();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.frequency.value = 880;
-      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-      osc.start(audioCtx.currentTime);
-      osc.stop(audioCtx.currentTime + 0.4);
+      const t = audioCtx.currentTime;
+
+      // Tone 1: Loud high-pitched alarm
+      const osc1 = audioCtx.createOscillator();
+      const gain1 = audioCtx.createGain();
+      osc1.type = 'square';
+      osc1.connect(gain1);
+      gain1.connect(audioCtx.destination);
+      osc1.frequency.setValueAtTime(1000, t);
+      osc1.frequency.setValueAtTime(1400, t + 0.15);
+      osc1.frequency.setValueAtTime(1000, t + 0.3);
+      gain1.gain.setValueAtTime(0.7, t);
+      gain1.gain.setValueAtTime(0.7, t + 0.4);
+      gain1.gain.exponentialRampToValueAtTime(0.01, t + 0.5);
+      osc1.start(t);
+      osc1.stop(t + 0.5);
+
+      // Tone 2: Urgent siren sweep
       const osc2 = audioCtx.createOscillator();
       const gain2 = audioCtx.createGain();
+      osc2.type = 'sawtooth';
       osc2.connect(gain2);
       gain2.connect(audioCtx.destination);
-      osc2.frequency.value = 1100;
-      gain2.gain.setValueAtTime(0.3, audioCtx.currentTime + 0.2);
-      gain2.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
-      osc2.start(audioCtx.currentTime + 0.2);
-      osc2.stop(audioCtx.currentTime + 0.6);
+      osc2.frequency.setValueAtTime(800, t + 0.5);
+      osc2.frequency.linearRampToValueAtTime(1600, t + 0.8);
+      osc2.frequency.linearRampToValueAtTime(800, t + 1.1);
+      gain2.gain.setValueAtTime(0.6, t + 0.5);
+      gain2.gain.setValueAtTime(0.6, t + 1.0);
+      gain2.gain.exponentialRampToValueAtTime(0.01, t + 1.2);
+      osc2.start(t + 0.5);
+      osc2.stop(t + 1.2);
     } catch (e) {
       console.error("Audio playback error:", e);
     }
