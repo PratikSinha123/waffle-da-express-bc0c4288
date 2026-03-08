@@ -31,13 +31,33 @@ interface PastOrder {
 
 const TrackOrderPage = () => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [phoneNumber, setPhoneNumber] = useState("");
   const [searched, setSearched] = useState(false);
   const [loading, setLoading] = useState(false);
   const { getOrdersByPhone, getOrder } = useOrders();
+  const { addToCart, clearCart } = useCart();
+  const { toast } = useToast();
   const [matchedOrders, setMatchedOrders] = useState<Order[]>([]);
   const [pastOrders, setPastOrders] = useState<PastOrder[]>([]);
   const [activeTab, setActiveTab] = useState<"active" | "history">("active");
+
+  const handleReorder = (items: any[]) => {
+    clearCart();
+    items.forEach((item: any) => {
+      const cartItem = {
+        id: `${item.menuItem?.id || item.id}-${Date.now()}-${Math.random()}`,
+        menuItem: item.menuItem || { id: item.id, name: item.name, price: item.price || item.selectedPrice, category: "", description: "", isVeg: true },
+        selectedAddOns: item.selectedAddOns || [],
+        quantity: item.quantity || 1,
+        selectedPrice: item.selectedPrice || item.price || 0,
+        selectedPriceLabel: item.selectedPriceLabel,
+      };
+      addToCart(cartItem);
+    });
+    toast({ title: "Items added to cart! 🛒" });
+    navigate("/cart");
+  };
 
   useEffect(() => {
     const id = searchParams.get("id");
