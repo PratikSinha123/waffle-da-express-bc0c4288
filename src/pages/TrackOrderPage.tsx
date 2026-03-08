@@ -19,15 +19,9 @@ const TrackOrderPage = () => {
 
   useEffect(() => {
     const id = searchParams.get("id");
-    const isNew = searchParams.get("new") === "true";
     if (id) {
       const order = getOrder(id);
-      if (order) {
-        setPhoneNumber(order.phone);
-        setMatchedOrders([order]);
-        setSearched(true);
-        setIsNewOrder(isNew);
-      }
+      if (order) { setPhoneNumber(order.phone); setMatchedOrders([order]); setSearched(true); }
     }
   }, [searchParams, getOrder]);
 
