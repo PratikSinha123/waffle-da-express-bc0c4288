@@ -3,6 +3,7 @@ import { ArrowRight, UtensilsCrossed, Truck, Clock, MapPin, Phone, Clock3, Spark
 import { motion } from "framer-motion";
 import heroImage from "@/assets/hero-waffles.jpg";
 import { useMenu } from "@/context/MenuContext";
+import SEOHead from "@/components/SEOHead";
 
 const categoryIcons: Record<string, string> = {
   "Waffles": "🧇", "Waffle Cakes": "🎂", "Spiral Potatoes": "🥔",
