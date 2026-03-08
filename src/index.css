@@ -146,7 +146,7 @@
   }
 
   .glow-accent {
-    box-shadow: 0 0 20px hsl(40 80% 50% / 0.15), 0 0 40px hsl(25 60% 35% / 0.05);
+    box-shadow: 0 0 20px hsl(35 55% 52% / 0.1), 0 0 40px hsl(25 40% 38% / 0.04);
   }
 
   .bg-pattern-dots {
