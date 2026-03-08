@@ -106,7 +106,7 @@
   }
 
   .waffle-card-elevated:hover {
-    box-shadow: 0 8px 30px -4px hsl(25 60% 35% / 0.18), 0 4px 12px -2px hsl(25 60% 35% / 0.1);
+    box-shadow: 0 8px 30px -4px hsl(25 40% 38% / 0.14), 0 4px 12px -2px hsl(25 40% 38% / 0.08);
     transform: translateY(-2px);
   }
 
