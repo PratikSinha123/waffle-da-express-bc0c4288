@@ -89,15 +89,19 @@
 
 @layer components {
   .waffle-gradient {
-    background: linear-gradient(135deg, hsl(25 40% 38%), hsl(35 55% 52%));
+    background: linear-gradient(135deg, hsl(32 50% 42%), hsl(36 60% 50%));
   }
 
   .waffle-gradient-warm {
-    background: linear-gradient(135deg, hsl(25 40% 38%), hsl(30 55% 50%), hsl(35 60% 54%));
+    background: linear-gradient(135deg, hsl(28 45% 36%), hsl(34 65% 48%), hsl(38 70% 52%));
   }
 
   .waffle-gradient-soft {
-    background: linear-gradient(160deg, hsl(38 25% 98%), hsl(36 30% 96%), hsl(34 22% 93%));
+    background: linear-gradient(160deg, hsl(40 22% 98%), hsl(38 28% 96%), hsl(36 20% 92%));
+  }
+
+  .dark .waffle-gradient-soft {
+    background: linear-gradient(160deg, hsl(28 18% 13%), hsl(28 16% 15%), hsl(28 14% 17%));
   }
 
   .waffle-card {
@@ -107,12 +111,20 @@
 
   .waffle-card-elevated {
     @apply bg-card rounded-2xl border border-border p-4 transition-all duration-300;
-    box-shadow: 0 4px 20px -4px hsl(25 40% 38% / 0.08), 0 2px 8px -2px hsl(25 40% 38% / 0.04);
+    box-shadow: 0 4px 20px -4px hsl(32 50% 42% / 0.08), 0 2px 8px -2px hsl(32 50% 42% / 0.04);
   }
 
   .waffle-card-elevated:hover {
-    box-shadow: 0 8px 30px -4px hsl(25 40% 38% / 0.14), 0 4px 12px -2px hsl(25 40% 38% / 0.08);
+    box-shadow: 0 8px 30px -4px hsl(32 50% 42% / 0.14), 0 4px 12px -2px hsl(32 50% 42% / 0.08);
     transform: translateY(-2px);
+  }
+
+  .dark .waffle-card-elevated {
+    box-shadow: 0 4px 20px -4px hsl(0 0% 0% / 0.3), 0 2px 8px -2px hsl(0 0% 0% / 0.2);
+  }
+
+  .dark .waffle-card-elevated:hover {
+    box-shadow: 0 8px 30px -4px hsl(0 0% 0% / 0.4), 0 4px 12px -2px hsl(0 0% 0% / 0.25);
   }
 
   .category-chip {
@@ -121,7 +133,7 @@
 
   .category-chip-active {
     @apply bg-primary text-primary-foreground shadow-sm;
-    box-shadow: 0 4px 12px -2px hsl(25 40% 38% / 0.3);
+    box-shadow: 0 4px 12px -2px hsl(32 50% 42% / 0.3);
   }
 
   .category-chip-inactive {
@@ -130,7 +142,11 @@
 
   .page-header {
     @apply relative overflow-hidden rounded-3xl mb-8 p-8 sm:p-10;
-    background: linear-gradient(135deg, hsl(25 40% 38% / 0.06), hsl(35 55% 52% / 0.04), hsl(38 25% 98%));
+    background: linear-gradient(135deg, hsl(32 50% 42% / 0.06), hsl(36 60% 50% / 0.04), hsl(40 22% 98%));
+  }
+
+  .dark .page-header {
+    background: linear-gradient(135deg, hsl(36 55% 50% / 0.12), hsl(36 60% 48% / 0.08), hsl(28 18% 13%));
   }
 
   .page-header::before {
@@ -141,33 +157,44 @@
     width: 300px;
     height: 300px;
     border-radius: 50%;
-    background: radial-gradient(circle, hsl(35 55% 52% / 0.08), transparent 70%);
+    background: radial-gradient(circle, hsl(36 60% 50% / 0.08), transparent 70%);
     pointer-events: none;
   }
 
   .section-divider {
     height: 2px;
-    background: linear-gradient(90deg, transparent, hsl(25 40% 38% / 0.1), hsl(35 55% 52% / 0.1), transparent);
+    background: linear-gradient(90deg, transparent, hsl(32 50% 42% / 0.1), hsl(36 60% 50% / 0.1), transparent);
   }
 
   .glow-accent {
-    box-shadow: 0 0 20px hsl(35 55% 52% / 0.1), 0 0 40px hsl(25 40% 38% / 0.04);
+    box-shadow: 0 0 20px hsl(36 60% 50% / 0.1), 0 0 40px hsl(32 50% 42% / 0.04);
   }
 
   .bg-pattern-dots {
-    background-image: radial-gradient(hsl(25 40% 38% / 0.03) 1px, transparent 1px);
+    background-image: radial-gradient(hsl(32 50% 42% / 0.03) 1px, transparent 1px);
     background-size: 24px 24px;
+  }
+
+  .dark .bg-pattern-dots {
+    background-image: radial-gradient(hsl(36 55% 50% / 0.05) 1px, transparent 1px);
   }
 
   .bg-pattern-waffle {
     background-image: 
-      linear-gradient(hsl(25 40% 38% / 0.02) 1px, transparent 1px),
-      linear-gradient(90deg, hsl(25 40% 38% / 0.02) 1px, transparent 1px);
+      linear-gradient(hsl(32 50% 42% / 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(32 50% 42% / 0.02) 1px, transparent 1px);
     background-size: 32px 32px;
   }
 
   .text-gradient {
-    background: linear-gradient(135deg, hsl(25 40% 38%), hsl(35 55% 52%));
+    background: linear-gradient(135deg, hsl(32 50% 42%), hsl(36 60% 50%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .dark .text-gradient {
+    background: linear-gradient(135deg, hsl(36 55% 50%), hsl(38 70% 55%));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
