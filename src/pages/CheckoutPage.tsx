@@ -56,14 +56,7 @@ const CheckoutPage = () => {
 
     clearCart();
     toast({ title: "Order placed!", description: `Your order ID is ${orderId}` });
-
-    // Send WhatsApp notification to admin
-    const itemsList = items.map(i => `• ${i.menuItem.name} x${i.quantity} - ₹${i.selectedPrice * i.quantity}`).join('\n');
-    const whatsappMsg = `🧇 *New Order from Waffle Da!*\n\n*Order ID:* ${orderId}\n*Customer:* ${form.name.trim()}\n*Phone:* ${form.phone.trim()}\n*Type:* ${orderType}\n*Payment:* ${paymentMethod}\n\n*Items:*\n${itemsList}\n\n*Subtotal:* ₹${subtotal}\n*Delivery Fee:* ₹${deliveryFee}\n*Total:* ₹${total}${form.notes.trim() ? `\n\n*Notes:* ${form.notes.trim()}` : ''}${needsAddress ? `\n*Address:* ${form.address.trim()}` : ''}`;
-    const waLink = `https://wa.me/918979375554?text=${encodeURIComponent(whatsappMsg)}`;
-    window.open(waLink, '_blank');
-
-    navigate(`/track-order?id=${orderId}`);
+    navigate(`/track-order?id=${orderId}&new=true`);
   };
 
   return (
