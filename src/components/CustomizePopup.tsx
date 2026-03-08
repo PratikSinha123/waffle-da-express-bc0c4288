@@ -50,19 +50,19 @@ const CustomizePopup = ({ item, onClose }: CustomizePopupProps) => {
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-0 sm:p-4" onClick={onClose}>
       <div
-        className="bg-gradient-to-b from-[hsl(35,40%,99%)] to-[hsl(30,30%,94%)] w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl max-h-[85vh] flex flex-col shadow-[0_-10px_60px_-15px_rgba(0,0,0,0.3)] border border-[hsl(35,40%,90%)]"
+        className="bg-gradient-to-b from-card to-secondary w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl max-h-[85vh] flex flex-col shadow-[0_-10px_60px_-15px_rgba(0,0,0,0.2)] border border-border"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="relative flex items-center justify-between p-6 border-b border-[hsl(30,30%,88%)]">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-1.5 rounded-full bg-[hsl(30,20%,80%)] mt-2 sm:hidden" />
+        <div className="relative flex items-center justify-between p-6 border-b border-border">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-1.5 rounded-full bg-muted mt-2 sm:hidden" />
           <div>
             <h2 className="text-xl font-bold text-foreground" style={{ fontFamily: "'Playfair Display', serif" }}>{item.name}</h2>
             <p className="text-sm text-muted-foreground mt-0.5">Base price: ₹{item.price}</p>
           </div>
           <button
             onClick={onClose}
-            className="p-2.5 rounded-full bg-[hsl(25,20%,90%)] hover:bg-[hsl(25,30%,85%)] transition-colors"
+            className="p-2.5 rounded-full bg-secondary hover:bg-muted transition-colors"
           >
             <X className="w-4 h-4 text-foreground" />
           </button>
@@ -79,8 +79,8 @@ const CustomizePopup = ({ item, onClose }: CustomizePopupProps) => {
                   onClick={() => setSelectedPrice(item.price)}
                   className={`flex-1 py-3 rounded-xl text-sm font-medium border-2 transition-all ${
                     selectedPrice === item.price
-                      ? "border-accent bg-accent/15 text-accent shadow-sm"
-                      : "border-[hsl(30,20%,88%)] text-muted-foreground hover:border-accent/40"
+                      ? "border-accent bg-accent/10 text-accent shadow-sm"
+                      : "border-border text-muted-foreground hover:border-accent/40"
                   }`}
                 >
                   {item.priceLabel} - ₹{item.price}
@@ -89,8 +89,8 @@ const CustomizePopup = ({ item, onClose }: CustomizePopupProps) => {
                   onClick={() => setSelectedPrice(item.price2!)}
                   className={`flex-1 py-3 rounded-xl text-sm font-medium border-2 transition-all ${
                     selectedPrice === item.price2
-                      ? "border-accent bg-accent/15 text-accent shadow-sm"
-                      : "border-[hsl(30,20%,88%)] text-muted-foreground hover:border-accent/40"
+                      ? "border-accent bg-accent/10 text-accent shadow-sm"
+                      : "border-border text-muted-foreground hover:border-accent/40"
                   }`}
                 >
                   {item.priceLabel2} - ₹{item.price2}
@@ -105,7 +105,7 @@ const CustomizePopup = ({ item, onClose }: CustomizePopupProps) => {
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="w-11 h-11 rounded-full border-2 border-[hsl(30,20%,85%)] flex items-center justify-center hover:bg-[hsl(30,20%,90%)] transition-colors"
+                className="w-11 h-11 rounded-full border-2 border-border flex items-center justify-center hover:bg-secondary transition-colors"
               >
                 <Minus className="w-4 h-4 text-muted-foreground" />
               </button>
@@ -136,8 +136,8 @@ const CustomizePopup = ({ item, onClose }: CustomizePopupProps) => {
                         onClick={() => toggleAddOn(addOn)}
                         className={`px-4 py-3 rounded-xl text-sm font-medium border-2 transition-all text-left ${
                           isSelected
-                            ? "border-accent bg-gradient-to-r from-accent/15 to-accent/5 text-accent shadow-sm"
-                            : "border-[hsl(30,20%,88%)] text-foreground hover:border-accent/40 hover:bg-[hsl(35,30%,96%)]"
+                            ? "border-accent bg-accent/10 text-accent shadow-sm"
+                            : "border-border text-foreground hover:border-accent/40 hover:bg-secondary"
                         }`}
                       >
                         {addOn.name}
@@ -161,8 +161,8 @@ const CustomizePopup = ({ item, onClose }: CustomizePopupProps) => {
                         onClick={() => toggleAddOn(addOn)}
                         className={`px-4 py-3 rounded-xl text-sm font-medium border-2 transition-all text-left ${
                           isSelected
-                            ? "border-accent bg-gradient-to-r from-accent/15 to-accent/5 text-accent shadow-sm"
-                            : "border-[hsl(30,20%,88%)] text-foreground hover:border-accent/40 hover:bg-[hsl(35,30%,96%)]"
+                            ? "border-accent bg-accent/10 text-accent shadow-sm"
+                            : "border-border text-foreground hover:border-accent/40 hover:bg-secondary"
                         }`}
                       >
                         {addOn.name}
@@ -176,14 +176,14 @@ const CustomizePopup = ({ item, onClose }: CustomizePopupProps) => {
         </div>
 
         {/* Footer */}
-        <div className="p-6 border-t border-[hsl(30,30%,88%)] bg-[hsl(35,35%,97%)]">
+        <div className="p-6 border-t border-border bg-secondary/50">
           <div className="flex items-center justify-between mb-4">
             <span className="text-muted-foreground font-medium">Total</span>
             <span className="text-2xl font-bold text-foreground" style={{ fontFamily: "'Playfair Display', serif" }}>₹{totalPrice}</span>
           </div>
           <button
             onClick={handleAddToCart}
-            className="w-full py-4 rounded-2xl bg-gradient-to-r from-[hsl(var(--waffle-amber))] via-[hsl(var(--waffle-gold))] to-[hsl(var(--waffle-honey))] text-white font-semibold text-lg hover:opacity-95 transition-all shadow-lg hover:shadow-xl active:scale-[0.98]"
+            className="w-full py-4 rounded-2xl waffle-gradient-warm text-primary-foreground font-semibold text-lg hover:opacity-95 transition-all shadow-lg hover:shadow-xl active:scale-[0.98]"
           >
             Add to Cart
           </button>
