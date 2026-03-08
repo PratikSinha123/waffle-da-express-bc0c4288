@@ -105,7 +105,7 @@ const CustomizePopup = ({ item, onClose }: CustomizePopupProps) => {
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="w-11 h-11 rounded-full border-2 border-[hsl(30,20%,85%)] flex items-center justify-center hover:bg-[hsl(30,20%,90%)] transition-colors"
+                className="w-11 h-11 rounded-full border-2 border-border flex items-center justify-center hover:bg-secondary transition-colors"
               >
                 <Minus className="w-4 h-4 text-muted-foreground" />
               </button>
