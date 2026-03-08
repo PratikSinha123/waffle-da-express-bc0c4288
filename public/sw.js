@@ -12,14 +12,22 @@ self.addEventListener("push", (event) => {
     }
   }
 
+  // 10 seconds of continuous vibration pattern (200ms on, 100ms off repeating)
+  const vibratePattern = [];
+  for (let i = 0; i < 33; i++) {
+    vibratePattern.push(200, 100);
+  }
+  vibratePattern.push(200); // ends with vibrate
+
   const options = {
     body: data.body,
     icon: "/favicon.ico",
     badge: "/favicon.ico",
-    vibrate: [200, 100, 200, 100, 200],
+    vibrate: vibratePattern,
     tag: "new-order",
     renotify: true,
     requireInteraction: true,
+    silent: false,
     data: { orderId: data.orderId, url: "/admin" },
   };
 

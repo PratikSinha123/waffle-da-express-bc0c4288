@@ -171,9 +171,9 @@ const AdminPage = () => {
 
   return (
     <div className="min-h-screen max-w-7xl mx-auto px-4 py-6">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold text-foreground">Admin Panel</h1>
-        <div className="flex items-center gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+        <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Admin Panel</h1>
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
           {/* Push notification subscribe button */}
           <PushSubscribeButton />
           {/* Notification bell */}
@@ -188,7 +188,7 @@ const AdminPage = () => {
               </span>
             )}
           </button>
-          <button onClick={() => setIsLoggedIn(false)} className="px-4 py-2 rounded-xl border border-border text-sm font-medium text-foreground hover:bg-secondary">
+          <button onClick={() => setIsLoggedIn(false)} className="px-3 sm:px-4 py-2 rounded-xl border border-border text-sm font-medium text-foreground hover:bg-secondary">
             <LogOut className="w-4 h-4 inline mr-1" /> Logout
           </button>
         </div>
@@ -254,7 +254,9 @@ const useOrderRingtone = () => {
       } catch {}
     };
     playTone();
-    intervalRef.current = setInterval(playTone, 2500);
+    // Beep every 800ms for 10 seconds continuous
+    intervalRef.current = setInterval(playTone, 800);
+    setTimeout(() => stopRinging(), 10000);
   };
 
   const stopRinging = () => {
