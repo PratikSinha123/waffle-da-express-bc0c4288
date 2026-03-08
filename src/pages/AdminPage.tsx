@@ -222,15 +222,39 @@ const AdminPage = () => {
   );
 };
 
+// Shared AudioContext - initialized on first user interaction
+let sharedAudioCtx: AudioContext | null = null;
+
+const getAudioContext = () => {
+  if (!sharedAudioCtx) {
+    sharedAudioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+  }
+  // Resume if suspended (browser policy)
+  if (sharedAudioCtx.state === "suspended") {
+    sharedAudioCtx.resume();
+  }
+  return sharedAudioCtx;
+};
+
+// Initialize AudioContext on any user click (bypasses browser autoplay policy)
+if (typeof window !== "undefined") {
+  const initAudio = () => {
+    getAudioContext();
+    document.removeEventListener("click", initAudio);
+  };
+  document.addEventListener("click", initAudio);
+}
+
 // Ringtone notification sound hook
 const useOrderRingtone = () => {
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const startRinging = () => {
     stopRinging();
     const playTone = () => {
       try {
-        const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+        const audioCtx = getAudioContext();
         // First beep
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
@@ -251,18 +275,24 @@ const useOrderRingtone = () => {
         gain2.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
         osc2.start(audioCtx.currentTime + 0.2);
         osc2.stop(audioCtx.currentTime + 0.6);
-      } catch {}
+      } catch (e) {
+        console.error("Audio playback error:", e);
+      }
     };
     playTone();
     // Beep every 800ms for 10 seconds continuous
     intervalRef.current = setInterval(playTone, 800);
-    setTimeout(() => stopRinging(), 10000);
+    timeoutRef.current = setTimeout(() => stopRinging(), 10000);
   };
 
   const stopRinging = () => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
+    }
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
     }
   };
 
@@ -285,8 +315,6 @@ const NotificationBanner = () => {
       setLatestOrder(newest.id);
       setShowBanner(true);
       startRinging();
-      const timer = setTimeout(() => stopRinging(), 30000);
-      return () => clearTimeout(timer);
     }
     prevCountRef.current = orders.length;
   }, [orders]);
