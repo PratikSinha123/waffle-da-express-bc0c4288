@@ -7,43 +7,43 @@
 
 @layer base {
   :root {
-    --background: 35 30% 95%;
-    --foreground: 25 30% 15%;
+    --background: 36 30% 96%;
+    --foreground: 25 20% 22%;
 
-    --card: 35 40% 98%;
-    --card-foreground: 25 30% 15%;
+    --card: 38 25% 98%;
+    --card-foreground: 25 20% 22%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 25 30% 15%;
+    --popover: 36 20% 99%;
+    --popover-foreground: 25 20% 22%;
 
-    --primary: 25 60% 35%;
-    --primary-foreground: 35 40% 98%;
+    --primary: 25 40% 38%;
+    --primary-foreground: 38 30% 97%;
 
-    --secondary: 35 35% 90%;
-    --secondary-foreground: 25 30% 15%;
+    --secondary: 34 22% 92%;
+    --secondary-foreground: 25 20% 25%;
 
-    --muted: 35 20% 92%;
-    --muted-foreground: 25 10% 45%;
+    --muted: 35 18% 93%;
+    --muted-foreground: 25 12% 48%;
 
-    --accent: 25 70% 45%;
-    --accent-foreground: 35 40% 98%;
+    --accent: 28 45% 42%;
+    --accent-foreground: 38 30% 97%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 65% 55%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 30 20% 88%;
-    --input: 30 20% 88%;
-    --ring: 25 60% 35%;
+    --border: 32 16% 89%;
+    --input: 32 16% 89%;
+    --ring: 25 35% 40%;
 
     --radius: 0.75rem;
 
-    --waffle-brown: 25 60% 35%;
-    --waffle-cream: 35 30% 95%;
-    --waffle-gold: 40 80% 50%;
-    --waffle-light: 35 40% 98%;
-    --waffle-dark: 25 30% 20%;
-    --waffle-amber: 30 85% 55%;
-    --waffle-honey: 38 90% 58%;
+    --waffle-brown: 25 40% 38%;
+    --waffle-cream: 36 30% 96%;
+    --waffle-gold: 35 55% 52%;
+    --waffle-light: 38 25% 98%;
+    --waffle-dark: 25 22% 18%;
+    --waffle-amber: 30 55% 50%;
+    --waffle-honey: 35 60% 54%;
   }
 
   .dark {
