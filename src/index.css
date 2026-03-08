@@ -7,67 +7,72 @@
 
 @layer base {
   :root {
-    --background: 36 30% 96%;
-    --foreground: 25 20% 22%;
+    --background: 38 28% 96%;
+    --foreground: 28 22% 20%;
 
-    --card: 38 25% 98%;
-    --card-foreground: 25 20% 22%;
+    --card: 40 22% 98%;
+    --card-foreground: 28 22% 20%;
 
-    --popover: 36 20% 99%;
-    --popover-foreground: 25 20% 22%;
+    --popover: 40 20% 99%;
+    --popover-foreground: 28 22% 20%;
 
-    --primary: 25 40% 38%;
-    --primary-foreground: 38 30% 97%;
+    --primary: 32 50% 42%;
+    --primary-foreground: 40 30% 97%;
 
-    --secondary: 34 22% 92%;
-    --secondary-foreground: 25 20% 25%;
+    --secondary: 36 20% 91%;
+    --secondary-foreground: 28 22% 22%;
 
-    --muted: 35 18% 93%;
-    --muted-foreground: 25 12% 48%;
+    --muted: 37 16% 92%;
+    --muted-foreground: 28 10% 46%;
 
-    --accent: 28 45% 42%;
-    --accent-foreground: 38 30% 97%;
+    --accent: 36 60% 50%;
+    --accent-foreground: 28 30% 15%;
 
-    --destructive: 0 65% 55%;
+    --destructive: 0 60% 52%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 32 16% 89%;
-    --input: 32 16% 89%;
-    --ring: 25 35% 40%;
+    --border: 35 14% 88%;
+    --input: 35 14% 88%;
+    --ring: 32 45% 44%;
 
     --radius: 0.75rem;
 
-    --waffle-brown: 25 40% 38%;
-    --waffle-cream: 36 30% 96%;
-    --waffle-gold: 35 55% 52%;
-    --waffle-light: 38 25% 98%;
-    --waffle-dark: 25 22% 18%;
-    --waffle-amber: 30 55% 50%;
-    --waffle-honey: 35 60% 54%;
+    --waffle-brown: 32 50% 42%;
+    --waffle-cream: 38 28% 96%;
+    --waffle-gold: 36 60% 50%;
+    --waffle-light: 40 22% 98%;
+    --waffle-dark: 28 24% 16%;
+    --waffle-amber: 34 65% 48%;
+    --waffle-honey: 38 70% 52%;
   }
 
   .dark {
-    --background: 25 18% 11%;
-    --foreground: 36 25% 92%;
-    --card: 25 16% 15%;
-    --card-foreground: 36 25% 92%;
-    --popover: 25 16% 15%;
-    --popover-foreground: 36 25% 92%;
-    --primary: 35 45% 52%;
-    --primary-foreground: 25 18% 11%;
-    --secondary: 25 14% 20%;
-    --secondary-foreground: 36 25% 92%;
-    --muted: 25 12% 20%;
-    --muted-foreground: 35 12% 58%;
-    --accent: 35 50% 48%;
-    --accent-foreground: 25 18% 11%;
-    --destructive: 0 55% 35%;
+    --background: 28 20% 9%;
+    --foreground: 38 22% 90%;
+    --card: 28 18% 13%;
+    --card-foreground: 38 22% 90%;
+    --popover: 28 18% 13%;
+    --popover-foreground: 38 22% 90%;
+    --primary: 36 55% 50%;
+    --primary-foreground: 28 20% 9%;
+    --secondary: 28 16% 18%;
+    --secondary-foreground: 38 22% 88%;
+    --muted: 28 14% 17%;
+    --muted-foreground: 36 14% 55%;
+    --accent: 36 60% 48%;
+    --accent-foreground: 28 20% 9%;
+    --destructive: 0 50% 40%;
     --destructive-foreground: 0 0% 100%;
-    --border: 25 12% 22%;
-    --input: 25 12% 22%;
-    --ring: 35 45% 52%;
-    --waffle-amber: 30 55% 50%;
-    --waffle-honey: 35 60% 54%;
+    --border: 28 14% 20%;
+    --input: 28 14% 20%;
+    --ring: 36 55% 50%;
+    --waffle-brown: 32 45% 38%;
+    --waffle-cream: 38 20% 18%;
+    --waffle-gold: 36 55% 50%;
+    --waffle-light: 28 18% 13%;
+    --waffle-dark: 28 24% 8%;
+    --waffle-amber: 34 60% 46%;
+    --waffle-honey: 38 65% 50%;
   }
 }
 
@@ -84,15 +89,19 @@
 
 @layer components {
   .waffle-gradient {
-    background: linear-gradient(135deg, hsl(25 40% 38%), hsl(35 55% 52%));
+    background: linear-gradient(135deg, hsl(32 50% 42%), hsl(36 60% 50%));
   }
 
   .waffle-gradient-warm {
-    background: linear-gradient(135deg, hsl(25 40% 38%), hsl(30 55% 50%), hsl(35 60% 54%));
+    background: linear-gradient(135deg, hsl(28 45% 36%), hsl(34 65% 48%), hsl(38 70% 52%));
   }
 
   .waffle-gradient-soft {
-    background: linear-gradient(160deg, hsl(38 25% 98%), hsl(36 30% 96%), hsl(34 22% 93%));
+    background: linear-gradient(160deg, hsl(40 22% 98%), hsl(38 28% 96%), hsl(36 20% 92%));
+  }
+
+  .dark .waffle-gradient-soft {
+    background: linear-gradient(160deg, hsl(28 18% 13%), hsl(28 16% 15%), hsl(28 14% 17%));
   }
 
   .waffle-card {
@@ -102,12 +111,20 @@
 
   .waffle-card-elevated {
     @apply bg-card rounded-2xl border border-border p-4 transition-all duration-300;
-    box-shadow: 0 4px 20px -4px hsl(25 40% 38% / 0.08), 0 2px 8px -2px hsl(25 40% 38% / 0.04);
+    box-shadow: 0 4px 20px -4px hsl(32 50% 42% / 0.08), 0 2px 8px -2px hsl(32 50% 42% / 0.04);
   }
 
   .waffle-card-elevated:hover {
-    box-shadow: 0 8px 30px -4px hsl(25 40% 38% / 0.14), 0 4px 12px -2px hsl(25 40% 38% / 0.08);
+    box-shadow: 0 8px 30px -4px hsl(32 50% 42% / 0.14), 0 4px 12px -2px hsl(32 50% 42% / 0.08);
     transform: translateY(-2px);
+  }
+
+  .dark .waffle-card-elevated {
+    box-shadow: 0 4px 20px -4px hsl(0 0% 0% / 0.3), 0 2px 8px -2px hsl(0 0% 0% / 0.2);
+  }
+
+  .dark .waffle-card-elevated:hover {
+    box-shadow: 0 8px 30px -4px hsl(0 0% 0% / 0.4), 0 4px 12px -2px hsl(0 0% 0% / 0.25);
   }
 
   .category-chip {
@@ -116,7 +133,7 @@
 
   .category-chip-active {
     @apply bg-primary text-primary-foreground shadow-sm;
-    box-shadow: 0 4px 12px -2px hsl(25 40% 38% / 0.3);
+    box-shadow: 0 4px 12px -2px hsl(32 50% 42% / 0.3);
   }
 
   .category-chip-inactive {
@@ -125,7 +142,11 @@
 
   .page-header {
     @apply relative overflow-hidden rounded-3xl mb-8 p-8 sm:p-10;
-    background: linear-gradient(135deg, hsl(25 40% 38% / 0.06), hsl(35 55% 52% / 0.04), hsl(38 25% 98%));
+    background: linear-gradient(135deg, hsl(32 50% 42% / 0.06), hsl(36 60% 50% / 0.04), hsl(40 22% 98%));
+  }
+
+  .dark .page-header {
+    background: linear-gradient(135deg, hsl(36 55% 50% / 0.12), hsl(36 60% 48% / 0.08), hsl(28 18% 13%));
   }
 
   .page-header::before {
@@ -136,33 +157,44 @@
     width: 300px;
     height: 300px;
     border-radius: 50%;
-    background: radial-gradient(circle, hsl(35 55% 52% / 0.08), transparent 70%);
+    background: radial-gradient(circle, hsl(36 60% 50% / 0.08), transparent 70%);
     pointer-events: none;
   }
 
   .section-divider {
     height: 2px;
-    background: linear-gradient(90deg, transparent, hsl(25 40% 38% / 0.1), hsl(35 55% 52% / 0.1), transparent);
+    background: linear-gradient(90deg, transparent, hsl(32 50% 42% / 0.1), hsl(36 60% 50% / 0.1), transparent);
   }
 
   .glow-accent {
-    box-shadow: 0 0 20px hsl(35 55% 52% / 0.1), 0 0 40px hsl(25 40% 38% / 0.04);
+    box-shadow: 0 0 20px hsl(36 60% 50% / 0.1), 0 0 40px hsl(32 50% 42% / 0.04);
   }
 
   .bg-pattern-dots {
-    background-image: radial-gradient(hsl(25 40% 38% / 0.03) 1px, transparent 1px);
+    background-image: radial-gradient(hsl(32 50% 42% / 0.03) 1px, transparent 1px);
     background-size: 24px 24px;
+  }
+
+  .dark .bg-pattern-dots {
+    background-image: radial-gradient(hsl(36 55% 50% / 0.05) 1px, transparent 1px);
   }
 
   .bg-pattern-waffle {
     background-image: 
-      linear-gradient(hsl(25 40% 38% / 0.02) 1px, transparent 1px),
-      linear-gradient(90deg, hsl(25 40% 38% / 0.02) 1px, transparent 1px);
+      linear-gradient(hsl(32 50% 42% / 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(32 50% 42% / 0.02) 1px, transparent 1px);
     background-size: 32px 32px;
   }
 
   .text-gradient {
-    background: linear-gradient(135deg, hsl(25 40% 38%), hsl(35 55% 52%));
+    background: linear-gradient(135deg, hsl(32 50% 42%), hsl(36 60% 50%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .dark .text-gradient {
+    background: linear-gradient(135deg, hsl(36 55% 50%), hsl(38 70% 55%));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { ShoppingCart, Menu, X } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useState } from "react";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const Navbar = () => {
   const { totalItems } = useCart();
@@ -42,7 +43,8 @@ const Navbar = () => {
               ))}
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
               <Link to="/cart" className="relative p-2.5 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors">
                 <ShoppingCart className="w-5 h-5 text-primary" />
                 {totalItems > 0 && (
