@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { useOrders, OrderStatus, Order } from "@/context/OrderContext";
+import { useCart } from "@/context/CartContext";
 import { supabase } from "@/integrations/supabase/client";
-import { Search, CheckCircle2, Clock, Truck, Package, Phone, History } from "lucide-react";
+import { Search, CheckCircle2, Clock, Truck, Package, Phone, History, RefreshCw } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const statusSteps: { status: OrderStatus; icon: typeof Package; label: string }[] = [
   { status: "Order Received", icon: Package, label: "Order Received" },
@@ -29,13 +31,33 @@ interface PastOrder {
 
 const TrackOrderPage = () => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [phoneNumber, setPhoneNumber] = useState("");
   const [searched, setSearched] = useState(false);
   const [loading, setLoading] = useState(false);
   const { getOrdersByPhone, getOrder } = useOrders();
+  const { addToCart, clearCart } = useCart();
+  const { toast } = useToast();
   const [matchedOrders, setMatchedOrders] = useState<Order[]>([]);
   const [pastOrders, setPastOrders] = useState<PastOrder[]>([]);
   const [activeTab, setActiveTab] = useState<"active" | "history">("active");
+
+  const handleReorder = (items: any[]) => {
+    clearCart();
+    items.forEach((item: any) => {
+      const cartItem = {
+        id: `${item.menuItem?.id || item.id}-${Date.now()}-${Math.random()}`,
+        menuItem: item.menuItem || { id: item.id, name: item.name, price: item.price || item.selectedPrice, category: "", description: "", isVeg: true },
+        selectedAddOns: item.selectedAddOns || [],
+        quantity: item.quantity || 1,
+        selectedPrice: item.selectedPrice || item.price || 0,
+        selectedPriceLabel: item.selectedPriceLabel,
+      };
+      addToCart(cartItem);
+    });
+    toast({ title: "Items added to cart! 🛒" });
+    navigate("/cart");
+  };
 
   useEffect(() => {
     const id = searchParams.get("id");
@@ -233,6 +255,13 @@ const TrackOrderPage = () => {
                         </div>
                       ))}
                     </div>
+
+                    <button
+                      onClick={() => handleReorder(items)}
+                      className="w-full py-3 rounded-xl waffle-gradient-warm text-primary-foreground font-semibold hover:opacity-95 transition-all flex items-center justify-center gap-2"
+                    >
+                      <RefreshCw className="w-4 h-4" /> Reorder
+                    </button>
                   </div>
                 );
               })
