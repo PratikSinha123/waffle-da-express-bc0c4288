@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { useOrders, OrderStatus, Order } from "@/context/OrderContext";
+import { useCart } from "@/context/CartContext";
 import { supabase } from "@/integrations/supabase/client";
-import { Search, CheckCircle2, Clock, Truck, Package, Phone, History } from "lucide-react";
+import { Search, CheckCircle2, Clock, Truck, Package, Phone, History, RefreshCw } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const statusSteps: { status: OrderStatus; icon: typeof Package; label: string }[] = [
   { status: "Order Received", icon: Package, label: "Order Received" },
