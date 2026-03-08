@@ -135,7 +135,7 @@ const PushSubscribeButton = () => {
 const AdminPage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [password, setPassword] = useState("");
-  const [activeTab, setActiveTab] = useState<"orders" | "menu" | "offers">("orders");
+  const [activeTab, setActiveTab] = useState<"orders" | "menu" | "offers" | "history">("orders");
   const { toast } = useToast();
   const { unseenCount, markAllSeen } = useOrders();
 
@@ -198,8 +198,8 @@ const AdminPage = () => {
       <NotificationBanner />
 
       {/* Tabs */}
-      <div className="flex gap-2 mb-6">
-        {(["orders", "menu", "offers"] as const).map((tab) => (
+      <div className="flex gap-2 mb-6 flex-wrap">
+        {(["orders", "menu", "offers", "history"] as const).map((tab) => (
           <button
             key={tab}
             onClick={() => { setActiveTab(tab); if (tab === "orders") markAllSeen(); }}
@@ -207,7 +207,7 @@ const AdminPage = () => {
               activeTab === tab ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"
             }`}
           >
-            {tab === "orders" ? "Orders" : tab === "menu" ? "Menu" : "Offers"}
+            {tab === "orders" ? "Orders" : tab === "menu" ? "Menu" : tab === "offers" ? "Offers" : "History"}
             {tab === "orders" && unseenCount > 0 && (
               <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-xs font-bold w-4 h-4 rounded-full flex items-center justify-center">
                 {unseenCount}
@@ -217,7 +217,7 @@ const AdminPage = () => {
         ))}
       </div>
 
-      {activeTab === "orders" ? <OrdersPanel /> : activeTab === "menu" ? <MenuPanel /> : <OffersPanel />}
+      {activeTab === "orders" ? <OrdersPanel /> : activeTab === "menu" ? <MenuPanel /> : activeTab === "offers" ? <OffersPanel /> : <DeletedOrdersPanel />}
     </div>
   );
 };
@@ -846,6 +846,121 @@ const OffersPanel = () => {
           </div>
         )}
       </div>
+    </div>
+  );
+};
+// Deleted Orders History Panel
+const DeletedOrdersPanel = () => {
+  const [deletedOrders, setDeletedOrders] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
+  const [confirmPermanentDelete, setConfirmPermanentDelete] = useState<string | null>(null);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const fetchDeleted = async () => {
+      const { data, error } = await supabase
+        .from("deleted_orders")
+        .select("*")
+        .order("deleted_at", { ascending: false });
+      if (data) setDeletedOrders(data);
+      if (error) console.error("Failed to fetch deleted orders:", error);
+      setLoading(false);
+    };
+    fetchDeleted();
+  }, []);
+
+  const handlePermanentDelete = async (id: string) => {
+    await supabase.from("deleted_orders").delete().eq("id", id);
+    setDeletedOrders((prev) => prev.filter((o) => o.id !== id));
+    setConfirmPermanentDelete(null);
+    setExpandedOrder(null);
+    toast({ title: "Order permanently deleted" });
+  };
+
+  if (loading) {
+    return <div className="text-center py-12 text-muted-foreground">Loading history...</div>;
+  }
+
+  return (
+    <div>
+      <div className="flex items-center gap-2 mb-4">
+        <Trash2 className="w-4 h-4 text-muted-foreground" />
+        <span className="text-sm text-muted-foreground">Showing {deletedOrders.length} deleted orders</span>
+      </div>
+
+      {deletedOrders.length === 0 ? (
+        <div className="waffle-card text-center py-12">
+          <p className="text-muted-foreground">No deleted orders yet</p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {deletedOrders.map((order) => {
+            const items = (order.items || []) as any[];
+            return (
+              <div key={order.id} className="waffle-card opacity-75">
+                <div
+                  className="flex items-center justify-between p-4 cursor-pointer"
+                  onClick={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
+                >
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-mono text-sm font-semibold text-foreground">{order.id}</span>
+                      <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-destructive/10 text-destructive">Deleted</span>
+                      <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-muted text-muted-foreground">{order.order_type}</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {order.customer_name} • {order.phone} • ₹{order.total}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Ordered: {new Date(order.created_at).toLocaleString()} • Deleted: {new Date(order.deleted_at).toLocaleString()}
+                    </p>
+                  </div>
+                  <ChevronDown className={`w-5 h-5 text-muted-foreground transition-transform ${expandedOrder === order.id ? "rotate-180" : ""}`} />
+                </div>
+
+                {expandedOrder === order.id && (
+                  <div className="px-4 pb-4 border-t border-border pt-3 space-y-3">
+                    <div className="grid grid-cols-2 gap-2 text-sm">
+                      <div><span className="text-muted-foreground">Phone:</span> <span className="text-foreground">{order.phone}</span></div>
+                      <div><span className="text-muted-foreground">Payment:</span> <span className="text-foreground">{order.payment_method}</span></div>
+                      {order.address && <div className="col-span-2"><span className="text-muted-foreground">Address:</span> <span className="text-foreground">{order.address}</span></div>}
+                      {order.notes && <div className="col-span-2"><span className="text-muted-foreground">Notes:</span> <span className="text-foreground">{order.notes}</span></div>}
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-foreground mb-1">Items:</p>
+                      {items.map((item: any, i: number) => (
+                        <div key={i} className="text-sm text-muted-foreground">
+                          {item.quantity}x {item.menuItem?.name || "Unknown"} — ₹{item.selectedPrice * item.quantity}
+                          {item.selectedAddOns?.length > 0 && (
+                            <span className="text-xs ml-1">(+{item.selectedAddOns.map((a: any) => a.name).join(", ")})</span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                    <div className="text-sm text-foreground font-medium">
+                      Subtotal: ₹{order.subtotal} • Delivery: ₹{order.delivery_fee} • <strong>Total: ₹{order.total}</strong>
+                    </div>
+                    <div className="pt-2">
+                      {confirmPermanentDelete === order.id ? (
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-destructive font-medium">Permanently delete?</span>
+                          <button onClick={() => setConfirmPermanentDelete(null)} className="px-3 py-1 rounded-lg text-xs border border-border text-muted-foreground">Cancel</button>
+                          <button onClick={() => handlePermanentDelete(order.id)} className="px-3 py-1 rounded-lg text-xs bg-destructive text-destructive-foreground">Yes, Delete</button>
+                        </div>
+                      ) : (
+                        <button onClick={() => setConfirmPermanentDelete(order.id)} className="flex items-center gap-1 text-xs text-destructive hover:underline">
+                          <Trash2 className="w-3 h-3" /> Permanently Delete
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

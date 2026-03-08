@@ -271,6 +271,27 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   const deleteOrder = (id: string) => {
+    // Archive the order before deleting
+    const order = orders.find((o) => o.id === id);
+    if (order) {
+      supabase.from("deleted_orders").insert({
+        id: order.id,
+        customer_name: order.customerName,
+        phone: order.phone,
+        address: order.address,
+        notes: order.notes,
+        items: JSON.parse(JSON.stringify(order.items)),
+        payment_method: order.paymentMethod,
+        order_type: order.orderType,
+        status: order.status,
+        subtotal: order.subtotal,
+        delivery_fee: order.deliveryFee,
+        total: order.total,
+        created_at: order.createdAt,
+      } as any).then(({ error }) => {
+        if (error) console.error("Failed to archive order:", error);
+      });
+    }
     setOrders((prev) => prev.filter((o) => o.id !== id));
     supabase.from("orders").delete().eq("id", id).then(({ error }) => {
       if (error) console.error("Failed to delete order:", error);
