@@ -149,8 +149,12 @@ const OrdersPanel = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
-  const [deliveryFee, setDeliveryFeeLocal] = useState(() => getDeliveryFeeAmount());
+  const [deliveryFee, setDeliveryFeeLocal] = useState(DEFAULT_DELIVERY_FEE);
   const [editingFee, setEditingFee] = useState(false);
+
+  useEffect(() => {
+    getDeliveryFeeAmount().then(setDeliveryFeeLocal);
+  }, []);
 
   const filteredOrders = orders.filter(
     (o) =>
