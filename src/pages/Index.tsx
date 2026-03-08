@@ -165,14 +165,27 @@ const Index = () => {
             { icon: UtensilsCrossed, title: "Fresh & Tasty", desc: "Made with premium ingredients, prepared fresh for every order", emoji: "✨" },
             { icon: Truck, title: "Fast Delivery", desc: "Quick delivery right to your doorstep in minimum time", emoji: "🚀" },
             { icon: Clock, title: "Track Live", desc: "Real-time order tracking so you know exactly when it arrives", emoji: "📍" },
-          ].map((feature) => (
-            <div key={feature.title} className="waffle-card-elevated text-center p-8 bg-card/80 backdrop-blur-sm">
-              <div className="w-16 h-16 rounded-2xl waffle-gradient-warm flex items-center justify-center mx-auto mb-5 glow-accent">
+          ].map((feature, i) => (
+            <motion.div
+              key={feature.title}
+              className="waffle-card-elevated text-center p-8 bg-card/80 backdrop-blur-sm"
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.5, delay: 0.15 * i }}
+            >
+              <motion.div
+                className="w-16 h-16 rounded-2xl waffle-gradient-warm flex items-center justify-center mx-auto mb-5 glow-accent"
+                initial={{ scale: 0 }}
+                whileInView={{ scale: 1 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.4, delay: 0.15 * i + 0.2, type: "spring", stiffness: 200 }}
+              >
                 <feature.icon className="w-7 h-7 text-primary-foreground" />
-              </div>
+              </motion.div>
               <h3 className="font-bold text-foreground text-lg mb-2">{feature.title} {feature.emoji}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">{feature.desc}</p>
-            </div>
+            </motion.div>
           ))}
         </div>
       </section>
