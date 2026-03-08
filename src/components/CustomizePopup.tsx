@@ -62,7 +62,7 @@ const CustomizePopup = ({ item, onClose }: CustomizePopupProps) => {
           </div>
           <button
             onClick={onClose}
-            className="p-2.5 rounded-full bg-[hsl(25,20%,90%)] hover:bg-[hsl(25,30%,85%)] transition-colors"
+            className="p-2.5 rounded-full bg-secondary hover:bg-muted transition-colors"
           >
             <X className="w-4 h-4 text-foreground" />
           </button>
