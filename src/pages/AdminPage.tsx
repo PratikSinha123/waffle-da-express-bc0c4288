@@ -133,7 +133,7 @@ const PushSubscribeButton = () => {
 };
 
 const AdminPage = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(() => localStorage.getItem("waffle_admin") === "true");
   const [password, setPassword] = useState("");
   const [activeTab, setActiveTab] = useState<"orders" | "menu" | "offers" | "history">("orders");
   const { toast } = useToast();
@@ -143,6 +143,7 @@ const AdminPage = () => {
     e.preventDefault();
     if (password === ADMIN_PASSWORD) {
       setIsLoggedIn(true);
+      localStorage.setItem("waffle_admin", "true");
       toast({ title: "Welcome, Admin!" });
     } else {
       toast({ title: "Wrong password", variant: "destructive" });
@@ -188,7 +189,7 @@ const AdminPage = () => {
               </span>
             )}
           </button>
-          <button onClick={() => setIsLoggedIn(false)} className="px-3 sm:px-4 py-2 rounded-xl border border-border text-sm font-medium text-foreground hover:bg-secondary">
+          <button onClick={() => { setIsLoggedIn(false); localStorage.removeItem("waffle_admin"); }} className="px-3 sm:px-4 py-2 rounded-xl border border-border text-sm font-medium text-foreground hover:bg-secondary">
             <LogOut className="w-4 h-4 inline mr-1" /> Logout
           </button>
         </div>
