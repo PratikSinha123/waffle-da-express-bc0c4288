@@ -56,7 +56,7 @@ const CheckoutPage = () => {
 
     clearCart();
     toast({ title: "Order placed!", description: `Your order ID is ${orderId}` });
-    navigate(`/track-order?id=${orderId}&new=true`);
+    navigate(`/track-order?id=${orderId}`);
   };
 
   return (
