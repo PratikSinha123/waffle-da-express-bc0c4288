@@ -2,11 +2,13 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
 import { CartProvider } from "@/context/CartContext";
 import { OrderProvider } from "@/context/OrderContext";
 import { MenuProvider } from "@/context/MenuContext";
 import Navbar from "@/components/Navbar";
+import PageTransition from "@/components/PageTransition";
 import Index from "./pages/Index";
 import MenuPage from "./pages/MenuPage";
 import CartPage from "./pages/CartPage";
@@ -19,6 +21,25 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+const AnimatedRoutes = () => {
+  const location = useLocation();
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<PageTransition><Index /></PageTransition>} />
+        <Route path="/menu" element={<PageTransition><MenuPage /></PageTransition>} />
+        <Route path="/cart" element={<PageTransition><CartPage /></PageTransition>} />
+        <Route path="/checkout" element={<PageTransition><CheckoutPage /></PageTransition>} />
+        <Route path="/track-order" element={<PageTransition><TrackOrderPage /></PageTransition>} />
+        <Route path="/offers" element={<PageTransition><OffersPage /></PageTransition>} />
+        <Route path="/payment-status" element={<PageTransition><PaymentStatusPage /></PageTransition>} />
+        <Route path="/admin" element={<PageTransition><AdminPage /></PageTransition>} />
+        <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
+      </Routes>
+    </AnimatePresence>
+  );
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -29,17 +50,7 @@ const App = () => (
             <Sonner />
             <BrowserRouter>
               <Navbar />
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/menu" element={<MenuPage />} />
-                <Route path="/cart" element={<CartPage />} />
-                <Route path="/checkout" element={<CheckoutPage />} />
-                <Route path="/track-order" element={<TrackOrderPage />} />
-                <Route path="/offers" element={<OffersPage />} />
-                <Route path="/payment-status" element={<PaymentStatusPage />} />
-                <Route path="/admin" element={<AdminPage />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
+              <AnimatedRoutes />
             </BrowserRouter>
           </OrderProvider>
         </CartProvider>
