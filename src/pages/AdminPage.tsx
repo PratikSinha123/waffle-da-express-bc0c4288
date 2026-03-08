@@ -198,8 +198,8 @@ const AdminPage = () => {
       <NotificationBanner />
 
       {/* Tabs */}
-      <div className="flex gap-2 mb-6">
-        {(["orders", "menu", "offers"] as const).map((tab) => (
+      <div className="flex gap-2 mb-6 flex-wrap">
+        {(["orders", "menu", "offers", "history"] as const).map((tab) => (
           <button
             key={tab}
             onClick={() => { setActiveTab(tab); if (tab === "orders") markAllSeen(); }}
@@ -207,7 +207,7 @@ const AdminPage = () => {
               activeTab === tab ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"
             }`}
           >
-            {tab === "orders" ? "Orders" : tab === "menu" ? "Menu" : "Offers"}
+            {tab === "orders" ? "Orders" : tab === "menu" ? "Menu" : tab === "offers" ? "Offers" : "History"}
             {tab === "orders" && unseenCount > 0 && (
               <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-xs font-bold w-4 h-4 rounded-full flex items-center justify-center">
                 {unseenCount}
@@ -217,7 +217,7 @@ const AdminPage = () => {
         ))}
       </div>
 
-      {activeTab === "orders" ? <OrdersPanel /> : activeTab === "menu" ? <MenuPanel /> : <OffersPanel />}
+      {activeTab === "orders" ? <OrdersPanel /> : activeTab === "menu" ? <MenuPanel /> : activeTab === "offers" ? <OffersPanel /> : <DeletedOrdersPanel />}
     </div>
   );
 };
