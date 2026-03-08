@@ -48,35 +48,39 @@ const CustomizePopup = ({ item, onClose }: CustomizePopupProps) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 p-0 sm:p-4">
-      <div className="bg-card w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl max-h-[85vh] flex flex-col shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-0 sm:p-4" onClick={onClose}>
+      <div
+        className="bg-gradient-to-b from-[hsl(35,40%,99%)] to-[hsl(30,30%,94%)] w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl max-h-[85vh] flex flex-col shadow-[0_-10px_60px_-15px_rgba(0,0,0,0.3)] border border-[hsl(35,40%,90%)]"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-border">
+        <div className="relative flex items-center justify-between p-6 border-b border-[hsl(30,30%,88%)]">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-1.5 rounded-full bg-[hsl(30,20%,80%)] mt-2 sm:hidden" />
           <div>
-            <h2 className="text-xl font-bold text-foreground">{item.name}</h2>
-            <p className="text-sm text-muted-foreground">Base price: ₹{item.price}</p>
+            <h2 className="text-xl font-bold text-foreground" style={{ fontFamily: "'Playfair Display', serif" }}>{item.name}</h2>
+            <p className="text-sm text-muted-foreground mt-0.5">Base price: ₹{item.price}</p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-full hover:bg-secondary transition-colors"
+            className="p-2.5 rounded-full bg-[hsl(25,20%,90%)] hover:bg-[hsl(25,30%,85%)] transition-colors"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4 text-foreground" />
           </button>
         </div>
 
         {/* Scrollable content */}
-        <div className="flex-1 overflow-y-auto p-5 space-y-5">
+        <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {/* Size selector for items with 2 prices */}
           {item.price2 && (
             <div>
-              <h3 className="font-semibold text-foreground mb-3">Select Size</h3>
+              <h3 className="font-semibold text-foreground mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>Select Size</h3>
               <div className="flex gap-3">
                 <button
                   onClick={() => setSelectedPrice(item.price)}
                   className={`flex-1 py-3 rounded-xl text-sm font-medium border-2 transition-all ${
                     selectedPrice === item.price
-                      ? "border-primary bg-primary/10 text-primary"
-                      : "border-border text-muted-foreground"
+                      ? "border-accent bg-accent/15 text-accent shadow-sm"
+                      : "border-[hsl(30,20%,88%)] text-muted-foreground hover:border-accent/40"
                   }`}
                 >
                   {item.priceLabel} - ₹{item.price}
@@ -85,8 +89,8 @@ const CustomizePopup = ({ item, onClose }: CustomizePopupProps) => {
                   onClick={() => setSelectedPrice(item.price2!)}
                   className={`flex-1 py-3 rounded-xl text-sm font-medium border-2 transition-all ${
                     selectedPrice === item.price2
-                      ? "border-primary bg-primary/10 text-primary"
-                      : "border-border text-muted-foreground"
+                      ? "border-accent bg-accent/15 text-accent shadow-sm"
+                      : "border-[hsl(30,20%,88%)] text-muted-foreground hover:border-accent/40"
                   }`}
                 >
                   {item.priceLabel2} - ₹{item.price2}
@@ -97,18 +101,18 @@ const CustomizePopup = ({ item, onClose }: CustomizePopupProps) => {
 
           {/* Quantity */}
           <div>
-            <h3 className="font-semibold text-foreground mb-3">Quantity</h3>
+            <h3 className="font-semibold text-foreground mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>Quantity</h3>
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="w-10 h-10 rounded-full border-2 border-border flex items-center justify-center hover:bg-secondary transition-colors"
+                className="w-11 h-11 rounded-full border-2 border-[hsl(30,20%,85%)] flex items-center justify-center hover:bg-[hsl(30,20%,90%)] transition-colors"
               >
-                <Minus className="w-4 h-4" />
+                <Minus className="w-4 h-4 text-muted-foreground" />
               </button>
-              <span className="text-xl font-bold w-8 text-center">{quantity}</span>
+              <span className="text-xl font-bold w-8 text-center text-foreground">{quantity}</span>
               <button
                 onClick={() => setQuantity(quantity + 1)}
-                className="w-10 h-10 rounded-full border-2 border-primary bg-primary text-primary-foreground flex items-center justify-center hover:opacity-90 transition-opacity"
+                className="w-11 h-11 rounded-full bg-accent text-accent-foreground flex items-center justify-center hover:opacity-90 transition-opacity shadow-md"
               >
                 <Plus className="w-4 h-4" />
               </button>
@@ -120,18 +124,20 @@ const CustomizePopup = ({ item, onClose }: CustomizePopupProps) => {
             <>
               {/* ₹20 Add-ons */}
               <div>
-                <h3 className="font-semibold text-foreground mb-3">Add-ons @ ₹20</h3>
-                <div className="grid grid-cols-2 gap-2">
+                <h3 className="font-semibold text-foreground mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>
+                  Add-ons <span className="text-accent font-normal">@ ₹20</span>
+                </h3>
+                <div className="grid grid-cols-2 gap-2.5">
                   {addOns20.map((addOn) => {
                     const isSelected = selectedAddOns.find((a) => a.id === addOn.id);
                     return (
                       <button
                         key={addOn.id}
                         onClick={() => toggleAddOn(addOn)}
-                        className={`px-3 py-2.5 rounded-xl text-sm font-medium border-2 transition-all text-left ${
+                        className={`px-4 py-3 rounded-xl text-sm font-medium border-2 transition-all text-left ${
                           isSelected
-                            ? "border-primary bg-primary/10 text-primary"
-                            : "border-border text-foreground hover:border-primary/30"
+                            ? "border-accent bg-gradient-to-r from-accent/15 to-accent/5 text-accent shadow-sm"
+                            : "border-[hsl(30,20%,88%)] text-foreground hover:border-accent/40 hover:bg-[hsl(35,30%,96%)]"
                         }`}
                       >
                         {addOn.name}
@@ -143,18 +149,20 @@ const CustomizePopup = ({ item, onClose }: CustomizePopupProps) => {
 
               {/* ₹30 Add-ons */}
               <div>
-                <h3 className="font-semibold text-foreground mb-3">Add-ons @ ₹30</h3>
-                <div className="grid grid-cols-2 gap-2">
+                <h3 className="font-semibold text-foreground mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>
+                  Add-ons <span className="text-accent font-normal">@ ₹30</span>
+                </h3>
+                <div className="grid grid-cols-2 gap-2.5">
                   {addOns30.map((addOn) => {
                     const isSelected = selectedAddOns.find((a) => a.id === addOn.id);
                     return (
                       <button
                         key={addOn.id}
                         onClick={() => toggleAddOn(addOn)}
-                        className={`px-3 py-2.5 rounded-xl text-sm font-medium border-2 transition-all text-left ${
+                        className={`px-4 py-3 rounded-xl text-sm font-medium border-2 transition-all text-left ${
                           isSelected
-                            ? "border-primary bg-primary/10 text-primary"
-                            : "border-border text-foreground hover:border-primary/30"
+                            ? "border-accent bg-gradient-to-r from-accent/15 to-accent/5 text-accent shadow-sm"
+                            : "border-[hsl(30,20%,88%)] text-foreground hover:border-accent/40 hover:bg-[hsl(35,30%,96%)]"
                         }`}
                       >
                         {addOn.name}
@@ -168,14 +176,14 @@ const CustomizePopup = ({ item, onClose }: CustomizePopupProps) => {
         </div>
 
         {/* Footer */}
-        <div className="p-5 border-t border-border">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-muted-foreground">Total</span>
-            <span className="text-2xl font-bold text-foreground">₹{totalPrice}</span>
+        <div className="p-6 border-t border-[hsl(30,30%,88%)] bg-[hsl(35,35%,97%)]">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-muted-foreground font-medium">Total</span>
+            <span className="text-2xl font-bold text-foreground" style={{ fontFamily: "'Playfair Display', serif" }}>₹{totalPrice}</span>
           </div>
           <button
             onClick={handleAddToCart}
-            className="w-full py-4 rounded-2xl waffle-gradient text-primary-foreground font-semibold text-lg hover:opacity-95 transition-opacity"
+            className="w-full py-4 rounded-2xl bg-gradient-to-r from-[hsl(var(--waffle-amber))] via-[hsl(var(--waffle-gold))] to-[hsl(var(--waffle-honey))] text-white font-semibold text-lg hover:opacity-95 transition-all shadow-lg hover:shadow-xl active:scale-[0.98]"
           >
             Add to Cart
           </button>
