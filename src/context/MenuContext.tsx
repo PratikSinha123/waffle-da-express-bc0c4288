@@ -12,8 +12,16 @@ interface MenuContextType {
 
 const MenuContext = createContext<MenuContextType | undefined>(undefined);
 
+const MENU_VERSION = "v2"; // bump this to force refresh cached menu
+
 export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [menuItems, setMenuItems] = useState<MenuItem[]>(() => {
+    const savedVersion = localStorage.getItem("waffle-da-menu-version");
+    if (savedVersion !== MENU_VERSION) {
+      localStorage.removeItem("waffle-da-menu");
+      localStorage.setItem("waffle-da-menu-version", MENU_VERSION);
+      return defaultMenuItems;
+    }
     const saved = localStorage.getItem("waffle-da-menu");
     return saved ? JSON.parse(saved) : defaultMenuItems;
   });
