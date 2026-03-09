@@ -102,10 +102,10 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     fetchAll();
   }, []);
 
-  // Realtime subscription for orders + fallback polling
+  // Realtime subscription for orders + aggressive polling fallback
   useEffect(() => {
     let isActive = true;
-    let pollInterval = 3000;
+    const POLL_INTERVAL = 1500; // 1.5s for near-instant updates
     let timeoutId: ReturnType<typeof setTimeout>;
 
     const channel = supabase
@@ -117,20 +117,12 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             if (prev.find((o) => o.id === newOrder.id)) return prev;
             return [newOrder, ...prev];
           });
-          try {
-            const audio = new Audio("data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdW+Jj4yKg3xzb3N8hoyQjomDfHRwc3yEjJCOiIN8dHBzfISMkI6Ig3x0cHN8hIyQjoiDfHRwc3yEjJCOiIN8dHBzfA==");
-            audio.volume = 0.3;
-            audio.play().catch(() => {});
-          } catch {}
-          pollInterval = 3000;
         } else if (payload.eventType === "UPDATE") {
           const updated = rowToOrder(payload.new);
           setOrders((prev) => prev.map((o) => (o.id === updated.id ? updated : o)));
-          pollInterval = 3000;
         } else if (payload.eventType === "DELETE") {
           const deletedId = (payload.old as any).id;
           setOrders((prev) => prev.filter((o) => o.id !== deletedId));
-          pollInterval = 3000;
         }
       })
       .subscribe((status, err) => {
@@ -139,7 +131,7 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         }
       });
 
-    // Fallback polling to catch missed events
+    // Aggressive polling fallback
     const poll = async () => {
       if (!isActive) return;
       try {
@@ -150,19 +142,9 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         if (data) {
           setOrders((prev) => {
             const newOrders = data.map(rowToOrder);
-            // Check if data actually changed
-            if (JSON.stringify(prev.map(o => o.id + o.status + o.seen)) !== 
-                JSON.stringify(newOrders.map(o => o.id + o.status + o.seen))) {
-              // Play sound if new order appeared
-              if (newOrders.length > prev.length) {
-                try {
-                  const audio = new Audio("data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdW+Jj4yKg3xzb3N8hoyQjomDfHRwc3yEjJCOiIN8dHBzfISMkI6Ig3x0cHN8hIyQjoiDfHRwc3yEjJCOiIN8dHBzfA==");
-                  audio.volume = 0.3;
-                  audio.play().catch(() => {});
-                } catch {}
-              }
-              return newOrders;
-            }
+            const prevKey = prev.map(o => o.id + o.status + o.seen).join("|");
+            const newKey = newOrders.map(o => o.id + o.status + o.seen).join("|");
+            if (prevKey !== newKey) return newOrders;
             return prev;
           });
         }
@@ -170,11 +152,11 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         console.error("Orders polling error:", e);
       }
       if (isActive) {
-        timeoutId = setTimeout(poll, pollInterval);
+        timeoutId = setTimeout(poll, POLL_INTERVAL);
       }
     };
 
-    timeoutId = setTimeout(poll, pollInterval);
+    timeoutId = setTimeout(poll, POLL_INTERVAL);
 
     return () => {
       isActive = false;

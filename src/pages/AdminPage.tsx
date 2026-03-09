@@ -223,93 +223,89 @@ const AdminPage = () => {
   );
 };
 
-// Shared AudioContext - initialized on first user interaction
-let sharedAudioCtx: AudioContext | null = null;
-
-const getAudioContext = () => {
-  if (!sharedAudioCtx) {
-    sharedAudioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+// Generate a beep WAV as a data URI (works in background tabs unlike AudioContext)
+const generateBeepDataUri = () => {
+  const sampleRate = 8000;
+  const duration = 0.4;
+  const freq1 = 1000;
+  const freq2 = 1400;
+  const numSamples = Math.floor(sampleRate * duration);
+  const data = new Uint8Array(numSamples);
+  
+  for (let i = 0; i < numSamples; i++) {
+    const t = i / sampleRate;
+    const freq = t < duration / 2 ? freq1 : freq2;
+    const sample = Math.sin(2 * Math.PI * freq * t) * 0.8;
+    data[i] = Math.floor((sample + 1) * 127.5);
   }
-  // Resume if suspended (browser policy)
-  if (sharedAudioCtx.state === "suspended") {
-    sharedAudioCtx.resume();
-  }
-  return sharedAudioCtx;
+  
+  // Create WAV header
+  const wavSize = 44 + numSamples;
+  const wav = new Uint8Array(wavSize);
+  const view = new DataView(wav.buffer);
+  
+  // RIFF header
+  wav.set([82, 73, 70, 70]); // "RIFF"
+  view.setUint32(4, wavSize - 8, true);
+  wav.set([87, 65, 86, 69], 8); // "WAVE"
+  
+  // fmt chunk
+  wav.set([102, 109, 116, 32], 12); // "fmt "
+  view.setUint32(16, 16, true); // chunk size
+  view.setUint16(20, 1, true); // PCM
+  view.setUint16(22, 1, true); // mono
+  view.setUint32(24, sampleRate, true);
+  view.setUint32(28, sampleRate, true); // byte rate
+  view.setUint16(32, 1, true); // block align
+  view.setUint16(34, 8, true); // bits per sample
+  
+  // data chunk
+  wav.set([100, 97, 116, 97], 36); // "data"
+  view.setUint32(40, numSamples, true);
+  wav.set(data, 44);
+  
+  const binary = String.fromCharCode(...wav);
+  return `data:audio/wav;base64,${btoa(binary)}`;
 };
 
-// Initialize AudioContext on any user click (bypasses browser autoplay policy)
-if (typeof window !== "undefined") {
-  const initAudio = () => {
-    getAudioContext();
-    document.removeEventListener("click", initAudio);
-  };
-  document.addEventListener("click", initAudio);
-}
+const BEEP_DATA_URI = generateBeepDataUri();
 
-// Ringtone notification sound hook - uses Web Worker to avoid background tab throttling
+// Ringtone using Audio elements (works in background tabs)
 const useOrderRingtone = () => {
-  const workerRef = useRef<Worker | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const countRef = useRef(0);
+  const MAX_BEEPS = 15;
+  const BEEP_INTERVAL = 1200;
 
-  const playTone = () => {
+  const playBeep = () => {
     try {
-      const audioCtx = getAudioContext();
-      const t = audioCtx.currentTime;
-
-      // Tone 1: Loud high-pitched alarm
-      const osc1 = audioCtx.createOscillator();
-      const gain1 = audioCtx.createGain();
-      osc1.type = 'square';
-      osc1.connect(gain1);
-      gain1.connect(audioCtx.destination);
-      osc1.frequency.setValueAtTime(1000, t);
-      osc1.frequency.setValueAtTime(1400, t + 0.15);
-      osc1.frequency.setValueAtTime(1000, t + 0.3);
-      gain1.gain.setValueAtTime(0.7, t);
-      gain1.gain.setValueAtTime(0.7, t + 0.4);
-      gain1.gain.exponentialRampToValueAtTime(0.01, t + 0.5);
-      osc1.start(t);
-      osc1.stop(t + 0.5);
-
-      // Tone 2: Urgent siren sweep
-      const osc2 = audioCtx.createOscillator();
-      const gain2 = audioCtx.createGain();
-      osc2.type = 'sawtooth';
-      osc2.connect(gain2);
-      gain2.connect(audioCtx.destination);
-      osc2.frequency.setValueAtTime(800, t + 0.5);
-      osc2.frequency.linearRampToValueAtTime(1600, t + 0.8);
-      osc2.frequency.linearRampToValueAtTime(800, t + 1.1);
-      gain2.gain.setValueAtTime(0.6, t + 0.5);
-      gain2.gain.setValueAtTime(0.6, t + 1.0);
-      gain2.gain.exponentialRampToValueAtTime(0.01, t + 1.2);
-      osc2.start(t + 0.5);
-      osc2.stop(t + 1.2);
-    } catch (e) {
-      console.error("Audio playback error:", e);
-    }
+      const audio = new Audio(BEEP_DATA_URI);
+      audio.volume = 1.0;
+      audio.play().catch(() => {});
+    } catch {}
   };
 
   const startRinging = () => {
     stopRinging();
-    try {
-      const worker = new Worker("/ringtone-worker.js");
-      workerRef.current = worker;
-      worker.onmessage = (e) => {
-        if (e.data === 'beep') playTone();
-        else if (e.data === 'done') stopRinging();
-      };
-      worker.postMessage('start');
-    } catch {
-      playTone();
-    }
+    countRef.current = 0;
+    playBeep();
+    countRef.current = 1;
+    intervalRef.current = setInterval(() => {
+      countRef.current++;
+      if (countRef.current > MAX_BEEPS) {
+        stopRinging();
+        return;
+      }
+      playBeep();
+    }, BEEP_INTERVAL);
   };
 
   const stopRinging = () => {
-    if (workerRef.current) {
-      workerRef.current.postMessage('stop');
-      workerRef.current.terminate();
-      workerRef.current = null;
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
     }
+    countRef.current = 0;
   };
 
   useEffect(() => () => stopRinging(), []);
