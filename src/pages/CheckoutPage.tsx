@@ -3,7 +3,7 @@ import { useCart } from "@/context/CartContext";
 import { useOrders, OrderType } from "@/context/OrderContext";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { Truck, Store, UtensilsCrossed, Loader2 } from "lucide-react";
+import { Truck, Store, UtensilsCrossed, Loader2, Clock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 const orderTypeOptions: { type: OrderType; icon: typeof Truck; label: string; desc: string }[] = [
@@ -11,6 +11,11 @@ const orderTypeOptions: { type: OrderType; icon: typeof Truck; label: string; de
   { type: "Pickup", icon: Store, label: "Pickup", desc: "Pick up from our store" },
   { type: "Dine-in", icon: UtensilsCrossed, label: "Dine-in", desc: "Eat at our restaurant" },
 ];
+
+const isShopOpen = () => {
+  const hour = new Date().getHours();
+  return hour >= 17 || hour < 5;
+};
 
 const CheckoutPage = () => {
   const { items, subtotal, deliveryFee, total, clearCart, orderType, setOrderType } = useCart();
@@ -23,8 +28,11 @@ const CheckoutPage = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const needsAddress = orderType === "Delivery";
 
+  const shopOpen = isShopOpen();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isShopOpen()) { toast({ title: "We're closed right now", description: "Orders are accepted between 5 PM – 5 AM only.", variant: "destructive" }); return; }
     if (!form.name.trim() || !form.phone.trim()) { toast({ title: "Please fill name and phone number", variant: "destructive" }); return; }
     if (needsAddress && !form.address.trim()) { toast({ title: "Please fill delivery address", variant: "destructive" }); return; }
     if (items.length === 0) { toast({ title: "Your cart is empty", variant: "destructive" }); return; }
@@ -68,6 +76,16 @@ const CheckoutPage = () => {
           </h1>
           <p className="text-muted-foreground mt-1">Almost there! Complete your order</p>
         </div>
+
+        {!shopOpen && (
+          <div className="flex items-center gap-3 p-4 rounded-xl bg-destructive/10 border border-destructive/30 text-destructive">
+            <Clock className="w-5 h-5 flex-shrink-0" />
+            <div>
+              <p className="font-semibold text-sm">We're currently closed</p>
+              <p className="text-xs opacity-80">Orders are accepted between 5:00 PM – 5:00 AM only. Come back later!</p>
+            </div>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Order Type */}
@@ -147,9 +165,9 @@ const CheckoutPage = () => {
             <div className="flex justify-between text-lg font-bold text-foreground pt-1"><span>Total</span><span>₹{total}</span></div>
           </div>
 
-          <button type="submit" disabled={isProcessing}
+          <button type="submit" disabled={isProcessing || !shopOpen}
             className="w-full py-4 rounded-2xl waffle-gradient-warm text-primary-foreground font-semibold text-lg hover:opacity-95 transition-all disabled:opacity-60 flex items-center justify-center gap-2 glow-accent hover:scale-[1.01]">
-            {isProcessing ? (<><Loader2 className="w-5 h-5 animate-spin" />Processing...</>) : paymentMethod === "Cashfree" ? "Pay Now" : "Place Order"}
+            {!shopOpen ? "🕐 Shop Opens at 5 PM" : isProcessing ? (<><Loader2 className="w-5 h-5 animate-spin" />Processing...</>) : paymentMethod === "Cashfree" ? "Pay Now" : "Place Order"}
           </button>
         </form>
       </div>
