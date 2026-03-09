@@ -211,6 +211,23 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const id = `WD-${Date.now().toString(36).toUpperCase()}`;
     const now = new Date().toISOString();
 
+    // Fire push notification IMMEDIATELY (don't wait for DB insert)
+    fetch(
+      `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/push-notify?action=send`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+        },
+        body: JSON.stringify({
+          title: "🧇 New Order!",
+          body: `${orderData.customerName} • ${orderData.orderType} • ₹${orderData.total}`,
+          orderId: id,
+        }),
+      }
+    ).catch((e) => console.error("Push notify error:", e));
+
     // Insert into DB (async, realtime will update state)
     supabase.from("orders").insert({
       id,
@@ -229,24 +246,6 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       created_at: now,
     } as any).then(({ error }) => {
       if (error) console.error("Failed to insert order:", error);
-      else {
-        // Trigger push notification to admin
-        fetch(
-          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/push-notify?action=send`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-            },
-            body: JSON.stringify({
-              title: "🧇 New Order!",
-              body: `${orderData.customerName} • ${orderData.orderType} • ₹${orderData.total}`,
-              orderId: id,
-            }),
-          }
-        ).catch((e) => console.error("Push notify error:", e));
-      }
     });
 
     // Optimistic update
