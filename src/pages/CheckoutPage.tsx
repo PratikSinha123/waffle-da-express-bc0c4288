@@ -28,8 +28,11 @@ const CheckoutPage = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const needsAddress = orderType === "Delivery";
 
+  const shopOpen = isShopOpen();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isShopOpen()) { toast({ title: "We're closed right now", description: "Orders are accepted between 5 PM – 5 AM only.", variant: "destructive" }); return; }
     if (!form.name.trim() || !form.phone.trim()) { toast({ title: "Please fill name and phone number", variant: "destructive" }); return; }
     if (needsAddress && !form.address.trim()) { toast({ title: "Please fill delivery address", variant: "destructive" }); return; }
     if (items.length === 0) { toast({ title: "Your cart is empty", variant: "destructive" }); return; }
