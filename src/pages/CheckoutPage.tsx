@@ -5,17 +5,13 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { Truck, Store, UtensilsCrossed, Loader2, Clock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import ShopClosedBanner, { isShopOpen } from "@/components/ShopClosedBanner";
 
 const orderTypeOptions: { type: OrderType; icon: typeof Truck; label: string; desc: string }[] = [
   { type: "Delivery", icon: Truck, label: "Delivery", desc: "Delivered to your doorstep" },
   { type: "Pickup", icon: Store, label: "Pickup", desc: "Pick up from our store" },
   { type: "Dine-in", icon: UtensilsCrossed, label: "Dine-in", desc: "Eat at our restaurant" },
 ];
-
-const isShopOpen = () => {
-  const hour = new Date().getHours();
-  return hour >= 17 || hour < 5;
-};
 
 const CheckoutPage = () => {
   const { items, subtotal, deliveryFee, total, clearCart, orderType, setOrderType } = useCart();
