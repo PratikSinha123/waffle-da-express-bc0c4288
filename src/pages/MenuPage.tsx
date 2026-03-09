@@ -52,6 +52,8 @@ const MenuPage = () => {
           <p className="text-white/70">Choose from our wide variety of items</p>
         </div>
 
+        <ShopClosedBanner />
+
         {/* Search & Diet Filter */}
         <div className="flex flex-col sm:flex-row gap-3 mb-5">
           <div className="relative flex-1 sm:max-w-sm">

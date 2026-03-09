@@ -38,6 +38,8 @@ const CartPage = () => {
           <p className="text-muted-foreground text-sm mt-1">{items.length} item{items.length > 1 ? 's' : ''} in your cart</p>
         </div>
 
+        <ShopClosedBanner />
+
         <div className="space-y-4 mb-8">
           {items.map((item) => {
             const addOnsTotal = item.selectedAddOns.reduce((s, a) => s + a.price, 0);
