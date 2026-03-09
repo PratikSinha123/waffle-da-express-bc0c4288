@@ -5,17 +5,13 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { Truck, Store, UtensilsCrossed, Loader2, Clock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import ShopClosedBanner, { isShopOpen } from "@/components/ShopClosedBanner";
 
 const orderTypeOptions: { type: OrderType; icon: typeof Truck; label: string; desc: string }[] = [
   { type: "Delivery", icon: Truck, label: "Delivery", desc: "Delivered to your doorstep" },
   { type: "Pickup", icon: Store, label: "Pickup", desc: "Pick up from our store" },
   { type: "Dine-in", icon: UtensilsCrossed, label: "Dine-in", desc: "Eat at our restaurant" },
 ];
-
-const isShopOpen = () => {
-  const hour = new Date().getHours();
-  return hour >= 17 || hour < 5;
-};
 
 const CheckoutPage = () => {
   const { items, subtotal, deliveryFee, total, clearCart, orderType, setOrderType } = useCart();
@@ -77,15 +73,7 @@ const CheckoutPage = () => {
           <p className="text-muted-foreground mt-1">Almost there! Complete your order</p>
         </div>
 
-        {!shopOpen && (
-          <div className="flex items-center gap-3 p-4 rounded-xl bg-destructive/10 border border-destructive/30 text-destructive">
-            <Clock className="w-5 h-5 flex-shrink-0" />
-            <div>
-              <p className="font-semibold text-sm">We're currently closed</p>
-              <p className="text-xs opacity-80">Orders are accepted between 5:00 PM – 5:00 AM only. Come back later!</p>
-            </div>
-          </div>
-        )}
+        <ShopClosedBanner />
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Order Type */}

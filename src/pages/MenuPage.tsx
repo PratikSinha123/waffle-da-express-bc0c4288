@@ -8,6 +8,7 @@ import { MenuItem } from "@/data/menuData";
 import { Search } from "lucide-react";
 import heroImage from "@/assets/hero-waffles.jpg";
 import SEOHead from "@/components/SEOHead";
+import ShopClosedBanner from "@/components/ShopClosedBanner";
 
 const MenuPage = () => {
   const { menuItems, categories } = useMenu();
@@ -50,6 +51,8 @@ const MenuPage = () => {
           </h1>
           <p className="text-white/70">Choose from our wide variety of items</p>
         </div>
+
+        <ShopClosedBanner />
 
         {/* Search & Diet Filter */}
         <div className="flex flex-col sm:flex-row gap-3 mb-5">

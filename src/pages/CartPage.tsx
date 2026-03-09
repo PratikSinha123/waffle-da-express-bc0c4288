@@ -2,6 +2,7 @@ import { useCart } from "@/context/CartContext";
 import { Link } from "react-router-dom";
 import { Plus, Minus, Trash2, ShoppingBag, Truck, Store, UtensilsCrossed } from "lucide-react";
 import { OrderType } from "@/context/OrderContext";
+import ShopClosedBanner from "@/components/ShopClosedBanner";
 
 const orderTypeOptions: { type: OrderType; icon: typeof Truck; label: string }[] = [
   { type: "Delivery", icon: Truck, label: "Delivery" },
@@ -36,6 +37,8 @@ const CartPage = () => {
           </h1>
           <p className="text-muted-foreground text-sm mt-1">{items.length} item{items.length > 1 ? 's' : ''} in your cart</p>
         </div>
+
+        <ShopClosedBanner />
 
         <div className="space-y-4 mb-8">
           {items.map((item) => {
