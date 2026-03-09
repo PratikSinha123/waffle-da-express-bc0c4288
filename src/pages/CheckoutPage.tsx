@@ -165,9 +165,9 @@ const CheckoutPage = () => {
             <div className="flex justify-between text-lg font-bold text-foreground pt-1"><span>Total</span><span>₹{total}</span></div>
           </div>
 
-          <button type="submit" disabled={isProcessing}
+          <button type="submit" disabled={isProcessing || !shopOpen}
             className="w-full py-4 rounded-2xl waffle-gradient-warm text-primary-foreground font-semibold text-lg hover:opacity-95 transition-all disabled:opacity-60 flex items-center justify-center gap-2 glow-accent hover:scale-[1.01]">
-            {isProcessing ? (<><Loader2 className="w-5 h-5 animate-spin" />Processing...</>) : paymentMethod === "Cashfree" ? "Pay Now" : "Place Order"}
+            {!shopOpen ? "🕐 Shop Opens at 5 PM" : isProcessing ? (<><Loader2 className="w-5 h-5 animate-spin" />Processing...</>) : paymentMethod === "Cashfree" ? "Pay Now" : "Place Order"}
           </button>
         </form>
       </div>
