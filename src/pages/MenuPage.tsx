@@ -8,6 +8,7 @@ import { MenuItem } from "@/data/menuData";
 import { Search } from "lucide-react";
 import heroImage from "@/assets/hero-waffles.jpg";
 import SEOHead from "@/components/SEOHead";
+import ShopClosedBanner from "@/components/ShopClosedBanner";
 
 const MenuPage = () => {
   const { menuItems, categories } = useMenu();
