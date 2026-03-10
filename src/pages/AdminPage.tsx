@@ -1051,7 +1051,10 @@ const DeletedOrdersPanel = () => {
                     <div className="text-sm text-foreground font-medium">
                       Subtotal: ₹{order.subtotal} • Delivery: ₹{order.delivery_fee} • <strong>Total: ₹{order.total}</strong>
                     </div>
-                    <div className="pt-2">
+                    <div className="pt-2 flex items-center gap-3 flex-wrap">
+                      <button onClick={() => handleRecover(order)} className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/30 hover:bg-primary/20 transition-colors">
+                        <RotateCcw className="w-3.5 h-3.5" /> Recover Order
+                      </button>
                       {confirmPermanentDelete === order.id ? (
                         <div className="flex items-center gap-2">
                           <span className="text-xs text-destructive font-medium">Permanently delete?</span>
