@@ -788,10 +788,23 @@ const MenuPanel = () => {
                         <span className={`block w-1.5 h-1.5 rounded-full m-[2px] ${item.isVeg ? "bg-green-600" : "bg-red-600"}`} />
                       </span>
                       <span className="text-sm font-medium text-foreground truncate">{item.name}</span>
+                      {item.available === false && (
+                        <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-destructive/10 text-destructive font-medium">Unavailable</span>
+                      )}
                     </div>
                     <span className="text-xs text-muted-foreground">{item.category} • ₹{item.price}</span>
                   </div>
                   <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => updateMenuItem(item.id, { available: item.available === false ? true : false })}
+                      className={`px-2 py-1 rounded-lg text-[10px] font-medium border transition-colors ${
+                        item.available === false
+                          ? "border-destructive/30 bg-destructive/10 text-destructive"
+                          : "border-green-600/30 bg-green-600/10 text-green-600"
+                      }`}
+                    >
+                      {item.available === false ? "Unavail" : "Avail"}
+                    </button>
                     <button onClick={() => startEdit(item)} className="p-1.5 rounded-lg hover:bg-secondary">
                       <Pencil className="w-3.5 h-3.5 text-muted-foreground" />
                     </button>

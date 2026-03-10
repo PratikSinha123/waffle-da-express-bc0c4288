@@ -6,14 +6,19 @@ interface MenuCardProps {
 }
 
 const MenuCard = ({ item, onCustomize }: MenuCardProps) => {
+  const isUnavailable = item.available === false;
+
   return (
-    <div className="waffle-card-elevated flex flex-col justify-between group">
+    <div className={`waffle-card-elevated flex flex-col justify-between group ${isUnavailable ? "opacity-50 grayscale" : ""}`}>
       <div>
         <div className="flex items-start justify-between mb-2">
           <div className="flex items-center gap-2">
             <span className={`w-4 h-4 rounded-sm border-2 flex items-center justify-center ${item.isVeg ? "border-green-600" : "border-red-600"}`}>
               <span className={`w-2 h-2 rounded-full ${item.isVeg ? "bg-green-600" : "bg-red-600"}`} />
             </span>
+            {isUnavailable && (
+              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-destructive/10 text-destructive font-semibold">Unavailable</span>
+            )}
           </div>
         </div>
         <h3 className="font-semibold text-foreground text-base mb-1 group-hover:text-primary transition-colors">{item.name}</h3>
@@ -25,10 +30,15 @@ const MenuCard = ({ item, onCustomize }: MenuCardProps) => {
           {item.price2 && <span className="text-sm text-muted-foreground ml-1">/ ₹{item.price2}</span>}
         </div>
         <button
-          onClick={() => onCustomize(item)}
-          className="px-4 py-2 rounded-full waffle-gradient text-primary-foreground text-sm font-medium hover:opacity-90 transition-all hover:scale-[1.03] glow-accent"
+          onClick={() => !isUnavailable && onCustomize(item)}
+          disabled={isUnavailable}
+          className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+            isUnavailable
+              ? "bg-muted text-muted-foreground cursor-not-allowed"
+              : "waffle-gradient text-primary-foreground hover:opacity-90 hover:scale-[1.03] glow-accent"
+          }`}
         >
-          Customize
+          {isUnavailable ? "Unavailable" : "Customize"}
         </button>
       </div>
     </div>

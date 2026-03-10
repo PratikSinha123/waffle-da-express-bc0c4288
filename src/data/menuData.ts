@@ -8,6 +8,7 @@ export interface MenuItem {
   priceLabel2?: string;
   category: string;
   isVeg: boolean;
+  available?: boolean;
 }
 
 export interface AddOn {
