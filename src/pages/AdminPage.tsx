@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useOrders, OrderStatus, Offer } from "@/context/OrderContext";
 import { useMenu } from "@/context/MenuContext";
 import { useToast } from "@/hooks/use-toast";
-import { Download, Search, Plus, Pencil, Trash2, LogIn, LogOut, ChevronDown, Bell, BellRing, Tag, Settings } from "lucide-react";
+import { Download, Search, Plus, Pencil, Trash2, LogIn, LogOut, ChevronDown, Bell, BellRing, Tag, Settings, RotateCcw } from "lucide-react";
 import { MenuItem } from "@/data/menuData";
 import { getDeliveryFeeAmount, setDeliveryFeeAmount } from "@/context/CartContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -959,6 +959,35 @@ const DeletedOrdersPanel = () => {
     toast({ title: "Order permanently deleted" });
   };
 
+  const handleRecover = async (order: any) => {
+    // Re-insert into orders table
+    const { error: insertErr } = await supabase.from("orders").insert({
+      id: order.id,
+      customer_name: order.customer_name,
+      phone: order.phone,
+      address: order.address || "",
+      notes: order.notes || "",
+      items: order.items || [],
+      payment_method: order.payment_method,
+      order_type: order.order_type,
+      status: order.status || "Order Received",
+      subtotal: order.subtotal,
+      delivery_fee: order.delivery_fee,
+      total: order.total,
+      seen: true,
+      created_at: order.created_at,
+    } as any);
+    if (insertErr) {
+      toast({ title: "Failed to recover order", variant: "destructive" });
+      return;
+    }
+    // Remove from deleted_orders
+    await supabase.from("deleted_orders").delete().eq("id", order.id);
+    setDeletedOrders((prev) => prev.filter((o) => o.id !== order.id));
+    setExpandedOrder(null);
+    toast({ title: "✅ Order recovered successfully!" });
+  };
+
   if (loading) {
     return <div className="text-center py-12 text-muted-foreground">Loading history...</div>;
   }
@@ -1022,7 +1051,10 @@ const DeletedOrdersPanel = () => {
                     <div className="text-sm text-foreground font-medium">
                       Subtotal: ₹{order.subtotal} • Delivery: ₹{order.delivery_fee} • <strong>Total: ₹{order.total}</strong>
                     </div>
-                    <div className="pt-2">
+                    <div className="pt-2 flex items-center gap-3 flex-wrap">
+                      <button onClick={() => handleRecover(order)} className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/30 hover:bg-primary/20 transition-colors">
+                        <RotateCcw className="w-3.5 h-3.5" /> Recover Order
+                      </button>
                       {confirmPermanentDelete === order.id ? (
                         <div className="flex items-center gap-2">
                           <span className="text-xs text-destructive font-medium">Permanently delete?</span>
