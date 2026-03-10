@@ -205,14 +205,6 @@ export const defaultMenuItems: MenuItem[] = [
   { id: "qb7", name: "Cheese Fingers (8 Pcs)", description: "Crispy cheese fingers", price: 100, category: "Quick Bites", isVeg: true },
   { id: "qb8", name: "Kurkure Momos (8 Pcs)", description: "Crunchy kurkure momos", price: 100, category: "Quick Bites", isVeg: true },
 
-  // SWEET DISH
-  { id: "sd1", name: "Brownie Sundae", description: "Warm brownie with ice cream", price: 180, category: "Sweet Dish", isVeg: true },
-  { id: "sd2", name: "Ice Cream Sundae", description: "Classic ice cream sundae", price: 150, category: "Sweet Dish", isVeg: true },
-  { id: "sd3", name: "Kunafa Kaju", description: "Crispy kunafa with cashew filling", price: 140, category: "Sweet Dish", isVeg: true },
-  { id: "sd4", name: "Kunafa Pista", description: "Crispy kunafa with pistachio filling", price: 140, category: "Sweet Dish", isVeg: true },
-  { id: "sd5", name: "Kunafa Almond", description: "Crispy kunafa with almond filling", price: 140, category: "Sweet Dish", isVeg: true },
-  { id: "sd6", name: "Tiramisu", description: "Classic Italian tiramisu dessert", price: 140, category: "Sweet Dish", isVeg: true },
-  { id: "sd7", name: "Biscoff", description: "Creamy Biscoff dessert", price: 140, category: "Sweet Dish", isVeg: true },
 
   // TEA
   { id: "te1", name: "Elaichi Tea", description: "Cardamom flavored tea", price: 30, category: "Tea", isVeg: true },
