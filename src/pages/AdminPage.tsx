@@ -959,6 +959,35 @@ const DeletedOrdersPanel = () => {
     toast({ title: "Order permanently deleted" });
   };
 
+  const handleRecover = async (order: any) => {
+    // Re-insert into orders table
+    const { error: insertErr } = await supabase.from("orders").insert({
+      id: order.id,
+      customer_name: order.customer_name,
+      phone: order.phone,
+      address: order.address || "",
+      notes: order.notes || "",
+      items: order.items || [],
+      payment_method: order.payment_method,
+      order_type: order.order_type,
+      status: order.status || "Order Received",
+      subtotal: order.subtotal,
+      delivery_fee: order.delivery_fee,
+      total: order.total,
+      seen: true,
+      created_at: order.created_at,
+    } as any);
+    if (insertErr) {
+      toast({ title: "Failed to recover order", variant: "destructive" });
+      return;
+    }
+    // Remove from deleted_orders
+    await supabase.from("deleted_orders").delete().eq("id", order.id);
+    setDeletedOrders((prev) => prev.filter((o) => o.id !== order.id));
+    setExpandedOrder(null);
+    toast({ title: "✅ Order recovered successfully!" });
+  };
+
   if (loading) {
     return <div className="text-center py-12 text-muted-foreground">Loading history...</div>;
   }
