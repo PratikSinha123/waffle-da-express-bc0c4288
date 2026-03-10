@@ -204,7 +204,13 @@ export const defaultMenuItems: MenuItem[] = [
   { id: "qb6", name: "Momos (8 Pcs)", description: "Steamed momos", price: 90, category: "Quick Bites", isVeg: true },
   { id: "qb7", name: "Cheese Fingers (8 Pcs)", description: "Crispy cheese fingers", price: 100, category: "Quick Bites", isVeg: true },
   { id: "qb8", name: "Kurkure Momos (8 Pcs)", description: "Crunchy kurkure momos", price: 100, category: "Quick Bites", isVeg: true },
-
+  { id: "w41", name: "Brownie Sundae", description: "Warm brownie with ice cream", price: 180, category: "Waffles", isVeg: true },
+  { id: "w42", name: "Ice Cream Sundae", description: "Classic ice cream sundae", price: 150, category: "Waffles", isVeg: true },
+  { id: "w43", name: "Kunafa Kaju", description: "Crispy kunafa with cashew filling", price: 140, category: "Waffles", isVeg: true },
+  { id: "w44", name: "Kunafa Pista", description: "Crispy kunafa with pistachio filling", price: 140, category: "Waffles", isVeg: true },
+  { id: "w45", name: "Kunafa Almond", description: "Crispy kunafa with almond filling", price: 140, category: "Waffles", isVeg: true },
+  { id: "w46", name: "Tiramisu", description: "Classic Italian tiramisu dessert", price: 140, category: "Waffles", isVeg: true },
+  { id: "w47", name: "Biscoff", description: "Creamy Biscoff dessert", price: 140, category: "Waffles", isVeg: true },
 
   // TEA
   { id: "te1", name: "Elaichi Tea", description: "Cardamom flavored tea", price: 30, category: "Tea", isVeg: true },
