@@ -52,7 +52,6 @@ export const categories = [
   "Chicken Pizza",
   "Pasta",
   "Quick Bites",
-  "Sweet Dish",
   "Tea",
   "Coffee",
   "Ice Tea",
@@ -102,6 +101,13 @@ export const defaultMenuItems: MenuItem[] = [
   { id: "w35", name: "Rasmalai Pistachio", description: "Rasmalai with pistachio crush", price: 90, category: "Waffles", isVeg: true },
   { id: "w36", name: "Banarsi Paan", description: "Paan flavored waffle", price: 90, category: "Waffles", isVeg: true },
   { id: "w37", name: "Mathura Peda", description: "Classic peda inspired waffle", price: 90, category: "Waffles", isVeg: true },
+  { id: "w41", name: "Brownie Sundae", description: "Warm brownie with ice cream", price: 180, category: "Waffles", isVeg: true },
+  { id: "w42", name: "Ice Cream Sundae", description: "Classic ice cream sundae", price: 150, category: "Waffles", isVeg: true },
+  { id: "w43", name: "Kunafa Kaju", description: "Crispy kunafa with cashew filling", price: 140, category: "Waffles", isVeg: true },
+  { id: "w44", name: "Kunafa Pista", description: "Crispy kunafa with pistachio filling", price: 140, category: "Waffles", isVeg: true },
+  { id: "w45", name: "Kunafa Almond", description: "Crispy kunafa with almond filling", price: 140, category: "Waffles", isVeg: true },
+  { id: "w46", name: "Tiramisu", description: "Classic Italian tiramisu dessert", price: 140, category: "Waffles", isVeg: true },
+  { id: "w47", name: "Biscoff", description: "Creamy Biscoff dessert", price: 140, category: "Waffles", isVeg: true },
 
   // WAFFLE CAKES
   { id: "wc1", name: "Circle of Bliss (Single)", description: "Single layer waffle cake", price: 300, category: "Waffle Cakes", isVeg: true },
@@ -204,15 +210,6 @@ export const defaultMenuItems: MenuItem[] = [
   { id: "qb6", name: "Momos (8 Pcs)", description: "Steamed momos", price: 90, category: "Quick Bites", isVeg: true },
   { id: "qb7", name: "Cheese Fingers (8 Pcs)", description: "Crispy cheese fingers", price: 100, category: "Quick Bites", isVeg: true },
   { id: "qb8", name: "Kurkure Momos (8 Pcs)", description: "Crunchy kurkure momos", price: 100, category: "Quick Bites", isVeg: true },
-
-  // SWEET DISH
-  { id: "sd1", name: "Brownie Sundae", description: "Warm brownie with ice cream", price: 180, category: "Sweet Dish", isVeg: true },
-  { id: "sd2", name: "Ice Cream Sundae", description: "Classic ice cream sundae", price: 150, category: "Sweet Dish", isVeg: true },
-  { id: "sd3", name: "Kunafa Kaju", description: "Crispy kunafa with cashew filling", price: 140, category: "Sweet Dish", isVeg: true },
-  { id: "sd4", name: "Kunafa Pista", description: "Crispy kunafa with pistachio filling", price: 140, category: "Sweet Dish", isVeg: true },
-  { id: "sd5", name: "Kunafa Almond", description: "Crispy kunafa with almond filling", price: 140, category: "Sweet Dish", isVeg: true },
-  { id: "sd6", name: "Tiramisu", description: "Classic Italian tiramisu dessert", price: 140, category: "Sweet Dish", isVeg: true },
-  { id: "sd7", name: "Biscoff", description: "Creamy Biscoff dessert", price: 140, category: "Sweet Dish", isVeg: true },
 
   // TEA
   { id: "te1", name: "Elaichi Tea", description: "Cardamom flavored tea", price: 30, category: "Tea", isVeg: true },
