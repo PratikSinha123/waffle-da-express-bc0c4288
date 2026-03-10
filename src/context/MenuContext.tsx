@@ -12,7 +12,7 @@ interface MenuContextType {
 
 const MenuContext = createContext<MenuContextType | undefined>(undefined);
 
-const MENU_VERSION = "v2"; // bump this to force refresh cached menu
+const MENU_VERSION = "v3"; // bump this to force refresh cached menu
 
 export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [menuItems, setMenuItems] = useState<MenuItem[]>(() => {

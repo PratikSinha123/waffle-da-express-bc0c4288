@@ -86,8 +86,11 @@ export const defaultMenuItems: MenuItem[] = [
   { id: "w23", name: "Coffee Toffee", description: "Coffee and toffee fusion", price: 90, category: "Waffles", isVeg: true },
   { id: "w24", name: "Rock It Chocolate", description: "Intense rocky chocolate waffle", price: 90, category: "Waffles", isVeg: true },
   { id: "w25", name: "Munch Mania", description: "Crunchy munch bar waffle", price: 90, category: "Waffles", isVeg: true },
-  { id: "w26", name: "Laila Majnu", description: "A pair of flavors in one", price: 90, category: "Waffles", isVeg: true },
+  { id: "w26", name: "Laila Majnu", description: "A pair of flavors in one", price: 110, category: "Waffles", isVeg: true },
   { id: "w27", name: "Dark Bourbon", description: "Dark/White/Milk chocolate bourbon", price: 90, category: "Waffles", isVeg: true },
+  { id: "w38", name: "Black Choco", description: "Intense black chocolate waffle", price: 110, category: "Waffles", isVeg: true },
+  { id: "w39", name: "Whiskey Chocolate", description: "Whiskey infused chocolate waffle", price: 90, category: "Waffles", isVeg: true },
+  { id: "w40", name: "Mama Malai", description: "Creamy malai flavored waffle", price: 90, category: "Waffles", isVeg: true },
   { id: "w28", name: "Pati Patni Aur Woh", description: "Triple flavor surprise waffle", price: 90, category: "Waffles", isVeg: true },
   { id: "w29", name: "Eclairs", description: "Eclairs chocolate waffle", price: 90, category: "Waffles", isVeg: true },
   { id: "w30", name: "Jimmy Jimmy", description: "Sprinkled jimmies waffle", price: 90, category: "Waffles", isVeg: true },
@@ -205,6 +208,11 @@ export const defaultMenuItems: MenuItem[] = [
   // SWEET DISH
   { id: "sd1", name: "Brownie Sundae", description: "Warm brownie with ice cream", price: 180, category: "Sweet Dish", isVeg: true },
   { id: "sd2", name: "Ice Cream Sundae", description: "Classic ice cream sundae", price: 150, category: "Sweet Dish", isVeg: true },
+  { id: "sd3", name: "Kunafa Kaju", description: "Crispy kunafa with cashew filling", price: 140, category: "Sweet Dish", isVeg: true },
+  { id: "sd4", name: "Kunafa Pista", description: "Crispy kunafa with pistachio filling", price: 140, category: "Sweet Dish", isVeg: true },
+  { id: "sd5", name: "Kunafa Almond", description: "Crispy kunafa with almond filling", price: 140, category: "Sweet Dish", isVeg: true },
+  { id: "sd6", name: "Tiramisu", description: "Classic Italian tiramisu dessert", price: 140, category: "Sweet Dish", isVeg: true },
+  { id: "sd7", name: "Biscoff", description: "Creamy Biscoff dessert", price: 140, category: "Sweet Dish", isVeg: true },
 
   // TEA
   { id: "te1", name: "Elaichi Tea", description: "Cardamom flavored tea", price: 30, category: "Tea", isVeg: true },
