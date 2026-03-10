@@ -102,6 +102,13 @@ export const defaultMenuItems: MenuItem[] = [
   { id: "w35", name: "Rasmalai Pistachio", description: "Rasmalai with pistachio crush", price: 90, category: "Waffles", isVeg: true },
   { id: "w36", name: "Banarsi Paan", description: "Paan flavored waffle", price: 90, category: "Waffles", isVeg: true },
   { id: "w37", name: "Mathura Peda", description: "Classic peda inspired waffle", price: 90, category: "Waffles", isVeg: true },
+  { id: "w41", name: "Brownie Sundae", description: "Warm brownie with ice cream", price: 180, category: "Waffles", isVeg: true },
+  { id: "w42", name: "Ice Cream Sundae", description: "Classic ice cream sundae", price: 150, category: "Waffles", isVeg: true },
+  { id: "w43", name: "Kunafa Kaju", description: "Crispy kunafa with cashew filling", price: 140, category: "Waffles", isVeg: true },
+  { id: "w44", name: "Kunafa Pista", description: "Crispy kunafa with pistachio filling", price: 140, category: "Waffles", isVeg: true },
+  { id: "w45", name: "Kunafa Almond", description: "Crispy kunafa with almond filling", price: 140, category: "Waffles", isVeg: true },
+  { id: "w46", name: "Tiramisu", description: "Classic Italian tiramisu dessert", price: 140, category: "Waffles", isVeg: true },
+  { id: "w47", name: "Biscoff", description: "Creamy Biscoff dessert", price: 140, category: "Waffles", isVeg: true },
 
   // WAFFLE CAKES
   { id: "wc1", name: "Circle of Bliss (Single)", description: "Single layer waffle cake", price: 300, category: "Waffle Cakes", isVeg: true },
