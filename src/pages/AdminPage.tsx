@@ -722,6 +722,18 @@ const MenuPanel = () => {
           </button>
         </div>
 
+        {/* Menu search bar */}
+        <div className="relative mb-4">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <input
+            type="text"
+            value={menuSearch}
+            onChange={(e) => setMenuSearch(e.target.value)}
+            placeholder="Search menu items..."
+            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-background border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+          />
+        </div>
+
         {showAddForm && (
           <div className="p-4 rounded-xl bg-secondary/50 mb-4 space-y-3">
             <input type="text" placeholder="Item name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -745,7 +757,11 @@ const MenuPanel = () => {
         )}
 
         <div className="space-y-2 max-h-[60vh] overflow-y-auto">
-          {menuItems.map((item) => (
+          {menuItems.filter((item) => {
+            if (!menuSearch.trim()) return true;
+            const q = menuSearch.toLowerCase();
+            return item.name.toLowerCase().includes(q) || item.category.toLowerCase().includes(q) || item.description.toLowerCase().includes(q);
+          }).map((item) => (
             <div key={item.id} className="flex items-center justify-between p-3 rounded-xl bg-background border border-border">
               {editingId === item.id ? (
                 <div className="flex-1 space-y-2 mr-3">
