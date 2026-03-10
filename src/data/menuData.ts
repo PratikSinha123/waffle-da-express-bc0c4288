@@ -86,7 +86,7 @@ export const defaultMenuItems: MenuItem[] = [
   { id: "w23", name: "Coffee Toffee", description: "Coffee and toffee fusion", price: 90, category: "Waffles", isVeg: true },
   { id: "w24", name: "Rock It Chocolate", description: "Intense rocky chocolate waffle", price: 90, category: "Waffles", isVeg: true },
   { id: "w25", name: "Munch Mania", description: "Crunchy munch bar waffle", price: 90, category: "Waffles", isVeg: true },
-  { id: "w26", name: "Laila Majnu", description: "A pair of flavors in one", price: 90, category: "Waffles", isVeg: true },
+  { id: "w26", name: "Laila Majnu", description: "A pair of flavors in one", price: 110, category: "Waffles", isVeg: true },
   { id: "w27", name: "Dark Bourbon", description: "Dark/White/Milk chocolate bourbon", price: 90, category: "Waffles", isVeg: true },
   { id: "w28", name: "Pati Patni Aur Woh", description: "Triple flavor surprise waffle", price: 90, category: "Waffles", isVeg: true },
   { id: "w29", name: "Eclairs", description: "Eclairs chocolate waffle", price: 90, category: "Waffles", isVeg: true },
