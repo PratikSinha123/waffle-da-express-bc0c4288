@@ -664,6 +664,7 @@ const MenuPanel = () => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [newCategory, setNewCategory] = useState("");
+  const [menuSearch, setMenuSearch] = useState("");
   const [form, setForm] = useState<Omit<MenuItem, "id">>({
     name: "",
     description: "",
