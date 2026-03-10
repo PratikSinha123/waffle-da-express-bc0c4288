@@ -53,7 +53,6 @@ export const categories = [
   "Pasta",
   "Quick Bites",
   "Tea",
-  "Tea",
   "Coffee",
   "Ice Tea",
   "Shakes",
