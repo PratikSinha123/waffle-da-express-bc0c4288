@@ -95,7 +95,7 @@ const Index = () => {
           </div>
           <div>
             <h3 className="text-lg sm:text-xl font-bold text-primary-foreground italic" style={{ fontFamily: "'Playfair Display', serif" }}>
-              🎉 Waffle Da 7-Day Pop-Up Stall at UPES — 20 to 26 March
+              🎉 Waffle Da Pop-Up Stall at UPES — 16 or 17 March
             </h3>
             <p className="text-primary-foreground/80 text-sm mt-1">Come visit us on campus! Fresh waffles, shakes & more 🧇</p>
           </div>
