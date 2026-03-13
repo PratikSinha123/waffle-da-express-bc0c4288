@@ -68,6 +68,7 @@ const rowToOrder = (row: any): Order => ({
   total: Number(row.total),
   createdAt: row.created_at,
   seen: row.seen ?? false,
+  deliveredAt: row.delivered_at ?? null,
 });
 
 // Helper: DB row → Offer
