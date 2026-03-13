@@ -589,6 +589,21 @@ const OrdersPanel = () => {
                     {order.notes && <div className="col-span-2"><span className="text-muted-foreground">Notes:</span> <span className="text-foreground">{order.notes}</span></div>}
                     <div><span className="text-muted-foreground">Ordered:</span> <span className="text-foreground">{new Date(order.createdAt).toLocaleString()}</span></div>
                     <div><span className="text-muted-foreground">Delivered:</span> <span className="text-foreground">{order.deliveredAt ? new Date(order.deliveredAt).toLocaleString() : "—"}</span></div>
+                    {order.deliveredAt && (() => {
+                      const ms = new Date(order.deliveredAt).getTime() - new Date(order.createdAt).getTime();
+                      const mins = Math.floor(ms / 60000);
+                      const hrs = Math.floor(mins / 60);
+                      const remainMins = mins % 60;
+                      const label = hrs > 0 ? `${hrs}h ${remainMins}m` : `${mins}m`;
+                      return (
+                        <div className="col-span-2">
+                          <span className="text-muted-foreground">Duration:</span>{" "}
+                          <span className={`font-semibold ${mins <= 30 ? "text-green-500" : mins <= 60 ? "text-yellow-500" : "text-red-500"}`}>
+                            ⏱ {label}
+                          </span>
+                        </div>
+                      );
+                    })()}
                   </div>
 
                   <div>
