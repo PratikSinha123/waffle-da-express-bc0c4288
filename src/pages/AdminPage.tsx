@@ -587,7 +587,8 @@ const OrdersPanel = () => {
                       <div className="col-span-2"><span className="text-muted-foreground">Address:</span> <span className="text-foreground">{order.address}</span></div>
                     )}
                     {order.notes && <div className="col-span-2"><span className="text-muted-foreground">Notes:</span> <span className="text-foreground">{order.notes}</span></div>}
-                    <div className="col-span-2"><span className="text-muted-foreground">Date:</span> <span className="text-foreground">{new Date(order.createdAt).toLocaleString()}</span></div>
+                    <div><span className="text-muted-foreground">Ordered:</span> <span className="text-foreground">{new Date(order.createdAt).toLocaleString()}</span></div>
+                    <div><span className="text-muted-foreground">Delivered:</span> <span className="text-foreground">{order.deliveredAt ? new Date(order.deliveredAt).toLocaleString() : "—"}</span></div>
                   </div>
 
                   <div>

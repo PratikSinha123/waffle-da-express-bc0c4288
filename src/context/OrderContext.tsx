@@ -20,6 +20,7 @@ export interface Order {
   total: number;
   createdAt: string;
   seen?: boolean;
+  deliveredAt?: string | null;
 }
 
 export interface Offer {
@@ -67,6 +68,7 @@ const rowToOrder = (row: any): Order => ({
   total: Number(row.total),
   createdAt: row.created_at,
   seen: row.seen ?? false,
+  deliveredAt: row.delivered_at ?? null,
 });
 
 // Helper: DB row → Offer
@@ -244,9 +246,12 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   const updateOrderStatus = (id: string, status: OrderStatus) => {
+    const deliveredAt = status === "Delivered" ? new Date().toISOString() : undefined;
     // Optimistic
-    setOrders((prev) => prev.map((o) => (o.id === id ? { ...o, status } : o)));
-    supabase.from("orders").update({ status } as any).eq("id", id).then(({ error }) => {
+    setOrders((prev) => prev.map((o) => (o.id === id ? { ...o, status, ...(deliveredAt ? { deliveredAt } : {}) } : o)));
+    const updateData: any = { status };
+    if (deliveredAt) updateData.delivered_at = deliveredAt;
+    supabase.from("orders").update(updateData).eq("id", id).then(({ error }) => {
       if (error) console.error("Failed to update order status:", error);
     });
   };

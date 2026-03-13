@@ -1,0 +1,1 @@
+ALTER TABLE public.orders ADD COLUMN delivered_at timestamp with time zone DEFAULT NULL;

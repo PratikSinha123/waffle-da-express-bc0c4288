@@ -106,6 +106,7 @@ export type Database = {
           address: string
           created_at: string
           customer_name: string
+          delivered_at: string | null
           delivery_fee: number
           id: string
           items: Json
@@ -122,6 +123,7 @@ export type Database = {
           address?: string
           created_at?: string
           customer_name: string
+          delivered_at?: string | null
           delivery_fee?: number
           id: string
           items?: Json
@@ -138,6 +140,7 @@ export type Database = {
           address?: string
           created_at?: string
           customer_name?: string
+          delivered_at?: string | null
           delivery_fee?: number
           id?: string
           items?: Json
