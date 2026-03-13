@@ -20,6 +20,7 @@ export interface Order {
   total: number;
   createdAt: string;
   seen?: boolean;
+  deliveredAt?: string | null;
 }
 
 export interface Offer {
