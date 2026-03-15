@@ -443,7 +443,7 @@ const OrdersPanel = () => {
     URL.revokeObjectURL(url);
   };
 
-  const statuses: OrderStatus[] = ["Order Received", "Preparing", "Out for Delivery", "Delivered"];
+  const statuses: OrderStatus[] = ["Order Received", "Preparing", "Out for Delivery", "Delivered", "Can't be Delivered"];
 
   return (
     <div>
