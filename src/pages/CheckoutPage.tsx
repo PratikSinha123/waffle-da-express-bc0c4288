@@ -5,7 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { Truck, Store, UtensilsCrossed, Loader2, Clock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import ShopClosedBanner, { isShopOpen } from "@/components/ShopClosedBanner";
+import ShopClosedBanner from "@/components/ShopClosedBanner";
+import { useShopStatus } from "@/context/ShopStatusContext";
 
 const orderTypeOptions: { type: OrderType; icon: typeof Truck; label: string; desc: string }[] = [
   { type: "Delivery", icon: Truck, label: "Delivery", desc: "Delivered to your doorstep" },
