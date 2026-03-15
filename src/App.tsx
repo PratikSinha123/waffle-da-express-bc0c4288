@@ -7,6 +7,7 @@ import { AnimatePresence } from "framer-motion";
 import { CartProvider } from "@/context/CartContext";
 import { OrderProvider } from "@/context/OrderContext";
 import { MenuProvider } from "@/context/MenuContext";
+import { ShopStatusProvider } from "@/context/ShopStatusContext";
 import Navbar from "@/components/Navbar";
 import PageTransition from "@/components/PageTransition";
 import Index from "./pages/Index";
@@ -49,18 +50,20 @@ const AnimatedRoutes = () => {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <MenuProvider>
-        <CartProvider>
-          <OrderProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <Navbar />
-              <AnimatedRoutes />
-            </BrowserRouter>
-          </OrderProvider>
-        </CartProvider>
-      </MenuProvider>
+      <ShopStatusProvider>
+        <MenuProvider>
+          <CartProvider>
+            <OrderProvider>
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
+                <Navbar />
+                <AnimatedRoutes />
+              </BrowserRouter>
+            </OrderProvider>
+          </CartProvider>
+        </MenuProvider>
+      </ShopStatusProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

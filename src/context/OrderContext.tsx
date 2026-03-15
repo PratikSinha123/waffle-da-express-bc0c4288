@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback, use
 import { CartItem } from "./CartContext";
 import { supabase } from "@/integrations/supabase/client";
 
-export type OrderStatus = "Order Received" | "Preparing" | "Out for Delivery" | "Delivered";
+export type OrderStatus = "Order Received" | "Preparing" | "Out for Delivery" | "Delivered" | "Can't be Delivered";
 export type OrderType = "Delivery" | "Pickup" | "Dine-in";
 
 export interface Order {

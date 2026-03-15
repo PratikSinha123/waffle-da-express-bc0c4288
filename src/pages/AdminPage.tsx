@@ -2,10 +2,12 @@ import { useState, useEffect, useRef } from "react";
 import { useOrders, OrderStatus, Offer } from "@/context/OrderContext";
 import { useMenu } from "@/context/MenuContext";
 import { useToast } from "@/hooks/use-toast";
-import { Download, Search, Plus, Pencil, Trash2, LogIn, LogOut, ChevronDown, Bell, BellRing, Tag, Settings, RotateCcw } from "lucide-react";
+import { Download, Search, Plus, Pencil, Trash2, LogIn, LogOut, ChevronDown, Bell, BellRing, Tag, Settings, RotateCcw, Power } from "lucide-react";
 import { MenuItem } from "@/data/menuData";
 import { getDeliveryFeeAmount, setDeliveryFeeAmount } from "@/context/CartContext";
 import { supabase } from "@/integrations/supabase/client";
+import { useShopStatus } from "@/context/ShopStatusContext";
+import { Switch } from "@/components/ui/switch";
 
 const ADMIN_PASSWORD = "waffle123";
 
@@ -373,6 +375,36 @@ const NotificationBanner = () => {
   );
 };
 
+const ShopToggle = () => {
+  const { isShopOpen, toggleShopStatus } = useShopStatus();
+  const { toast } = useToast();
+
+  const handleToggle = async () => {
+    await toggleShopStatus();
+    toast({ title: isShopOpen ? "Shop is now CLOSED" : "Shop is now OPEN" });
+  };
+
+  return (
+    <div className="waffle-card p-4 mb-4 flex items-center justify-between">
+      <div className="flex items-center gap-3">
+        <Power className={`w-5 h-5 ${isShopOpen ? "text-green-500" : "text-destructive"}`} />
+        <div>
+          <span className="text-sm font-medium text-foreground">Shop Status</span>
+          <p className="text-xs text-muted-foreground">
+            {isShopOpen ? "Customers can place orders" : "Ordering is disabled for customers"}
+          </p>
+        </div>
+      </div>
+      <div className="flex items-center gap-3">
+        <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${isShopOpen ? "bg-green-500/10 text-green-500" : "bg-destructive/10 text-destructive"}`}>
+          {isShopOpen ? "OPEN" : "CLOSED"}
+        </span>
+        <Switch checked={isShopOpen} onCheckedChange={handleToggle} />
+      </div>
+    </div>
+  );
+};
+
 const OrdersPanel = () => {
   const { orders, updateOrderStatus, deleteOrder } = useOrders();
   const { toast } = useToast();
@@ -443,7 +475,7 @@ const OrdersPanel = () => {
     URL.revokeObjectURL(url);
   };
 
-  const statuses: OrderStatus[] = ["Order Received", "Preparing", "Out for Delivery", "Delivered"];
+  const statuses: OrderStatus[] = ["Order Received", "Preparing", "Out for Delivery", "Delivered", "Can't be Delivered"];
 
   return (
     <div>
@@ -456,6 +488,9 @@ const OrdersPanel = () => {
         <span className="text-sm text-muted-foreground">Live — Auto-updating every 3s</span>
         <span className="ml-auto text-sm font-medium text-foreground">{orders.length} total orders</span>
       </div>
+
+      {/* Shop Status Toggle */}
+      <ShopToggle />
 
       {/* Delivery Fee Setting */}
       <div className="waffle-card p-4 mb-4 flex items-center gap-3">
@@ -569,6 +604,7 @@ const OrdersPanel = () => {
                     order.status === "Delivered" ? "bg-green-100 text-green-700" :
                     order.status === "Out for Delivery" ? "bg-blue-100 text-blue-700" :
                     order.status === "Preparing" ? "bg-yellow-100 text-yellow-700" :
+                    order.status === "Can't be Delivered" ? "bg-red-100 text-red-700" :
                     "bg-secondary text-secondary-foreground"
                   }`}>
                     {order.status}

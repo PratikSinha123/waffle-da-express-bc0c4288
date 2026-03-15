@@ -5,7 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { Truck, Store, UtensilsCrossed, Loader2, Clock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import ShopClosedBanner, { isShopOpen } from "@/components/ShopClosedBanner";
+import ShopClosedBanner from "@/components/ShopClosedBanner";
+import { useShopStatus } from "@/context/ShopStatusContext";
 
 const orderTypeOptions: { type: OrderType; icon: typeof Truck; label: string; desc: string }[] = [
   { type: "Delivery", icon: Truck, label: "Delivery", desc: "Delivered to your doorstep" },
@@ -24,11 +25,11 @@ const CheckoutPage = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const needsAddress = orderType === "Delivery";
 
-  const shopOpen = isShopOpen();
+  const { isShopOpen: shopOpen } = useShopStatus();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isShopOpen()) { toast({ title: "We're closed right now", description: "Orders are accepted between 5 PM – 5 AM only.", variant: "destructive" }); return; }
+    if (!shopOpen) { toast({ title: "We're closed right now", description: "We're not accepting orders right now.", variant: "destructive" }); return; }
     if (!form.name.trim() || !form.phone.trim()) { toast({ title: "Please fill name and phone number", variant: "destructive" }); return; }
     if (needsAddress && !form.address.trim()) { toast({ title: "Please fill delivery address", variant: "destructive" }); return; }
     if (items.length === 0) { toast({ title: "Your cart is empty", variant: "destructive" }); return; }

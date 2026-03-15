@@ -1,0 +1,1 @@
+INSERT INTO public.settings (key, value) VALUES ('shop_open', 'true') ON CONFLICT (key) DO NOTHING;
