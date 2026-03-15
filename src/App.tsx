@@ -7,6 +7,7 @@ import { AnimatePresence } from "framer-motion";
 import { CartProvider } from "@/context/CartContext";
 import { OrderProvider } from "@/context/OrderContext";
 import { MenuProvider } from "@/context/MenuContext";
+import { ShopStatusProvider } from "@/context/ShopStatusContext";
 import Navbar from "@/components/Navbar";
 import PageTransition from "@/components/PageTransition";
 import Index from "./pages/Index";
