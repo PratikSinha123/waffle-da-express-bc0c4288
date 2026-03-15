@@ -1,4 +1,5 @@
 import { MenuItem } from "@/data/menuData";
+import { useShopStatus } from "@/context/ShopStatusContext";
 
 interface MenuCardProps {
   item: MenuItem;
@@ -7,6 +8,8 @@ interface MenuCardProps {
 
 const MenuCard = ({ item, onCustomize }: MenuCardProps) => {
   const isUnavailable = item.available === false;
+  const { isShopOpen } = useShopStatus();
+  const isDisabled = isUnavailable || !isShopOpen;
 
   return (
     <div className={`waffle-card-elevated flex flex-col justify-between group ${isUnavailable ? "opacity-50 grayscale" : ""}`}>
