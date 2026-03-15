@@ -459,6 +459,9 @@ const OrdersPanel = () => {
         <span className="ml-auto text-sm font-medium text-foreground">{orders.length} total orders</span>
       </div>
 
+      {/* Shop Status Toggle */}
+      <ShopToggle />
+
       {/* Delivery Fee Setting */}
       <div className="waffle-card p-4 mb-4 flex items-center gap-3">
         <Settings className="w-4 h-4 text-muted-foreground" />
