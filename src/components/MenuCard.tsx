@@ -33,15 +33,15 @@ const MenuCard = ({ item, onCustomize }: MenuCardProps) => {
           {item.price2 && <span className="text-sm text-muted-foreground ml-1">/ ₹{item.price2}</span>}
         </div>
         <button
-          onClick={() => !isUnavailable && onCustomize(item)}
-          disabled={isUnavailable}
+          onClick={() => !isDisabled && onCustomize(item)}
+          disabled={isDisabled}
           className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-            isUnavailable
+            isDisabled
               ? "bg-muted text-muted-foreground cursor-not-allowed"
               : "waffle-gradient text-primary-foreground hover:opacity-90 hover:scale-[1.03] glow-accent"
           }`}
         >
-          {isUnavailable ? "Unavailable" : "Customize"}
+          {isUnavailable ? "Unavailable" : !isShopOpen ? "Shop Closed" : "Customize"}
         </button>
       </div>
     </div>
