@@ -375,6 +375,36 @@ const NotificationBanner = () => {
   );
 };
 
+const ShopToggle = () => {
+  const { isShopOpen, toggleShopStatus } = useShopStatus();
+  const { toast } = useToast();
+
+  const handleToggle = async () => {
+    await toggleShopStatus();
+    toast({ title: isShopOpen ? "Shop is now CLOSED" : "Shop is now OPEN" });
+  };
+
+  return (
+    <div className="waffle-card p-4 mb-4 flex items-center justify-between">
+      <div className="flex items-center gap-3">
+        <Power className={`w-5 h-5 ${isShopOpen ? "text-green-500" : "text-destructive"}`} />
+        <div>
+          <span className="text-sm font-medium text-foreground">Shop Status</span>
+          <p className="text-xs text-muted-foreground">
+            {isShopOpen ? "Customers can place orders" : "Ordering is disabled for customers"}
+          </p>
+        </div>
+      </div>
+      <div className="flex items-center gap-3">
+        <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${isShopOpen ? "bg-green-500/10 text-green-500" : "bg-destructive/10 text-destructive"}`}>
+          {isShopOpen ? "OPEN" : "CLOSED"}
+        </span>
+        <Switch checked={isShopOpen} onCheckedChange={handleToggle} />
+      </div>
+    </div>
+  );
+};
+
 const OrdersPanel = () => {
   const { orders, updateOrderStatus, deleteOrder } = useOrders();
   const { toast } = useToast();
