@@ -2,10 +2,12 @@ import { useState, useEffect, useRef } from "react";
 import { useOrders, OrderStatus, Offer } from "@/context/OrderContext";
 import { useMenu } from "@/context/MenuContext";
 import { useToast } from "@/hooks/use-toast";
-import { Download, Search, Plus, Pencil, Trash2, LogIn, LogOut, ChevronDown, Bell, BellRing, Tag, Settings, RotateCcw } from "lucide-react";
+import { Download, Search, Plus, Pencil, Trash2, LogIn, LogOut, ChevronDown, Bell, BellRing, Tag, Settings, RotateCcw, Power } from "lucide-react";
 import { MenuItem } from "@/data/menuData";
 import { getDeliveryFeeAmount, setDeliveryFeeAmount } from "@/context/CartContext";
 import { supabase } from "@/integrations/supabase/client";
+import { useShopStatus } from "@/context/ShopStatusContext";
+import { Switch } from "@/components/ui/switch";
 
 const ADMIN_PASSWORD = "waffle123";
 
