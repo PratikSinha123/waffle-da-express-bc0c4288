@@ -10,6 +10,8 @@ export interface MenuItem {
   isVeg: boolean;
   available?: boolean;
   isStallItem?: boolean;
+  stallPrice?: number;
+  stallPrice2?: number;
 }
 
 export interface AddOn {
