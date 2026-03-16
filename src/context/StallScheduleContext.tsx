@@ -61,15 +61,23 @@ export const StallScheduleProvider: React.FC<{ children: React.ReactNode }> = ({
   const setStallDates = useCallback(async (start: string, end: string) => {
     setStallStartDate(start);
     setStallEndDate(end);
-
     await Promise.all([
       supabase.from("settings").upsert({ key: "stall_start_date", value: start }),
       supabase.from("settings").upsert({ key: "stall_end_date", value: end }),
     ]);
   }, []);
 
+  const setBanner = useCallback(async (b: StallBanner) => {
+    setBannerState(b);
+    await Promise.all([
+      supabase.from("settings").upsert({ key: "stall_banner_title", value: b.title }),
+      supabase.from("settings").upsert({ key: "stall_banner_subtitle", value: b.subtitle }),
+      supabase.from("settings").upsert({ key: "stall_banner_link_text", value: b.linkText }),
+    ]);
+  }, []);
+
   return (
-    <StallScheduleContext.Provider value={{ stallStartDate, stallEndDate, isStallActive, setStallDates, loading }}>
+    <StallScheduleContext.Provider value={{ stallStartDate, stallEndDate, isStallActive, setStallDates, banner, setBanner, loading }}>
       {children}
     </StallScheduleContext.Provider>
   );
