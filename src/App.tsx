@@ -8,6 +8,7 @@ import { CartProvider } from "@/context/CartContext";
 import { OrderProvider } from "@/context/OrderContext";
 import { MenuProvider } from "@/context/MenuContext";
 import { ShopStatusProvider } from "@/context/ShopStatusContext";
+import { StallScheduleProvider } from "@/context/StallScheduleContext";
 import Navbar from "@/components/Navbar";
 import PageTransition from "@/components/PageTransition";
 import Index from "./pages/Index";
