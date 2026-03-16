@@ -8,6 +8,7 @@ import { CartProvider } from "@/context/CartContext";
 import { OrderProvider } from "@/context/OrderContext";
 import { MenuProvider } from "@/context/MenuContext";
 import { ShopStatusProvider } from "@/context/ShopStatusContext";
+import { StallScheduleProvider } from "@/context/StallScheduleContext";
 import Navbar from "@/components/Navbar";
 import PageTransition from "@/components/PageTransition";
 import Index from "./pages/Index";
@@ -53,18 +54,20 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <ShopStatusProvider>
-        <MenuProvider>
-          <CartProvider>
-            <OrderProvider>
-              <Toaster />
-              <Sonner />
-              <BrowserRouter>
-                <Navbar />
-                <AnimatedRoutes />
-              </BrowserRouter>
-            </OrderProvider>
-          </CartProvider>
-        </MenuProvider>
+        <StallScheduleProvider>
+          <MenuProvider>
+            <CartProvider>
+              <OrderProvider>
+                <Toaster />
+                <Sonner />
+                <BrowserRouter>
+                  <Navbar />
+                  <AnimatedRoutes />
+                </BrowserRouter>
+              </OrderProvider>
+            </CartProvider>
+          </MenuProvider>
+        </StallScheduleProvider>
       </ShopStatusProvider>
     </TooltipProvider>
   </QueryClientProvider>

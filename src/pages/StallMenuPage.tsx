@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { useMenu } from "@/context/MenuContext";
+import { useStallSchedule } from "@/context/StallScheduleContext";
 import MenuCard from "@/components/MenuCard";
 import CustomizePopup from "@/components/CustomizePopup";
 import { MenuItem } from "@/data/menuData";
@@ -9,6 +10,7 @@ import heroImage from "@/assets/hero-waffles.jpg";
 
 const StallMenuPage = () => {
   const { menuItems } = useMenu();
+  const { isStallActive, stallStartDate, stallEndDate } = useStallSchedule();
   const [customizeItem, setCustomizeItem] = useState<MenuItem | null>(null);
   const [search, setSearch] = useState("");
 
@@ -38,7 +40,14 @@ const StallMenuPage = () => {
             <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
               🏪 Pop-Up <span className="italic">Stall Menu</span>
             </h1>
-            <p className="text-white/70">Limited menu for 17 & 18 March — available at the stall only!</p>
+            <p className="text-white/70">
+              {stallStartDate && stallEndDate
+                ? `${stallStartDate} — ${stallEndDate}`
+                : "Limited stall menu — available at the stall only!"}
+            </p>
+            {!isStallActive && (
+              <p className="text-yellow-300/90 text-sm mt-1 font-medium">⚠️ The stall is currently not active</p>
+            )}
           </div>
         </div>
 

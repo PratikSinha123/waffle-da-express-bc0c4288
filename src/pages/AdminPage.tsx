@@ -8,6 +8,7 @@ import { getDeliveryFeeAmount, setDeliveryFeeAmount } from "@/context/CartContex
 import { supabase } from "@/integrations/supabase/client";
 import { useShopStatus } from "@/context/ShopStatusContext";
 import { Switch } from "@/components/ui/switch";
+import { useStallSchedule } from "@/context/StallScheduleContext";
 
 const ADMIN_PASSWORD = "waffle123";
 
@@ -891,6 +892,15 @@ const StallPanel = () => {
   const [editingStallPrice, setEditingStallPrice] = useState<string | null>(null);
   const [tempStallPrice, setTempStallPrice] = useState(0);
   const [tempStallPrice2, setTempStallPrice2] = useState(0);
+  const { stallStartDate, stallEndDate, isStallActive, setStallDates } = useStallSchedule();
+  const [tempStart, setTempStart] = useState(stallStartDate);
+  const [tempEnd, setTempEnd] = useState(stallEndDate);
+  const [datesChanged, setDatesChanged] = useState(false);
+
+  useEffect(() => {
+    setTempStart(stallStartDate);
+    setTempEnd(stallEndDate);
+  }, [stallStartDate, stallEndDate]);
 
   const stallItems = menuItems.filter((item) => item.isStallItem);
   const nonStallItems = menuItems.filter((item) => !item.isStallItem);
@@ -907,8 +917,60 @@ const StallPanel = () => {
     toast({ title: "Stall price updated!" });
   };
 
+  const handleSaveDates = async () => {
+    await setStallDates(tempStart, tempEnd);
+    setDatesChanged(false);
+    toast({ title: "Stall schedule saved!" });
+  };
+
   return (
     <div className="space-y-6">
+      {/* Schedule */}
+      <div className="waffle-card p-4">
+        <h3 className="font-semibold text-foreground mb-1">📅 Stall Schedule</h3>
+        <p className="text-xs text-muted-foreground mb-3">Set the dates when the stall menu is active. The stall link will auto-show/hide in the navbar.</p>
+        <div className="flex flex-col sm:flex-row items-start sm:items-end gap-3">
+          <div className="flex flex-col gap-1">
+            <label className="text-xs text-muted-foreground font-medium">Start Date</label>
+            <input
+              type="date"
+              value={tempStart}
+              onChange={(e) => { setTempStart(e.target.value); setDatesChanged(true); }}
+              className="px-3 py-2.5 rounded-xl bg-background border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+            />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-xs text-muted-foreground font-medium">End Date</label>
+            <input
+              type="date"
+              value={tempEnd}
+              onChange={(e) => { setTempEnd(e.target.value); setDatesChanged(true); }}
+              className="px-3 py-2.5 rounded-xl bg-background border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+            />
+          </div>
+          <button
+            onClick={handleSaveDates}
+            disabled={!datesChanged && tempStart === stallStartDate && tempEnd === stallEndDate}
+            className="px-5 py-2.5 rounded-xl waffle-gradient text-primary-foreground font-medium text-sm disabled:opacity-50"
+          >
+            Save Schedule
+          </button>
+        </div>
+        <div className="mt-3">
+          {isStallActive ? (
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-green-500/10 text-green-500">
+              <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" /> Stall is ACTIVE now
+            </span>
+          ) : stallStartDate && stallEndDate ? (
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground">
+              Scheduled: {stallStartDate} → {stallEndDate}
+            </span>
+          ) : (
+            <span className="text-xs text-muted-foreground">No schedule set</span>
+          )}
+        </div>
+      </div>
+
       {/* Active stall items */}
       <div className="waffle-card p-4">
         <h3 className="font-semibold text-foreground mb-1">🏪 Stall Items ({stallItems.length})</h3>
