@@ -22,24 +22,32 @@ const StallScheduleContext = createContext<StallScheduleContextType | undefined>
 export const StallScheduleProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [stallStartDate, setStallStartDate] = useState("");
   const [stallEndDate, setStallEndDate] = useState("");
+  const [banner, setBannerState] = useState<StallBanner>({
+    title: "🎉 Waffle Da Pop-Up Stall",
+    subtitle: "Come visit us! Fresh waffles, shakes & more 🧇",
+    linkText: "View Stall Menu",
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchDates = async () => {
+    const fetchData = async () => {
       const { data } = await supabase
         .from("settings")
         .select("key, value")
-        .in("key", ["stall_start_date", "stall_end_date"]);
+        .in("key", ["stall_start_date", "stall_end_date", "stall_banner_title", "stall_banner_subtitle", "stall_banner_link_text"]);
 
       if (data) {
         for (const row of data) {
           if (row.key === "stall_start_date") setStallStartDate(row.value);
           if (row.key === "stall_end_date") setStallEndDate(row.value);
+          if (row.key === "stall_banner_title") setBannerState(prev => ({ ...prev, title: row.value }));
+          if (row.key === "stall_banner_subtitle") setBannerState(prev => ({ ...prev, subtitle: row.value }));
+          if (row.key === "stall_banner_link_text") setBannerState(prev => ({ ...prev, linkText: row.value }));
         }
       }
       setLoading(false);
     };
-    fetchDates();
+    fetchData();
   }, []);
 
   const isStallActive = (() => {
