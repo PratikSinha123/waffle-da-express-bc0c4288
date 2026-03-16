@@ -98,6 +98,9 @@ const Index = () => {
               🎉 Waffle Da Pop-Up Stall at UPES — 17 & 18 March
             </h3>
             <p className="text-primary-foreground/80 text-sm mt-1">Come visit us on campus! Fresh waffles, shakes & more 🧇</p>
+            <Link to="/stall-menu" className="inline-flex items-center gap-1 mt-2 text-sm font-semibold text-primary-foreground underline underline-offset-2 hover:opacity-80">
+              View Stall Menu <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
         </div>
       </section>

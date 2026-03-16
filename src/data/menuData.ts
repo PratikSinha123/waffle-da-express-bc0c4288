@@ -9,6 +9,7 @@ export interface MenuItem {
   category: string;
   isVeg: boolean;
   available?: boolean;
+  isStallItem?: boolean;
 }
 
 export interface AddOn {
