@@ -1,11 +1,19 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
+interface StallBanner {
+  title: string;
+  subtitle: string;
+  linkText: string;
+}
+
 interface StallScheduleContextType {
-  stallStartDate: string; // ISO date string e.g. "2026-03-17"
+  stallStartDate: string;
   stallEndDate: string;
   isStallActive: boolean;
   setStallDates: (start: string, end: string) => Promise<void>;
+  banner: StallBanner;
+  setBanner: (banner: StallBanner) => Promise<void>;
   loading: boolean;
 }
 
@@ -14,24 +22,32 @@ const StallScheduleContext = createContext<StallScheduleContextType | undefined>
 export const StallScheduleProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [stallStartDate, setStallStartDate] = useState("");
   const [stallEndDate, setStallEndDate] = useState("");
+  const [banner, setBannerState] = useState<StallBanner>({
+    title: "🎉 Waffle Da Pop-Up Stall",
+    subtitle: "Come visit us! Fresh waffles, shakes & more 🧇",
+    linkText: "View Stall Menu",
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchDates = async () => {
+    const fetchData = async () => {
       const { data } = await supabase
         .from("settings")
         .select("key, value")
-        .in("key", ["stall_start_date", "stall_end_date"]);
+        .in("key", ["stall_start_date", "stall_end_date", "stall_banner_title", "stall_banner_subtitle", "stall_banner_link_text"]);
 
       if (data) {
         for (const row of data) {
           if (row.key === "stall_start_date") setStallStartDate(row.value);
           if (row.key === "stall_end_date") setStallEndDate(row.value);
+          if (row.key === "stall_banner_title") setBannerState(prev => ({ ...prev, title: row.value }));
+          if (row.key === "stall_banner_subtitle") setBannerState(prev => ({ ...prev, subtitle: row.value }));
+          if (row.key === "stall_banner_link_text") setBannerState(prev => ({ ...prev, linkText: row.value }));
         }
       }
       setLoading(false);
     };
-    fetchDates();
+    fetchData();
   }, []);
 
   const isStallActive = (() => {
@@ -45,15 +61,23 @@ export const StallScheduleProvider: React.FC<{ children: React.ReactNode }> = ({
   const setStallDates = useCallback(async (start: string, end: string) => {
     setStallStartDate(start);
     setStallEndDate(end);
-
     await Promise.all([
       supabase.from("settings").upsert({ key: "stall_start_date", value: start }),
       supabase.from("settings").upsert({ key: "stall_end_date", value: end }),
     ]);
   }, []);
 
+  const setBanner = useCallback(async (b: StallBanner) => {
+    setBannerState(b);
+    await Promise.all([
+      supabase.from("settings").upsert({ key: "stall_banner_title", value: b.title }),
+      supabase.from("settings").upsert({ key: "stall_banner_subtitle", value: b.subtitle }),
+      supabase.from("settings").upsert({ key: "stall_banner_link_text", value: b.linkText }),
+    ]);
+  }, []);
+
   return (
-    <StallScheduleContext.Provider value={{ stallStartDate, stallEndDate, isStallActive, setStallDates, loading }}>
+    <StallScheduleContext.Provider value={{ stallStartDate, stallEndDate, isStallActive, setStallDates, banner, setBanner, loading }}>
       {children}
     </StallScheduleContext.Provider>
   );
