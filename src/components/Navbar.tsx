@@ -12,6 +12,7 @@ const Navbar = () => {
   const links = [
     { to: "/", label: "Home" },
     { to: "/menu", label: "Menu" },
+    { to: "/stall-menu", label: "Stall Menu" },
     { to: "/track-order", label: "Track Order" },
     { to: "/admin", label: "Admin" },
   ];
