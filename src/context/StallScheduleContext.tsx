@@ -1,11 +1,19 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
+interface StallBanner {
+  title: string;
+  subtitle: string;
+  linkText: string;
+}
+
 interface StallScheduleContextType {
-  stallStartDate: string; // ISO date string e.g. "2026-03-17"
+  stallStartDate: string;
   stallEndDate: string;
   isStallActive: boolean;
   setStallDates: (start: string, end: string) => Promise<void>;
+  banner: StallBanner;
+  setBanner: (banner: StallBanner) => Promise<void>;
   loading: boolean;
 }
 
