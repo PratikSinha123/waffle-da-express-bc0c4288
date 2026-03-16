@@ -88,24 +88,26 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Pop-Up Stall Banner */}
-      <section className="py-6 px-4 relative overflow-hidden waffle-gradient-warm">
-        <div className="absolute inset-0 bg-pattern-waffle opacity-10" />
-        <div className="relative max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-4 text-center sm:text-left">
-          <div className="w-12 h-12 rounded-full bg-primary-foreground/20 flex items-center justify-center shrink-0 backdrop-blur-sm">
-            <CalendarDays className="w-6 h-6 text-primary-foreground" />
+      {/* Pop-Up Stall Banner - only when active */}
+      {isStallActive && (
+        <section className="py-6 px-4 relative overflow-hidden waffle-gradient-warm">
+          <div className="absolute inset-0 bg-pattern-waffle opacity-10" />
+          <div className="relative max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-4 text-center sm:text-left">
+            <div className="w-12 h-12 rounded-full bg-primary-foreground/20 flex items-center justify-center shrink-0 backdrop-blur-sm">
+              <CalendarDays className="w-6 h-6 text-primary-foreground" />
+            </div>
+            <div>
+              <h3 className="text-lg sm:text-xl font-bold text-primary-foreground italic" style={{ fontFamily: "'Playfair Display', serif" }}>
+                {banner.title}{stallStartDate && stallEndDate ? ` — ${new Date(stallStartDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })} & ${new Date(stallEndDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}` : ""}
+              </h3>
+              <p className="text-primary-foreground/80 text-sm mt-1">{banner.subtitle}</p>
+              <Link to="/stall-menu" className="inline-flex items-center gap-1 mt-2 text-sm font-semibold text-primary-foreground underline underline-offset-2 hover:opacity-80">
+                {banner.linkText} <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
           </div>
-          <div>
-            <h3 className="text-lg sm:text-xl font-bold text-primary-foreground italic" style={{ fontFamily: "'Playfair Display', serif" }}>
-              🎉 Waffle Da Pop-Up Stall at UPES — 17 & 18 March
-            </h3>
-            <p className="text-primary-foreground/80 text-sm mt-1">Come visit us on campus! Fresh waffles, shakes & more 🧇</p>
-            <Link to="/stall-menu" className="inline-flex items-center gap-1 mt-2 text-sm font-semibold text-primary-foreground underline underline-offset-2 hover:opacity-80">
-              View Stall Menu <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Explore Our Menu */}
       <section className="py-20 px-4 bg-pattern-dots relative">

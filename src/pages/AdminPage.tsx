@@ -977,6 +977,51 @@ const StallPanel = () => {
         </div>
       </div>
 
+      {/* Banner Customization */}
+      <div className="waffle-card p-4">
+        <h3 className="font-semibold text-foreground mb-1">🎨 Homepage Banner</h3>
+        <p className="text-xs text-muted-foreground mb-3">Customize the stall announcement banner shown on the homepage when the stall is active.</p>
+        <div className="space-y-3">
+          <div className="flex flex-col gap-1">
+            <label className="text-xs text-muted-foreground font-medium">Banner Title</label>
+            <input
+              type="text"
+              value={tempBanner.title}
+              onChange={(e) => { setTempBanner(prev => ({ ...prev, title: e.target.value })); setBannerChanged(true); }}
+              placeholder="e.g. 🎉 Waffle Da Pop-Up Stall at UPES"
+              className="px-3 py-2.5 rounded-xl bg-background border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+            />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-xs text-muted-foreground font-medium">Subtitle</label>
+            <input
+              type="text"
+              value={tempBanner.subtitle}
+              onChange={(e) => { setTempBanner(prev => ({ ...prev, subtitle: e.target.value })); setBannerChanged(true); }}
+              placeholder="e.g. Come visit us on campus!"
+              className="px-3 py-2.5 rounded-xl bg-background border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+            />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-xs text-muted-foreground font-medium">Link Text</label>
+            <input
+              type="text"
+              value={tempBanner.linkText}
+              onChange={(e) => { setTempBanner(prev => ({ ...prev, linkText: e.target.value })); setBannerChanged(true); }}
+              placeholder="e.g. View Stall Menu"
+              className="px-3 py-2.5 rounded-xl bg-background border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+            />
+          </div>
+          <button
+            onClick={async () => { await setBanner(tempBanner); setBannerChanged(false); toast({ title: "Banner updated!" }); }}
+            disabled={!bannerChanged}
+            className="px-5 py-2.5 rounded-xl waffle-gradient text-primary-foreground font-medium text-sm disabled:opacity-50"
+          >
+            Save Banner
+          </button>
+        </div>
+      </div>
+
       {/* Active stall items */}
       <div className="waffle-card p-4">
         <h3 className="font-semibold text-foreground mb-1">🏪 Stall Items ({stallItems.length})</h3>
