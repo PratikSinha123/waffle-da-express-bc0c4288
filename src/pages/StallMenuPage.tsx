@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { useMenu } from "@/context/MenuContext";
+import { useStallSchedule } from "@/context/StallScheduleContext";
 import MenuCard from "@/components/MenuCard";
 import CustomizePopup from "@/components/CustomizePopup";
 import { MenuItem } from "@/data/menuData";
