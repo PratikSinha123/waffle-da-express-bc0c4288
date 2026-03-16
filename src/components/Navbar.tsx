@@ -2,17 +2,19 @@ import { Link, useLocation } from "react-router-dom";
 import { ShoppingCart, Menu, X } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useState } from "react";
+import { useStallSchedule } from "@/context/StallScheduleContext";
 
 
 const Navbar = () => {
   const { totalItems } = useCart();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { isStallActive } = useStallSchedule();
 
   const links = [
     { to: "/", label: "Home" },
     { to: "/menu", label: "Menu" },
-    { to: "/stall-menu", label: "Stall Menu" },
+    ...(isStallActive ? [{ to: "/stall-menu", label: "🏪 Stall Menu" }] : []),
     { to: "/track-order", label: "Track Order" },
     { to: "/admin", label: "Admin" },
   ];
