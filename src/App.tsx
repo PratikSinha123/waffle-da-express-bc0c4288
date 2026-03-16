@@ -21,6 +21,7 @@ import PaymentStatusPage from "./pages/PaymentStatusPage";
 import ContactPage from "./pages/ContactPage";
 import TermsPage from "./pages/TermsPage";
 import RefundsPage from "./pages/RefundsPage";
+import StallMenuPage from "./pages/StallMenuPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
