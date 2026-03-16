@@ -19,6 +19,7 @@ const categoryIcons: Record<string, string> = {
 
 const Index = () => {
   const { menuItems, categories } = useMenu();
+  const { isStallActive, banner, stallStartDate, stallEndDate } = useStallSchedule();
   const getCategoryCount = (cat: string) => menuItems.filter((item) => item.category === cat).length;
   const menuCategories = categories.filter((c) => c !== "All" && getCategoryCount(c) > 0);
 
