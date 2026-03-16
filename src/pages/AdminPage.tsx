@@ -8,6 +8,7 @@ import { getDeliveryFeeAmount, setDeliveryFeeAmount } from "@/context/CartContex
 import { supabase } from "@/integrations/supabase/client";
 import { useShopStatus } from "@/context/ShopStatusContext";
 import { Switch } from "@/components/ui/switch";
+import { useStallSchedule } from "@/context/StallScheduleContext";
 
 const ADMIN_PASSWORD = "waffle123";
 
