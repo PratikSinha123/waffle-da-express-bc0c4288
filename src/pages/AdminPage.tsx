@@ -848,6 +848,16 @@ const MenuPanel = () => {
                   </div>
                   <div className="flex items-center gap-1">
                     <button
+                      onClick={() => updateMenuItem(item.id, { isStallItem: !item.isStallItem })}
+                      className={`px-2 py-1 rounded-lg text-[10px] font-medium border transition-colors ${
+                        item.isStallItem
+                          ? "border-primary/30 bg-primary/10 text-primary"
+                          : "border-border bg-secondary/50 text-muted-foreground"
+                      }`}
+                    >
+                      {item.isStallItem ? "🏪 Stall" : "Stall"}
+                    </button>
+                    <button
                       onClick={() => updateMenuItem(item.id, { available: item.available === false ? true : false })}
                       className={`px-2 py-1 rounded-lg text-[10px] font-medium border transition-colors ${
                         item.available === false

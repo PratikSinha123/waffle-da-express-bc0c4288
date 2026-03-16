@@ -21,6 +21,7 @@ import PaymentStatusPage from "./pages/PaymentStatusPage";
 import ContactPage from "./pages/ContactPage";
 import TermsPage from "./pages/TermsPage";
 import RefundsPage from "./pages/RefundsPage";
+import StallMenuPage from "./pages/StallMenuPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const AnimatedRoutes = () => {
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<PageTransition><Index /></PageTransition>} />
         <Route path="/menu" element={<PageTransition><MenuPage /></PageTransition>} />
+        <Route path="/stall-menu" element={<PageTransition><StallMenuPage /></PageTransition>} />
         <Route path="/cart" element={<PageTransition><CartPage /></PageTransition>} />
         <Route path="/checkout" element={<PageTransition><CheckoutPage /></PageTransition>} />
         <Route path="/track-order" element={<PageTransition><TrackOrderPage /></PageTransition>} />
