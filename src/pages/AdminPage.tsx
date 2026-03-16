@@ -892,10 +892,16 @@ const StallPanel = () => {
   const [editingStallPrice, setEditingStallPrice] = useState<string | null>(null);
   const [tempStallPrice, setTempStallPrice] = useState(0);
   const [tempStallPrice2, setTempStallPrice2] = useState(0);
-  const { stallStartDate, stallEndDate, isStallActive, setStallDates } = useStallSchedule();
+  const { stallStartDate, stallEndDate, isStallActive, setStallDates, banner, setBanner } = useStallSchedule();
   const [tempStart, setTempStart] = useState(stallStartDate);
   const [tempEnd, setTempEnd] = useState(stallEndDate);
   const [datesChanged, setDatesChanged] = useState(false);
+  const [tempBanner, setTempBanner] = useState(banner);
+  const [bannerChanged, setBannerChanged] = useState(false);
+
+  useEffect(() => {
+    setTempBanner(banner);
+  }, [banner]);
 
   useEffect(() => {
     setTempStart(stallStartDate);
