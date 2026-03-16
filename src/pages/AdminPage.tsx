@@ -137,7 +137,7 @@ const PushSubscribeButton = () => {
 const AdminPage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(() => localStorage.getItem("waffle_admin") === "true");
   const [password, setPassword] = useState("");
-  const [activeTab, setActiveTab] = useState<"orders" | "menu" | "offers" | "history">("orders");
+  const [activeTab, setActiveTab] = useState<"orders" | "menu" | "stall" | "offers" | "history">("orders");
   const { toast } = useToast();
   const { unseenCount, markAllSeen } = useOrders();
 
