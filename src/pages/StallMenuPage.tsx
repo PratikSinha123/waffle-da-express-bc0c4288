@@ -56,9 +56,14 @@ const StallMenuPage = () => {
 
         {stallItems.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {stallItems.map((item) => (
-              <MenuCard key={item.id} item={item} onCustomize={setCustomizeItem} />
-            ))}
+            {stallItems.map((item) => {
+              const displayItem = {
+                ...item,
+                price: item.stallPrice || item.price,
+                price2: item.stallPrice2 || item.price2,
+              };
+              return <MenuCard key={item.id} item={displayItem} onCustomize={() => setCustomizeItem(displayItem)} />;
+            })}
           </div>
         ) : (
           <div className="text-center py-16">
