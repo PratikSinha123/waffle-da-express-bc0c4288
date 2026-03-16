@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import heroImage from "@/assets/hero-waffles.jpg";
 import wafflePatternBg from "@/assets/waffle-pattern-bg.jpg";
 import { useMenu } from "@/context/MenuContext";
+import { useStallSchedule } from "@/context/StallScheduleContext";
 import SEOHead from "@/components/SEOHead";
 
 const categoryIcons: Record<string, string> = {
