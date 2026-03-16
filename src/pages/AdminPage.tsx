@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useOrders, OrderStatus, Offer } from "@/context/OrderContext";
 import { useMenu } from "@/context/MenuContext";
 import { useToast } from "@/hooks/use-toast";
-import { Download, Search, Plus, Pencil, Trash2, LogIn, LogOut, ChevronDown, Bell, BellRing, Tag, Settings, RotateCcw, Power } from "lucide-react";
+import { Download, Search, Plus, Pencil, Trash2, LogIn, LogOut, ChevronDown, Bell, BellRing, Tag, Settings, RotateCcw, Power, CalendarDays, ArrowRight } from "lucide-react";
 import { MenuItem } from "@/data/menuData";
 import { getDeliveryFeeAmount, setDeliveryFeeAmount } from "@/context/CartContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -1019,6 +1019,28 @@ const StallPanel = () => {
           >
             Save Banner
           </button>
+        </div>
+
+        {/* Live Preview */}
+        <div className="mt-4 pt-4 border-t border-border">
+          <p className="text-xs text-muted-foreground font-medium mb-2">📱 Live Preview</p>
+          <div className="rounded-2xl overflow-hidden waffle-gradient-warm relative">
+            <div className="absolute inset-0 bg-pattern-waffle opacity-10" />
+            <div className="relative py-5 px-4 flex flex-col sm:flex-row items-center justify-center gap-3 text-center sm:text-left">
+              <div className="w-10 h-10 rounded-full bg-primary-foreground/20 flex items-center justify-center shrink-0 backdrop-blur-sm">
+                <CalendarDays className="w-5 h-5 text-primary-foreground" />
+              </div>
+              <div>
+                <h3 className="text-base sm:text-lg font-bold text-primary-foreground italic" style={{ fontFamily: "'Playfair Display', serif" }}>
+                  {tempBanner.title || "Banner Title"}{tempStart && tempEnd ? ` — ${new Date(tempStart + "T00:00:00").toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })} & ${new Date(tempEnd + "T00:00:00").toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}` : ""}
+                </h3>
+                <p className="text-primary-foreground/80 text-xs mt-0.5">{tempBanner.subtitle || "Subtitle text"}</p>
+                <span className="inline-flex items-center gap-1 mt-1.5 text-xs font-semibold text-primary-foreground underline underline-offset-2">
+                  {tempBanner.linkText || "Link Text"} <ArrowRight className="w-3 h-3" />
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
