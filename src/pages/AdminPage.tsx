@@ -886,13 +886,13 @@ const MenuPanel = () => {
 };
 
 const StallPanel = () => {
-  const { menuItems, updateMenuItem } = useMenu();
+  const { menuItems } = useMenu();
   const { toast } = useToast();
   const [stallSearch, setStallSearch] = useState("");
   const [editingStallPrice, setEditingStallPrice] = useState<string | null>(null);
   const [tempStallPrice, setTempStallPrice] = useState(0);
   const [tempStallPrice2, setTempStallPrice2] = useState(0);
-  const { stallStartDate, stallEndDate, isStallActive, setStallDates, banner, setBanner } = useStallSchedule();
+  const { stallStartDate, stallEndDate, isStallActive, setStallDates, banner, setBanner, stallItemsConfig, addStallItem, removeStallItem, updateStallItemPrice } = useStallSchedule();
   const [tempStart, setTempStart] = useState(stallStartDate);
   const [tempEnd, setTempEnd] = useState(stallEndDate);
   const [datesChanged, setDatesChanged] = useState(false);
@@ -908,8 +908,12 @@ const StallPanel = () => {
     setTempEnd(stallEndDate);
   }, [stallStartDate, stallEndDate]);
 
-  const stallItems = menuItems.filter((item) => item.isStallItem);
-  const nonStallItems = menuItems.filter((item) => !item.isStallItem);
+  const stallItemIds = new Set(stallItemsConfig.map(c => c.id));
+  const stallItems = menuItems.filter((item) => stallItemIds.has(item.id)).map(item => {
+    const config = stallItemsConfig.find(c => c.id === item.id);
+    return { ...item, stallPrice: config?.stallPrice, stallPrice2: config?.stallPrice2 };
+  });
+  const nonStallItems = menuItems.filter((item) => !stallItemIds.has(item.id));
 
   const filteredNonStall = nonStallItems.filter((item) => {
     if (!stallSearch.trim()) return true;
@@ -917,8 +921,8 @@ const StallPanel = () => {
     return item.name.toLowerCase().includes(q) || item.category.toLowerCase().includes(q);
   });
 
-  const handleSaveStallPrice = (id: string) => {
-    updateMenuItem(id, { stallPrice: tempStallPrice || undefined, stallPrice2: tempStallPrice2 || undefined });
+  const handleSaveStallPrice = async (id: string) => {
+    await updateStallItemPrice(id, tempStallPrice || undefined, tempStallPrice2 || undefined);
     setEditingStallPrice(null);
     toast({ title: "Stall price updated!" });
   };
@@ -1047,7 +1051,7 @@ const StallPanel = () => {
       {/* Active stall items */}
       <div className="waffle-card p-4">
         <h3 className="font-semibold text-foreground mb-1">🏪 Stall Items ({stallItems.length})</h3>
-        <p className="text-xs text-muted-foreground mb-4">Items currently on the stall menu. Set a stall price to override the regular price.</p>
+        <p className="text-xs text-muted-foreground mb-4">Items currently on the stall menu. Set a stall price to override the regular price. Changes sync across all devices.</p>
 
         {stallItems.length === 0 ? (
           <p className="text-sm text-muted-foreground text-center py-6">No items added to stall yet. Add items from below.</p>
@@ -1103,7 +1107,7 @@ const StallPanel = () => {
                     </button>
                   )}
                   <button
-                    onClick={() => { updateMenuItem(item.id, { isStallItem: false, stallPrice: undefined, stallPrice2: undefined }); toast({ title: `${item.name} removed from stall` }); }}
+                    onClick={async () => { await removeStallItem(item.id); toast({ title: `${item.name} removed from stall` }); }}
                     className="px-2 py-1 rounded-lg text-[10px] font-medium border border-destructive/30 text-destructive hover:bg-destructive/10"
                   >
                     Remove
@@ -1139,7 +1143,7 @@ const StallPanel = () => {
                 <span className="text-[10px] text-muted-foreground">{item.category} • ₹{item.price}</span>
               </div>
               <button
-                onClick={() => { updateMenuItem(item.id, { isStallItem: true }); toast({ title: `${item.name} added to stall` }); }}
+                onClick={async () => { await addStallItem(item.id); toast({ title: `${item.name} added to stall` }); }}
                 className="px-3 py-1 rounded-lg text-xs font-medium waffle-gradient text-primary-foreground whitespace-nowrap"
               >
                 + Add
