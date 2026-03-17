@@ -10,7 +10,7 @@ import heroImage from "@/assets/hero-waffles.jpg";
 
 const StallMenuPage = () => {
   const { menuItems } = useMenu();
-  const { isStallActive, stallStartDate, stallEndDate, stallItemsConfig } = useStallSchedule();
+  const { isStallActive, stallStartDate, stallEndDate, stallStartTime, stallEndTime, stallItemsConfig } = useStallSchedule();
   const [customizeItem, setCustomizeItem] = useState<MenuItem | null>(null);
   const [search, setSearch] = useState("");
 
