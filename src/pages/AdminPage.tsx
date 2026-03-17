@@ -892,9 +892,11 @@ const StallPanel = () => {
   const [editingStallPrice, setEditingStallPrice] = useState<string | null>(null);
   const [tempStallPrice, setTempStallPrice] = useState(0);
   const [tempStallPrice2, setTempStallPrice2] = useState(0);
-  const { stallStartDate, stallEndDate, isStallActive, setStallDates, banner, setBanner, stallItemsConfig, addStallItem, removeStallItem, updateStallItemPrice } = useStallSchedule();
+  const { stallStartDate, stallEndDate, stallStartTime, stallEndTime, isStallActive, setStallDates, setStallTimes, banner, setBanner, stallItemsConfig, addStallItem, removeStallItem, updateStallItemPrice } = useStallSchedule();
   const [tempStart, setTempStart] = useState(stallStartDate);
   const [tempEnd, setTempEnd] = useState(stallEndDate);
+  const [tempStartTime, setTempStartTime] = useState(stallStartTime);
+  const [tempEndTime, setTempEndTime] = useState(stallEndTime);
   const [datesChanged, setDatesChanged] = useState(false);
   const [tempBanner, setTempBanner] = useState(banner);
   const [bannerChanged, setBannerChanged] = useState(false);
@@ -906,7 +908,9 @@ const StallPanel = () => {
   useEffect(() => {
     setTempStart(stallStartDate);
     setTempEnd(stallEndDate);
-  }, [stallStartDate, stallEndDate]);
+    setTempStartTime(stallStartTime);
+    setTempEndTime(stallEndTime);
+  }, [stallStartDate, stallEndDate, stallStartTime, stallEndTime]);
 
   const stallItemIds = new Set(stallItemsConfig.map(c => c.id));
   const stallItems = menuItems.filter((item) => stallItemIds.has(item.id)).map(item => {
