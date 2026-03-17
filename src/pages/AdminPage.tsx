@@ -933,6 +933,7 @@ const StallPanel = () => {
 
   const handleSaveDates = async () => {
     await setStallDates(tempStart, tempEnd);
+    await setStallTimes(tempStartTime, tempEndTime);
     setDatesChanged(false);
     toast({ title: "Stall schedule saved!" });
   };
