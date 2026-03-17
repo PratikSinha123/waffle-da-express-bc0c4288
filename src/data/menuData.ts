@@ -112,6 +112,9 @@ export const defaultMenuItems: MenuItem[] = [
   { id: "w45", name: "Kunafa Almond", description: "Crispy kunafa with almond filling", price: 140, category: "Waffles", isVeg: true },
   { id: "w46", name: "Tiramisu", description: "Classic Italian tiramisu dessert", price: 140, category: "Waffles", isVeg: true },
   { id: "w47", name: "Biscoff", description: "Creamy Biscoff dessert", price: 140, category: "Waffles", isVeg: true },
+  { id: "w48", name: "White Chocolate", description: "Smooth white chocolate waffle", price: 90, category: "Waffles", isVeg: true },
+  { id: "w49", name: "Imli Crunchy Coho", description: "Tangy imli with crunchy chocolate waffle", price: 90, category: "Waffles", isVeg: true },
+  { id: "w50", name: "Double Chocolate", description: "Double layered chocolate waffle", price: 110, category: "Waffles", isVeg: true },
 
   // WAFFLE CAKES
   { id: "wc1", name: "Circle of Bliss (Single)", description: "Single layer waffle cake", price: 300, category: "Waffle Cakes", isVeg: true },
