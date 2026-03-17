@@ -53,11 +53,11 @@ const StallMenuPage = () => {
             </h1>
             <p className="text-white/70">
               {stallStartDate && stallEndDate
-                ? `${stallStartDate} — ${stallEndDate}`
+                ? `${stallStartDate} — ${stallEndDate}${stallStartTime || stallEndTime ? ` • ${stallStartTime || "00:00"} - ${stallEndTime || "23:59"}` : ""}`
                 : "Limited stall menu — available at the stall only!"}
             </p>
             {!isStallActive && (
-              <p className="text-yellow-300/90 text-sm mt-1 font-medium">⚠️ The stall is currently not active</p>
+              <p className="text-yellow-300/90 text-sm mt-1 font-medium">⚠️ The stall is currently not active — ordering is disabled</p>
             )}
           </div>
         </div>
