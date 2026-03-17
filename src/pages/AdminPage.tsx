@@ -892,9 +892,11 @@ const StallPanel = () => {
   const [editingStallPrice, setEditingStallPrice] = useState<string | null>(null);
   const [tempStallPrice, setTempStallPrice] = useState(0);
   const [tempStallPrice2, setTempStallPrice2] = useState(0);
-  const { stallStartDate, stallEndDate, isStallActive, setStallDates, banner, setBanner, stallItemsConfig, addStallItem, removeStallItem, updateStallItemPrice } = useStallSchedule();
+  const { stallStartDate, stallEndDate, stallStartTime, stallEndTime, isStallActive, setStallDates, setStallTimes, banner, setBanner, stallItemsConfig, addStallItem, removeStallItem, updateStallItemPrice } = useStallSchedule();
   const [tempStart, setTempStart] = useState(stallStartDate);
   const [tempEnd, setTempEnd] = useState(stallEndDate);
+  const [tempStartTime, setTempStartTime] = useState(stallStartTime);
+  const [tempEndTime, setTempEndTime] = useState(stallEndTime);
   const [datesChanged, setDatesChanged] = useState(false);
   const [tempBanner, setTempBanner] = useState(banner);
   const [bannerChanged, setBannerChanged] = useState(false);
@@ -906,7 +908,9 @@ const StallPanel = () => {
   useEffect(() => {
     setTempStart(stallStartDate);
     setTempEnd(stallEndDate);
-  }, [stallStartDate, stallEndDate]);
+    setTempStartTime(stallStartTime);
+    setTempEndTime(stallEndTime);
+  }, [stallStartDate, stallEndDate, stallStartTime, stallEndTime]);
 
   const stallItemIds = new Set(stallItemsConfig.map(c => c.id));
   const stallItems = menuItems.filter((item) => stallItemIds.has(item.id)).map(item => {
@@ -929,6 +933,7 @@ const StallPanel = () => {
 
   const handleSaveDates = async () => {
     await setStallDates(tempStart, tempEnd);
+    await setStallTimes(tempStartTime, tempEndTime);
     setDatesChanged(false);
     toast({ title: "Stall schedule saved!" });
   };
@@ -939,13 +944,22 @@ const StallPanel = () => {
       <div className="waffle-card p-4">
         <h3 className="font-semibold text-foreground mb-1">📅 Stall Schedule</h3>
         <p className="text-xs text-muted-foreground mb-3">Set the dates when the stall menu is active. The stall link will auto-show/hide in the navbar.</p>
-        <div className="flex flex-col sm:flex-row items-start sm:items-end gap-3">
+        <div className="flex flex-col sm:flex-row items-start sm:items-end gap-3 flex-wrap">
           <div className="flex flex-col gap-1">
             <label className="text-xs text-muted-foreground font-medium">Start Date</label>
             <input
               type="date"
               value={tempStart}
               onChange={(e) => { setTempStart(e.target.value); setDatesChanged(true); }}
+              className="px-3 py-2.5 rounded-xl bg-background border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+            />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-xs text-muted-foreground font-medium">Start Time</label>
+            <input
+              type="time"
+              value={tempStartTime}
+              onChange={(e) => { setTempStartTime(e.target.value); setDatesChanged(true); }}
               className="px-3 py-2.5 rounded-xl bg-background border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
             />
           </div>
@@ -958,9 +972,18 @@ const StallPanel = () => {
               className="px-3 py-2.5 rounded-xl bg-background border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
             />
           </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-xs text-muted-foreground font-medium">End Time</label>
+            <input
+              type="time"
+              value={tempEndTime}
+              onChange={(e) => { setTempEndTime(e.target.value); setDatesChanged(true); }}
+              className="px-3 py-2.5 rounded-xl bg-background border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+            />
+          </div>
           <button
             onClick={handleSaveDates}
-            disabled={!datesChanged && tempStart === stallStartDate && tempEnd === stallEndDate}
+            disabled={!datesChanged}
             className="px-5 py-2.5 rounded-xl waffle-gradient text-primary-foreground font-medium text-sm disabled:opacity-50"
           >
             Save Schedule
@@ -973,7 +996,7 @@ const StallPanel = () => {
             </span>
           ) : stallStartDate && stallEndDate ? (
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground">
-              Scheduled: {stallStartDate} → {stallEndDate}
+              Scheduled: {stallStartDate} {stallStartTime || "00:00"} → {stallEndDate} {stallEndTime || "23:59"}
             </span>
           ) : (
             <span className="text-xs text-muted-foreground">No schedule set</span>

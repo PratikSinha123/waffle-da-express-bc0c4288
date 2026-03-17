@@ -10,7 +10,7 @@ import heroImage from "@/assets/hero-waffles.jpg";
 
 const StallMenuPage = () => {
   const { menuItems } = useMenu();
-  const { isStallActive, stallStartDate, stallEndDate, stallItemsConfig } = useStallSchedule();
+  const { isStallActive, stallStartDate, stallEndDate, stallStartTime, stallEndTime, stallItemsConfig } = useStallSchedule();
   const [customizeItem, setCustomizeItem] = useState<MenuItem | null>(null);
   const [search, setSearch] = useState("");
 
@@ -53,11 +53,11 @@ const StallMenuPage = () => {
             </h1>
             <p className="text-white/70">
               {stallStartDate && stallEndDate
-                ? `${stallStartDate} — ${stallEndDate}`
+                ? `${stallStartDate} — ${stallEndDate}${stallStartTime || stallEndTime ? ` • ${stallStartTime || "00:00"} - ${stallEndTime || "23:59"}` : ""}`
                 : "Limited stall menu — available at the stall only!"}
             </p>
             {!isStallActive && (
-              <p className="text-yellow-300/90 text-sm mt-1 font-medium">⚠️ The stall is currently not active</p>
+              <p className="text-yellow-300/90 text-sm mt-1 font-medium">⚠️ The stall is currently not active — ordering is disabled</p>
             )}
           </div>
         </div>
@@ -75,7 +75,7 @@ const StallMenuPage = () => {
         </div>
 
         {stallItems.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 ${!isStallActive ? "opacity-50 pointer-events-none select-none" : ""}`}>
             {stallItems.map((item) => {
               const displayItem = {
                 ...item,

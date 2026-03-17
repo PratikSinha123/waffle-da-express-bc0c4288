@@ -1,17 +1,20 @@
 import { useState, useMemo, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { useMenu } from "@/context/MenuContext";
+import { useStallSchedule } from "@/context/StallScheduleContext";
 import MenuCard from "@/components/MenuCard";
 import CategoryFilter from "@/components/CategoryFilter";
 import CustomizePopup from "@/components/CustomizePopup";
 import { MenuItem } from "@/data/menuData";
-import { Search } from "lucide-react";
+import { Search, ArrowRight } from "lucide-react";
 import heroImage from "@/assets/hero-waffles.jpg";
 import SEOHead from "@/components/SEOHead";
 import ShopClosedBanner from "@/components/ShopClosedBanner";
 
 const MenuPage = () => {
   const { menuItems, categories } = useMenu();
+  const { isStallActive } = useStallSchedule();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [activeCategory, setActiveCategory] = useState(() => {
     const cat = searchParams.get("category");
@@ -54,6 +57,22 @@ const MenuPage = () => {
 
         <ShopClosedBanner />
 
+        {/* Stall Active Banner - redirect to stall menu */}
+        {isStallActive && (
+          <div className="flex items-center gap-3 p-4 rounded-xl bg-primary/10 border border-primary/30 mb-6">
+            <div className="flex-1">
+              <p className="font-semibold text-sm text-foreground">🏪 Our stall is currently active!</p>
+              <p className="text-xs text-muted-foreground">Orders can only be placed from the Stall Menu right now.</p>
+            </div>
+            <button
+              onClick={() => navigate("/stall-menu")}
+              className="px-4 py-2 rounded-xl waffle-gradient text-primary-foreground font-medium text-sm flex items-center gap-1.5 whitespace-nowrap"
+            >
+              Go to Stall Menu <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+
         {/* Search & Diet Filter */}
         <div className="flex flex-col sm:flex-row gap-3 mb-5">
           <div className="relative flex-1 sm:max-w-sm">
@@ -92,7 +111,7 @@ const MenuPage = () => {
 
         <CategoryFilter categories={categories} activeCategory={activeCategory} onCategoryChange={setActiveCategory} />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-6">
+        <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-6 ${isStallActive ? "opacity-50 pointer-events-none select-none" : ""}`}>
           {filteredItems.map((item) => (
             <MenuCard key={item.id} item={item} onCustomize={setCustomizeItem} />
           ))}
@@ -105,7 +124,7 @@ const MenuPage = () => {
         )}
       </div>
 
-      {customizeItem && <CustomizePopup item={customizeItem} onClose={() => setCustomizeItem(null)} />}
+      {customizeItem && !isStallActive && <CustomizePopup item={customizeItem} onClose={() => setCustomizeItem(null)} />}
     </div>
   );
 };

@@ -16,8 +16,11 @@ interface StallBanner {
 interface StallScheduleContextType {
   stallStartDate: string;
   stallEndDate: string;
+  stallStartTime: string;
+  stallEndTime: string;
   isStallActive: boolean;
   setStallDates: (start: string, end: string) => Promise<void>;
+  setStallTimes: (startTime: string, endTime: string) => Promise<void>;
   banner: StallBanner;
   setBanner: (banner: StallBanner) => Promise<void>;
   stallItemsConfig: StallItemConfig[];
@@ -32,6 +35,8 @@ const StallScheduleContext = createContext<StallScheduleContextType | undefined>
 export const StallScheduleProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [stallStartDate, setStallStartDate] = useState("");
   const [stallEndDate, setStallEndDate] = useState("");
+  const [stallStartTime, setStallStartTime] = useState("");
+  const [stallEndTime, setStallEndTime] = useState("");
   const [banner, setBannerState] = useState<StallBanner>({
     title: "🎉 Waffle Da Pop-Up Stall",
     subtitle: "Come visit us! Fresh waffles, shakes & more 🧇",
@@ -45,12 +50,14 @@ export const StallScheduleProvider: React.FC<{ children: React.ReactNode }> = ({
       const { data } = await supabase
         .from("settings")
         .select("key, value")
-        .in("key", ["stall_start_date", "stall_end_date", "stall_banner_title", "stall_banner_subtitle", "stall_banner_link_text", "stall_items_config"]);
+        .in("key", ["stall_start_date", "stall_end_date", "stall_start_time", "stall_end_time", "stall_banner_title", "stall_banner_subtitle", "stall_banner_link_text", "stall_items_config"]);
 
       if (data) {
         for (const row of data) {
           if (row.key === "stall_start_date") setStallStartDate(row.value);
           if (row.key === "stall_end_date") setStallEndDate(row.value);
+          if (row.key === "stall_start_time") setStallStartTime(row.value);
+          if (row.key === "stall_end_time") setStallEndTime(row.value);
           if (row.key === "stall_banner_title") setBannerState(prev => ({ ...prev, title: row.value }));
           if (row.key === "stall_banner_subtitle") setBannerState(prev => ({ ...prev, subtitle: row.value }));
           if (row.key === "stall_banner_link_text") setBannerState(prev => ({ ...prev, linkText: row.value }));
@@ -69,8 +76,10 @@ export const StallScheduleProvider: React.FC<{ children: React.ReactNode }> = ({
   const isStallActive = (() => {
     if (!stallStartDate || !stallEndDate) return false;
     const now = new Date();
-    const start = new Date(stallStartDate + "T00:00:00");
-    const end = new Date(stallEndDate + "T23:59:59");
+    const startDateStr = stallStartDate + "T" + (stallStartTime || "00:00") + ":00";
+    const endDateStr = stallEndDate + "T" + (stallEndTime || "23:59") + ":59";
+    const start = new Date(startDateStr);
+    const end = new Date(endDateStr);
     return now >= start && now <= end;
   })();
 
@@ -80,6 +89,15 @@ export const StallScheduleProvider: React.FC<{ children: React.ReactNode }> = ({
     await Promise.all([
       supabase.from("settings").upsert({ key: "stall_start_date", value: start }),
       supabase.from("settings").upsert({ key: "stall_end_date", value: end }),
+    ]);
+  }, []);
+
+  const setStallTimes = useCallback(async (startTime: string, endTime: string) => {
+    setStallStartTime(startTime);
+    setStallEndTime(endTime);
+    await Promise.all([
+      supabase.from("settings").upsert({ key: "stall_start_time", value: startTime }),
+      supabase.from("settings").upsert({ key: "stall_end_time", value: endTime }),
     ]);
   }, []);
 
@@ -116,7 +134,7 @@ export const StallScheduleProvider: React.FC<{ children: React.ReactNode }> = ({
 
   return (
     <StallScheduleContext.Provider value={{
-      stallStartDate, stallEndDate, isStallActive, setStallDates,
+      stallStartDate, stallEndDate, stallStartTime, stallEndTime, isStallActive, setStallDates, setStallTimes,
       banner, setBanner,
       stallItemsConfig, addStallItem, removeStallItem, updateStallItemPrice,
       loading,
