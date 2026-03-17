@@ -16,8 +16,11 @@ interface StallBanner {
 interface StallScheduleContextType {
   stallStartDate: string;
   stallEndDate: string;
+  stallStartTime: string;
+  stallEndTime: string;
   isStallActive: boolean;
   setStallDates: (start: string, end: string) => Promise<void>;
+  setStallTimes: (startTime: string, endTime: string) => Promise<void>;
   banner: StallBanner;
   setBanner: (banner: StallBanner) => Promise<void>;
   stallItemsConfig: StallItemConfig[];
