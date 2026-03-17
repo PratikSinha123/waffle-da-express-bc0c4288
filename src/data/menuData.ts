@@ -112,6 +112,9 @@ export const defaultMenuItems: MenuItem[] = [
   { id: "w45", name: "Kunafa Almond", description: "Crispy kunafa with almond filling", price: 140, category: "Waffles", isVeg: true },
   { id: "w46", name: "Tiramisu", description: "Classic Italian tiramisu dessert", price: 140, category: "Waffles", isVeg: true },
   { id: "w47", name: "Biscoff", description: "Creamy Biscoff dessert", price: 140, category: "Waffles", isVeg: true },
+  { id: "w48", name: "White Chocolate", description: "Smooth white chocolate waffle", price: 90, category: "Waffles", isVeg: true },
+  { id: "w49", name: "Imli Crunchy Coho", description: "Tangy imli with crunchy chocolate waffle", price: 90, category: "Waffles", isVeg: true },
+  { id: "w50", name: "Double Chocolate", description: "Double layered chocolate waffle", price: 110, category: "Waffles", isVeg: true },
 
   // WAFFLE CAKES
   { id: "wc1", name: "Circle of Bliss (Single)", description: "Single layer waffle cake", price: 300, category: "Waffle Cakes", isVeg: true },
@@ -214,6 +217,11 @@ export const defaultMenuItems: MenuItem[] = [
   { id: "qb6", name: "Momos (8 Pcs)", description: "Steamed momos", price: 90, category: "Quick Bites", isVeg: true },
   { id: "qb7", name: "Cheese Fingers (8 Pcs)", description: "Crispy cheese fingers", price: 100, category: "Quick Bites", isVeg: true },
   { id: "qb8", name: "Kurkure Momos (8 Pcs)", description: "Crunchy kurkure momos", price: 100, category: "Quick Bites", isVeg: true },
+  { id: "qb9", name: "Chicken Momos (8 Pcs)", description: "Steamed chicken momos", price: 120, category: "Quick Bites", isVeg: false },
+  { id: "qb10", name: "Chicken Cheese Balls (8 Pcs)", description: "Crispy chicken cheese balls", price: 130, category: "Quick Bites", isVeg: false },
+  { id: "qb11", name: "Veg Cheese Balls (8 Pcs)", description: "Crispy veg cheese balls", price: 100, category: "Quick Bites", isVeg: true },
+  { id: "qb12", name: "Veg Momos (8 Pcs)", description: "Steamed veg momos", price: 80, category: "Quick Bites", isVeg: true },
+  { id: "qb13", name: "Paneer Momos (8 Pcs)", description: "Steamed paneer momos", price: 120, category: "Quick Bites", isVeg: true },
 
   // TEA
   { id: "te1", name: "Elaichi Tea", description: "Cardamom flavored tea", price: 30, category: "Tea", isVeg: true },

@@ -10,18 +10,29 @@ import heroImage from "@/assets/hero-waffles.jpg";
 
 const StallMenuPage = () => {
   const { menuItems } = useMenu();
-  const { isStallActive, stallStartDate, stallEndDate } = useStallSchedule();
+  const { isStallActive, stallStartDate, stallEndDate, stallItemsConfig } = useStallSchedule();
   const [customizeItem, setCustomizeItem] = useState<MenuItem | null>(null);
   const [search, setSearch] = useState("");
 
   const stallItems = useMemo(() => {
-    let items = menuItems.filter((item) => item.isStallItem);
+    const configMap = new Map(stallItemsConfig.map(c => [c.id, c]));
+    let items = menuItems
+      .filter((item) => configMap.has(item.id))
+      .map((item) => {
+        const config = configMap.get(item.id)!;
+        return {
+          ...item,
+          isStallItem: true,
+          stallPrice: config.stallPrice,
+          stallPrice2: config.stallPrice2,
+        };
+      });
     if (search.trim()) {
       const q = search.toLowerCase();
       items = items.filter((item) => item.name.toLowerCase().includes(q) || item.description.toLowerCase().includes(q));
     }
     return items;
-  }, [menuItems, search]);
+  }, [menuItems, stallItemsConfig, search]);
 
   return (
     <div className="min-h-screen relative">
