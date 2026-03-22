@@ -11,6 +11,9 @@ const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { isStallActive } = useStallSchedule();
 
+  // Hide navbar on admin route — admin has its own standalone header
+  if (location.pathname === "/admin") return null;
+
   const links = [
     { to: "/", label: "Home" },
     { to: "/menu", label: "Menu" },

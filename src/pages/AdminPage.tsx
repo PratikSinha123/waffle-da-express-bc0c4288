@@ -174,54 +174,67 @@ const AdminPage = () => {
   }
 
   return (
-    <div className="min-h-screen max-w-7xl mx-auto px-4 py-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Admin Panel</h1>
-        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-          {/* Push notification subscribe button */}
-          <PushSubscribeButton />
-          {/* Notification bell */}
-          <button
-            onClick={() => { setActiveTab("orders"); markAllSeen(); }}
-            className="relative p-2 rounded-full hover:bg-secondary transition-colors"
-          >
-            <Bell className="w-5 h-5 text-foreground" />
-            {unseenCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center animate-pulse">
-                {unseenCount}
-              </span>
-            )}
-          </button>
-          <button onClick={() => { setIsLoggedIn(false); localStorage.removeItem("waffle_admin"); }} className="px-3 sm:px-4 py-2 rounded-xl border border-border text-sm font-medium text-foreground hover:bg-secondary">
-            <LogOut className="w-4 h-4 inline mr-1" /> Logout
-          </button>
+    <div className="min-h-screen bg-background">
+      {/* Standalone Admin Header */}
+      <div className="h-1 waffle-gradient-warm" />
+      <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-xl border-b border-border/50 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div>
+              <h1 className="text-lg sm:text-xl font-bold text-foreground italic" style={{ fontFamily: "'Playfair Display', serif" }}>
+                Waffle Da — Admin
+              </h1>
+              <p className="text-xs text-muted-foreground">Manage orders, menu & stall</p>
+            </div>
+            <div className="flex items-center gap-2 sm:gap-3">
+              <PushSubscribeButton />
+              <button
+                onClick={() => { setActiveTab("orders"); markAllSeen(); }}
+                className="relative p-2 rounded-full hover:bg-secondary transition-colors"
+              >
+                <Bell className="w-5 h-5 text-foreground" />
+                {unseenCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center animate-pulse">
+                    {unseenCount}
+                  </span>
+                )}
+              </button>
+              <button onClick={() => { setIsLoggedIn(false); localStorage.removeItem("waffle_admin"); }} className="flex items-center gap-1 px-3 py-2 rounded-xl text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
+                <LogOut className="w-4 h-4" /> Logout
+              </button>
+            </div>
+          </div>
+
+          {/* Tab Navigation */}
+          <div className="flex gap-1 -mb-px overflow-x-auto scrollbar-hide">
+            {(["orders", "menu", "stall", "offers", "history"] as const).map((tab) => (
+              <button
+                key={tab}
+                onClick={() => { setActiveTab(tab); if (tab === "orders") markAllSeen(); }}
+                className={`px-4 py-3 text-sm font-medium transition-all relative whitespace-nowrap border-b-2 ${
+                  activeTab === tab
+                    ? "border-primary text-primary"
+                    : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
+                }`}
+              >
+                {tab === "orders" ? "📋 Orders" : tab === "menu" ? "🍽️ Menu" : tab === "stall" ? "🏪 Stall" : tab === "offers" ? "🏷️ Offers" : "📜 History"}
+                {tab === "orders" && unseenCount > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 bg-accent text-accent-foreground text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                    {unseenCount}
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
         </div>
+      </header>
+
+      <div className="max-w-7xl mx-auto px-4 py-6">
+        {/* Notification banner */}
+        <NotificationBanner />
+
+        {activeTab === "orders" ? <OrdersPanel /> : activeTab === "menu" ? <MenuPanel /> : activeTab === "stall" ? <StallPanel /> : activeTab === "offers" ? <OffersPanel /> : <DeletedOrdersPanel />}
       </div>
-
-      {/* Notification banner */}
-      <NotificationBanner />
-
-      {/* Tabs */}
-      <div className="flex gap-2 mb-6 flex-wrap">
-        {(["orders", "menu", "stall", "offers", "history"] as const).map((tab) => (
-          <button
-            key={tab}
-            onClick={() => { setActiveTab(tab); if (tab === "orders") markAllSeen(); }}
-            className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all relative ${
-              activeTab === tab ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"
-            }`}
-          >
-            {tab === "orders" ? "Orders" : tab === "menu" ? "Menu" : tab === "stall" ? "🏪 Stall" : tab === "offers" ? "Offers" : "History"}
-            {tab === "orders" && unseenCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-xs font-bold w-4 h-4 rounded-full flex items-center justify-center">
-                {unseenCount}
-              </span>
-            )}
-          </button>
-        ))}
-      </div>
-
-      {activeTab === "orders" ? <OrdersPanel /> : activeTab === "menu" ? <MenuPanel /> : activeTab === "stall" ? <StallPanel /> : activeTab === "offers" ? <OffersPanel /> : <DeletedOrdersPanel />}
     </div>
   );
 };
