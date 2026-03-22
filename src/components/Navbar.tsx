@@ -16,7 +16,6 @@ const Navbar = () => {
     { to: "/menu", label: "Menu" },
     ...(isStallActive ? [{ to: "/stall-menu", label: "🏪 Stall Menu" }] : []),
     { to: "/track-order", label: "Track Order" },
-    { to: "/admin", label: "Admin" },
   ];
 
   const isActive = (path: string) => location.pathname === path;
