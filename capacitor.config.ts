@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'Waffle Da Admin',
   webDir: 'dist',
   server: {
-    url: 'https://baef903a-1fe6-481a-bc92-245d2ff3e66d.lovableproject.com/admin?forceHideBadge=true',
+    url: 'https://waffle-da-express.lovable.app/admin?forceHideBadge=true',
     cleartext: true
   }
 };
