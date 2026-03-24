@@ -9,14 +9,15 @@ import SEOHead from "@/components/SEOHead";
 import heroImage from "@/assets/hero-waffles.jpg";
 
 const StallMenuPage = () => {
-  const { menuItems } = useMenu();
+  const { menuItems, refetchMenu } = useMenu();
   const { isStallActive, stallStartDate, stallEndDate, stallStartTime, stallEndTime, stallItemsConfig, refetch } = useStallSchedule();
   const [customizeItem, setCustomizeItem] = useState<MenuItem | null>(null);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
     refetch();
-  }, [refetch]);
+    refetchMenu();
+  }, [refetch, refetchMenu]);
 
   const stallItems = useMemo(() => {
     const configMap = new Map(stallItemsConfig.map(c => [c.id, c]));

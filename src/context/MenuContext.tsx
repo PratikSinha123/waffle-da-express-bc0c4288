@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
-import { MenuItem, defaultMenuItems, categories as defaultCategories } from "@/data/menuData";
+import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { MenuItem, categories as defaultCategories } from "@/data/menuData";
+import { supabase } from "@/integrations/supabase/client";
 
 interface MenuContextType {
   menuItems: MenuItem[];
@@ -8,48 +9,95 @@ interface MenuContextType {
   updateMenuItem: (id: string, updates: Partial<MenuItem>) => void;
   deleteMenuItem: (id: string) => void;
   addCategory: (category: string) => void;
+  loading: boolean;
+  refetchMenu: () => Promise<void>;
 }
 
 const MenuContext = createContext<MenuContextType | undefined>(undefined);
 
-const MENU_VERSION = "v5"; // bump this to force refresh cached menu
+const mapDbToMenuItem = (row: any): MenuItem => ({
+  id: row.id,
+  name: row.name,
+  description: row.description,
+  price: Number(row.price),
+  price2: row.price2 ? Number(row.price2) : undefined,
+  priceLabel: row.price_label || undefined,
+  priceLabel2: row.price_label2 || undefined,
+  category: row.category,
+  isVeg: row.is_veg,
+  available: row.available,
+});
 
 export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [menuItems, setMenuItems] = useState<MenuItem[]>(() => {
-    const savedVersion = localStorage.getItem("waffle-da-menu-version");
-    if (savedVersion !== MENU_VERSION) {
-      localStorage.removeItem("waffle-da-menu");
-      localStorage.setItem("waffle-da-menu-version", MENU_VERSION);
-      return defaultMenuItems;
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [categories, setCategories] = useState<string[]>(defaultCategories);
+  const [loading, setLoading] = useState(true);
+
+  const fetchMenu = useCallback(async () => {
+    const { data, error } = await supabase
+      .from("menu_items")
+      .select("*")
+      .order("sort_order", { ascending: true });
+
+    if (data && !error) {
+      setMenuItems(data.map(mapDbToMenuItem));
+      // Extract unique categories from DB items
+      const dbCategories = Array.from(new Set(data.map((r: any) => r.category)));
+      const merged = ["All", ...dbCategories.filter((c: string) => c !== "All")];
+      setCategories(merged);
     }
-    const saved = localStorage.getItem("waffle-da-menu");
-    return saved ? JSON.parse(saved) : defaultMenuItems;
-  });
-
-  const [categories, setCategories] = useState<string[]>(() => {
-    const saved = localStorage.getItem("waffle-da-categories");
-    return saved ? JSON.parse(saved) : defaultCategories;
-  });
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
-    localStorage.setItem("waffle-da-menu", JSON.stringify(menuItems));
-  }, [menuItems]);
+    fetchMenu();
+  }, [fetchMenu]);
 
-  useEffect(() => {
-    localStorage.setItem("waffle-da-categories", JSON.stringify(categories));
-  }, [categories]);
-
-  const addMenuItem = (item: Omit<MenuItem, "id">) => {
+  const addMenuItem = async (item: Omit<MenuItem, "id">) => {
     const id = `custom-${Date.now()}`;
-    setMenuItems((prev) => [...prev, { ...item, id }]);
+    // Get max sort_order
+    const maxSort = menuItems.length > 0 ? Math.max(...menuItems.map((_, i) => i)) + 1 : 0;
+    
+    const newItem: MenuItem = { ...item, id };
+    setMenuItems((prev) => [...prev, newItem]);
+
+    await supabase.from("menu_items").insert({
+      id,
+      name: item.name,
+      description: item.description,
+      price: item.price,
+      price2: item.price2 || null,
+      price_label: item.priceLabel || null,
+      price_label2: item.priceLabel2 || null,
+      category: item.category,
+      is_veg: item.isVeg,
+      available: item.available !== false,
+      sort_order: maxSort + 1,
+    });
   };
 
-  const updateMenuItem = (id: string, updates: Partial<MenuItem>) => {
+  const updateMenuItem = async (id: string, updates: Partial<MenuItem>) => {
     setMenuItems((prev) => prev.map((item) => (item.id === id ? { ...item, ...updates } : item)));
+
+    const dbUpdates: any = {};
+    if (updates.name !== undefined) dbUpdates.name = updates.name;
+    if (updates.description !== undefined) dbUpdates.description = updates.description;
+    if (updates.price !== undefined) dbUpdates.price = updates.price;
+    if (updates.price2 !== undefined) dbUpdates.price2 = updates.price2;
+    if (updates.priceLabel !== undefined) dbUpdates.price_label = updates.priceLabel;
+    if (updates.priceLabel2 !== undefined) dbUpdates.price_label2 = updates.priceLabel2;
+    if (updates.category !== undefined) dbUpdates.category = updates.category;
+    if (updates.isVeg !== undefined) dbUpdates.is_veg = updates.isVeg;
+    if (updates.available !== undefined) dbUpdates.available = updates.available;
+
+    if (Object.keys(dbUpdates).length > 0) {
+      await supabase.from("menu_items").update(dbUpdates).eq("id", id);
+    }
   };
 
-  const deleteMenuItem = (id: string) => {
+  const deleteMenuItem = async (id: string) => {
     setMenuItems((prev) => prev.filter((item) => item.id !== id));
+    await supabase.from("menu_items").delete().eq("id", id);
   };
 
   const addCategory = (category: string) => {
@@ -59,7 +107,7 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <MenuContext.Provider value={{ menuItems, categories, addMenuItem, updateMenuItem, deleteMenuItem, addCategory }}>
+    <MenuContext.Provider value={{ menuItems, categories, addMenuItem, updateMenuItem, deleteMenuItem, addCategory, loading, refetchMenu: fetchMenu }}>
       {children}
     </MenuContext.Provider>
   );
