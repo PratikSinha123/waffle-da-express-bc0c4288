@@ -28,6 +28,7 @@ interface StallScheduleContextType {
   removeStallItem: (id: string) => Promise<void>;
   updateStallItemPrice: (id: string, stallPrice?: number, stallPrice2?: number) => Promise<void>;
   loading: boolean;
+  refetch: () => Promise<void>;
 }
 
 const StallScheduleContext = createContext<StallScheduleContextType | undefined>(undefined);
