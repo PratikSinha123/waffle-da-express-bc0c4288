@@ -140,7 +140,7 @@ export const StallScheduleProvider: React.FC<{ children: React.ReactNode }> = ({
       stallStartDate, stallEndDate, stallStartTime, stallEndTime, isStallActive, setStallDates, setStallTimes,
       banner, setBanner,
       stallItemsConfig, addStallItem, removeStallItem, updateStallItemPrice,
-      loading,
+      loading, refetch: fetchData,
     }}>
       {children}
     </StallScheduleContext.Provider>
