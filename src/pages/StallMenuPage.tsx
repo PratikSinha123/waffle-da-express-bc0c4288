@@ -16,7 +16,8 @@ const StallMenuPage = () => {
 
   useEffect(() => {
     refetch();
-  }, [refetch]);
+    refetchMenu();
+  }, [refetch, refetchMenu]);
 
   const stallItems = useMemo(() => {
     const configMap = new Map(stallItemsConfig.map(c => [c.id, c]));
