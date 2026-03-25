@@ -15,7 +15,7 @@ const orderTypeOptions: { type: OrderType; icon: typeof Truck; label: string; de
 ];
 
 const CheckoutPage = () => {
-  const { items, subtotal, deliveryFee, total, clearCart, orderType, setOrderType } = useCart();
+  const { items, subtotal, deliveryFee, total, clearCart, orderType, setOrderType, hasStallItems } = useCart();
   const { addOrder } = useOrders();
   const navigate = useNavigate();
   const { toast } = useToast();
