@@ -25,6 +25,7 @@ interface CartContextType {
   total: number;
   orderType: OrderType;
   setOrderType: (type: OrderType) => void;
+  hasStallItems: boolean;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
