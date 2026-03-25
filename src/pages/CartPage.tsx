@@ -11,7 +11,8 @@ const orderTypeOptions: { type: OrderType; icon: typeof Truck; label: string }[]
 ];
 
 const CartPage = () => {
-  const { items, updateQuantity, removeFromCart, subtotal, deliveryFee, total, orderType, setOrderType } = useCart();
+  const { items, updateQuantity, removeFromCart, subtotal, deliveryFee, total, orderType, setOrderType, hasStallItems } = useCart();
+  const filteredOrderTypes = hasStallItems ? orderTypeOptions.filter(o => o.type !== "Delivery") : orderTypeOptions;
 
   if (items.length === 0) {
     return (
@@ -83,7 +84,7 @@ const CartPage = () => {
         <div className="waffle-card-elevated mb-4">
           <h3 className="font-semibold text-foreground mb-3">Order Type</h3>
           <div className="flex gap-2">
-            {orderTypeOptions.map((opt) => (
+            {filteredOrderTypes.map((opt) => (
               <button key={opt.type} onClick={() => setOrderType(opt.type)}
                 className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border-2 text-sm font-medium transition-all ${
                   orderType === opt.type ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:border-primary/30"

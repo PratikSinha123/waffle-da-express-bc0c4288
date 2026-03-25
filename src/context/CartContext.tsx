@@ -10,6 +10,7 @@ export interface CartItem {
   quantity: number;
   selectedPrice: number;
   selectedPriceLabel?: string;
+  isStallItem?: boolean;
 }
 
 interface CartContextType {
@@ -24,6 +25,7 @@ interface CartContextType {
   total: number;
   orderType: OrderType;
   setOrderType: (type: OrderType) => void;
+  hasStallItems: boolean;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -81,15 +83,23 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const clearCart = useCallback(() => setItems([]), []);
 
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
+  const hasStallItems = items.some(item => item.isStallItem);
   const subtotal = items.reduce((sum, item) => {
     const addOnsTotal = item.selectedAddOns.reduce((a, ao) => a + ao.price, 0);
     return sum + (item.selectedPrice + addOnsTotal) * item.quantity;
   }, 0);
-  const deliveryFee = orderType === "Delivery" && subtotal > 0 ? deliveryFeeRate : 0;
+  const deliveryFee = orderType === "Delivery" && subtotal > 0 && !hasStallItems ? deliveryFeeRate : 0;
   const total = subtotal + deliveryFee;
 
+  // Auto-switch away from Delivery if stall items are in cart
+  useEffect(() => {
+    if (hasStallItems && orderType === "Delivery") {
+      setOrderType("Pickup");
+    }
+  }, [hasStallItems, orderType]);
+
   return (
-    <CartContext.Provider value={{ items, addToCart, removeFromCart, updateQuantity, clearCart, totalItems, subtotal, deliveryFee, total, orderType, setOrderType }}>
+    <CartContext.Provider value={{ items, addToCart, removeFromCart, updateQuantity, clearCart, totalItems, subtotal, deliveryFee, total, orderType, setOrderType, hasStallItems }}>
       {children}
     </CartContext.Provider>
   );

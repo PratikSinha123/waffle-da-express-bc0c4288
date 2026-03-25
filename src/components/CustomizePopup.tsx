@@ -39,6 +39,7 @@ const CustomizePopup = ({ item, onClose }: CustomizePopupProps) => {
           ? item.priceLabel
           : item.priceLabel2
         : undefined,
+      isStallItem: item.isStallItem,
     });
     toast({
       title: "Added to cart!",
