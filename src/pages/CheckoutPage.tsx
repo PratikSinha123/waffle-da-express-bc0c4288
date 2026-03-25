@@ -15,7 +15,7 @@ const orderTypeOptions: { type: OrderType; icon: typeof Truck; label: string; de
 ];
 
 const CheckoutPage = () => {
-  const { items, subtotal, deliveryFee, total, clearCart, orderType, setOrderType } = useCart();
+  const { items, subtotal, deliveryFee, total, clearCart, orderType, setOrderType, hasStallItems } = useCart();
   const { addOrder } = useOrders();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -81,7 +81,7 @@ const CheckoutPage = () => {
           <div className="waffle-card-elevated space-y-4">
             <h2 className="font-semibold text-foreground text-lg">Order Type</h2>
             <div className="grid grid-cols-3 gap-3">
-              {orderTypeOptions.map((opt) => (
+              {(hasStallItems ? orderTypeOptions.filter(o => o.type === "Pickup") : orderTypeOptions).map((opt) => (
                 <button key={opt.type} type="button" onClick={() => setOrderType(opt.type)}
                   className={`flex flex-col items-center p-4 rounded-xl border-2 transition-all ${
                     orderType === opt.type ? "border-primary bg-primary/10" : "border-border hover:border-primary/30"

@@ -93,7 +93,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Auto-switch away from Delivery if stall items are in cart
   useEffect(() => {
-    if (hasStallItems && orderType === "Delivery") {
+    if (hasStallItems && orderType !== "Pickup") {
       setOrderType("Pickup");
     }
   }, [hasStallItems, orderType]);
