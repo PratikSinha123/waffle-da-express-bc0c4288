@@ -10,6 +10,7 @@ export interface CartItem {
   quantity: number;
   selectedPrice: number;
   selectedPriceLabel?: string;
+  isStallItem?: boolean;
 }
 
 interface CartContextType {
