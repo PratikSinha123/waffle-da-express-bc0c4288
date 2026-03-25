@@ -11,7 +11,8 @@ const orderTypeOptions: { type: OrderType; icon: typeof Truck; label: string }[]
 ];
 
 const CartPage = () => {
-  const { items, updateQuantity, removeFromCart, subtotal, deliveryFee, total, orderType, setOrderType } = useCart();
+  const { items, updateQuantity, removeFromCart, subtotal, deliveryFee, total, orderType, setOrderType, hasStallItems } = useCart();
+  const filteredOrderTypes = hasStallItems ? orderTypeOptions.filter(o => o.type !== "Delivery") : orderTypeOptions;
 
   if (items.length === 0) {
     return (
