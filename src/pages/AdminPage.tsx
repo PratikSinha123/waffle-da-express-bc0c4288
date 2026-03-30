@@ -549,6 +549,50 @@ const OrdersPanel = () => {
         )}
       </div>
 
+      {/* WhatsApp Webhook Setting */}
+      <div className="waffle-card p-4 mb-4">
+        <div className="flex items-center gap-3 mb-2">
+          <span className="text-lg">💬</span>
+          <span className="text-sm font-medium text-foreground">WhatsApp Notification Webhook</span>
+        </div>
+        {editingWebhook ? (
+          <div className="flex flex-col gap-2">
+            <input
+              type="url"
+              value={whatsappWebhook}
+              onChange={(e) => setWhatsappWebhook(e.target.value)}
+              className="w-full px-3 py-2 rounded-lg bg-background border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+              placeholder="Paste your WhatsApp webhook URL (Interakt, Wati, etc.)"
+            />
+            <div className="flex gap-2">
+              <button
+                onClick={async () => {
+                  const trimmed = whatsappWebhook.trim();
+                  await supabase.from("settings").upsert({ key: "whatsapp_webhook_url", value: trimmed, updated_at: new Date().toISOString() });
+                  setEditingWebhook(false);
+                  toast({ title: trimmed ? "WhatsApp webhook saved!" : "WhatsApp webhook removed" });
+                }}
+                className="px-3 py-1.5 rounded-lg text-xs font-medium waffle-gradient text-primary-foreground"
+              >
+                Save
+              </button>
+              <button onClick={() => { setEditingWebhook(false); }} className="px-3 py-1.5 rounded-lg text-xs font-medium border border-border text-muted-foreground">
+                Cancel
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted-foreground truncate flex-1">
+              {whatsappWebhook ? whatsappWebhook : "Not configured"}
+            </span>
+            <button onClick={() => setEditingWebhook(true)} className="px-3 py-1.5 rounded-lg text-xs font-medium border border-border text-muted-foreground hover:bg-secondary whitespace-nowrap">
+              <Pencil className="w-3 h-3 inline mr-1" /> {whatsappWebhook ? "Change" : "Set Up"}
+            </button>
+          </div>
+        )}
+      </div>
+
       <div className="flex flex-col sm:flex-row gap-3 mb-3">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
