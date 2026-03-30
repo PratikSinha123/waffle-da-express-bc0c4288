@@ -212,6 +212,28 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       }
     ).catch((e) => console.error("Push notify error:", e));
 
+    // Fire WhatsApp notification
+    fetch(
+      `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/whatsapp-notify`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+        },
+        body: JSON.stringify({
+          orderId: id,
+          customerName: orderData.customerName,
+          customerPhone: orderData.phone,
+          orderType: orderData.orderType,
+          total: orderData.total,
+          items: orderData.items,
+          address: orderData.address,
+          notes: orderData.notes,
+        }),
+      }
+    ).catch((e) => console.error("WhatsApp notify error:", e));
+
     // Insert into DB (async, realtime will update state)
     supabase.from("orders").insert({
       id,
