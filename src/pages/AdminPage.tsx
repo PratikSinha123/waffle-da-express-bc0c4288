@@ -434,6 +434,9 @@ const OrdersPanel = () => {
 
   useEffect(() => {
     getDeliveryFeeAmount().then(setDeliveryFeeLocal);
+    supabase.from("settings").select("value").eq("key", "whatsapp_webhook_url").single().then(({ data }) => {
+      if (data?.value) setWhatsappWebhook(data.value);
+    });
   }, []);
 
   const filteredOrders = orders.filter(
