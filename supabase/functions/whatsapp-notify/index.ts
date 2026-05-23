@@ -52,22 +52,23 @@ ${itemsList}
 
 💰 *Total: ₹${total}*`;
 
-    // Send to webhook (works with Interakt, Wati, etc.)
-    const webhookRes = await fetch(webhookUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        message,
-        orderId,
-        customerName,
-        customerPhone,
-        orderType,
-        total,
-        items,
-        address,
-        notes,
-      }),
-    });
+    // Detect CallMeBot (uses GET with text query param)
+    const isCallMeBot = webhookUrl.includes('callmebot.com');
+    let webhookRes;
+    if (isCallMeBot) {
+      const sep = webhookUrl.includes('?') ? '&' : '?';
+      const url = `${webhookUrl}${sep}text=${encodeURIComponent(message)}`;
+      webhookRes = await fetch(url, { method: 'GET' });
+    } else {
+      // Send to webhook (works with Interakt, Wati, etc.)
+      webhookRes = await fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message, orderId, customerName, customerPhone, orderType, total, items, address, notes,
+        }),
+      });
+    }
 
     const responseText = await webhookRes.text();
     console.log('WhatsApp webhook response:', webhookRes.status, responseText);
