@@ -431,6 +431,9 @@ const OrdersPanel = () => {
   const [csvToDate, setCsvToDate] = useState("");
   const [whatsappWebhook, setWhatsappWebhook] = useState("");
   const [editingWebhook, setEditingWebhook] = useState(false);
+  const [cmbPhone, setCmbPhone] = useState("");
+  const [cmbApiKey, setCmbApiKey] = useState("");
+  const [testingWebhook, setTestingWebhook] = useState(false);
 
   useEffect(() => {
     getDeliveryFeeAmount().then(setDeliveryFeeLocal);
@@ -562,7 +565,7 @@ const OrdersPanel = () => {
               value={whatsappWebhook}
               onChange={(e) => setWhatsappWebhook(e.target.value)}
               className="w-full px-3 py-2 rounded-lg bg-background border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
-              placeholder="Paste your WhatsApp webhook URL (Interakt, Wati, etc.)"
+              placeholder="Paste your WhatsApp webhook URL (Interakt, Wati, CallMeBot, etc.)"
             />
             <div className="flex gap-2">
               <button
@@ -586,11 +589,85 @@ const OrdersPanel = () => {
             <span className="text-xs text-muted-foreground truncate flex-1">
               {whatsappWebhook ? whatsappWebhook : "Not configured"}
             </span>
+            <button
+              disabled={!whatsappWebhook || testingWebhook}
+              onClick={async () => {
+                setTestingWebhook(true);
+                try {
+                  const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/whatsapp-notify`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY },
+                    body: JSON.stringify({
+                      orderId: "TEST-" + Date.now(),
+                      customerName: "Test Customer",
+                      customerPhone: "9999999999",
+                      orderType: "Pickup",
+                      total: 100,
+                      items: [{ name: "Test Waffle", quantity: 1, price: 100 }],
+                      address: "",
+                      notes: "This is a test notification",
+                    }),
+                  });
+                  toast({ title: res.ok ? "Test sent! Check your WhatsApp." : "Test failed — check the URL." });
+                } catch {
+                  toast({ title: "Test failed — network error." });
+                } finally {
+                  setTestingWebhook(false);
+                }
+              }}
+              className="px-3 py-1.5 rounded-lg text-xs font-medium border border-border text-muted-foreground hover:bg-secondary whitespace-nowrap disabled:opacity-40"
+            >
+              {testingWebhook ? "Sending…" : "Test"}
+            </button>
             <button onClick={() => setEditingWebhook(true)} className="px-3 py-1.5 rounded-lg text-xs font-medium border border-border text-muted-foreground hover:bg-secondary whitespace-nowrap">
               <Pencil className="w-3 h-3 inline mr-1" /> {whatsappWebhook ? "Change" : "Set Up"}
             </button>
           </div>
         )}
+
+        {/* CallMeBot Quick Setup (Free) */}
+        <div className="mt-4 pt-4 border-t border-border">
+          <div className="text-xs font-semibold text-foreground mb-1">⚡ Quick Setup: CallMeBot (Free)</div>
+          <div className="text-[11px] text-muted-foreground mb-2 leading-relaxed">
+            1. Save <span className="font-mono font-semibold">+34 644 51 95 23</span> in your contacts as "CallMeBot".<br/>
+            2. From your WhatsApp, send <span className="font-mono font-semibold">"I allow callmebot to send me messages"</span> to that number.<br/>
+            3. You'll receive your personal API key — paste it below with your phone number (with country code, no +).
+          </div>
+          <div className="flex flex-col sm:flex-row gap-2">
+            <input
+              type="tel"
+              value={cmbPhone}
+              onChange={(e) => setCmbPhone(e.target.value)}
+              placeholder="Phone (e.g. 919876543210)"
+              className="flex-1 px-3 py-2 rounded-lg bg-background border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+            />
+            <input
+              type="text"
+              value={cmbApiKey}
+              onChange={(e) => setCmbApiKey(e.target.value)}
+              placeholder="API Key"
+              className="flex-1 px-3 py-2 rounded-lg bg-background border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+            />
+            <button
+              onClick={async () => {
+                const phone = cmbPhone.trim().replace(/[^0-9]/g, "");
+                const key = cmbApiKey.trim();
+                if (!phone || !key) {
+                  toast({ title: "Enter both phone and API key" });
+                  return;
+                }
+                const url = `https://api.callmebot.com/whatsapp.php?phone=${phone}&apikey=${key}`;
+                await supabase.from("settings").upsert({ key: "whatsapp_webhook_url", value: url, updated_at: new Date().toISOString() });
+                setWhatsappWebhook(url);
+                setCmbPhone(""); setCmbApiKey("");
+                toast({ title: "CallMeBot configured! Hit Test to verify." });
+              }}
+              className="px-4 py-2 rounded-lg text-xs font-medium waffle-gradient text-primary-foreground whitespace-nowrap"
+            >
+              Save CallMeBot
+            </button>
+          </div>
+        </div>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3 mb-3">
