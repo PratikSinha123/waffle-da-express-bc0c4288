@@ -431,6 +431,9 @@ const OrdersPanel = () => {
   const [csvToDate, setCsvToDate] = useState("");
   const [whatsappWebhook, setWhatsappWebhook] = useState("");
   const [editingWebhook, setEditingWebhook] = useState(false);
+  const [cmbPhone, setCmbPhone] = useState("");
+  const [cmbApiKey, setCmbApiKey] = useState("");
+  const [testingWebhook, setTestingWebhook] = useState(false);
 
   useEffect(() => {
     getDeliveryFeeAmount().then(setDeliveryFeeLocal);
