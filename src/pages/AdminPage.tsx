@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useShopStatus } from "@/context/ShopStatusContext";
 import { Switch } from "@/components/ui/switch";
 import { useStallSchedule } from "@/context/StallScheduleContext";
+import { useNativePush } from "@/hooks/use-native-push";
 
 const ADMIN_PASSWORD = "waffle123";
 
@@ -136,6 +137,7 @@ const PushSubscribeButton = () => {
 };
 
 const AdminPage = () => {
+  useNativePush();
   const [isLoggedIn, setIsLoggedIn] = useState(() => localStorage.getItem("waffle_admin") === "true");
   const [password, setPassword] = useState("");
   const [activeTab, setActiveTab] = useState<"orders" | "menu" | "stall" | "offers" | "history">("orders");
