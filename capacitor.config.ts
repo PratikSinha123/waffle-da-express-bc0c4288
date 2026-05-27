@@ -5,7 +5,8 @@ const config: CapacitorConfig = {
   appName: 'Waffle Da Admin',
   webDir: 'dist',
   server: {
-    url: 'https://www.waffleda.in/admin',
+    // We use the root URL to avoid 404s, our App.tsx will auto-redirect to /admin for the APK
+    url: 'https://www.waffleda.in',
     cleartext: true
   }
 };
