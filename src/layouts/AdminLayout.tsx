@@ -2,6 +2,7 @@ import React from "react";
 import { Link, useLocation, Outlet } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { useOrders } from "@/context/OrderContext";
+import { useNativePush } from "@/hooks/use-native-push";
 import {
   LayoutDashboard,
   ClipboardList,
@@ -17,6 +18,9 @@ const AdminLayout: React.FC = () => {
   const { logout } = useAuth();
   const { unseenCount } = useOrders();
   const location = useLocation();
+
+  // Register for push notifications on native platforms
+  useNativePush();
 
   const navItems = [
     { path: "/admin", icon: LayoutDashboard, label: "Dashboard" },
