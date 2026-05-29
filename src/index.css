@@ -44,6 +44,7 @@
     --waffle-dark: 28 24% 16%;
     --waffle-amber: 34 65% 48%;
     --waffle-honey: 38 70% 52%;
+    --bg-gradient-end: 40 24% 96%;
   }
 
   .dark {
@@ -73,6 +74,7 @@
     --waffle-dark: 28 24% 8%;
     --waffle-amber: 34 60% 46%;
     --waffle-honey: 38 65% 50%;
+    --bg-gradient-end: 28 20% 7%;
   }
 }
 
@@ -95,7 +97,7 @@
   html {
     scroll-behavior: smooth;
     color-scheme: light;
-    background: linear-gradient(180deg, hsl(50 38% 87%), hsl(40 22% 96%));
+    background: linear-gradient(180deg, hsl(var(--background)), hsl(var(--bg-gradient-end)));
   }
 
   body {
@@ -111,7 +113,7 @@
       radial-gradient(circle at 86% 18%, hsl(32 50% 42% / 0.10), transparent 0 22%),
       radial-gradient(circle at 50% 120%, hsl(40 30% 72% / 0.18), transparent 0 30%),
       radial-gradient(circle at top, hsl(36 60% 50% / 0.18), transparent 28%),
-      linear-gradient(180deg, hsl(var(--background)), hsl(40 24% 96%));
+      linear-gradient(180deg, hsl(var(--background)), hsl(var(--bg-gradient-end)));
     background-attachment: fixed;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
