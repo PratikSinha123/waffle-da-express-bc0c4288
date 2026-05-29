@@ -29,15 +29,15 @@ const Navbar = () => {
       <nav className="sticky top-0 z-50 glass-panel border-x-0 border-t-0 rounded-none">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-18 py-2">
-            <Link to="/" className="flex items-center gap-3 group">
-              <div className="w-10 h-10 rounded-2xl waffle-gradient-warm flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
-                <Sparkles className="w-4.5 h-4.5 text-primary-foreground" />
-              </div>
+            <Link to="/" className="flex items-center gap-2 group">
               <div className="leading-tight">
-                <span className="block text-xl font-bold text-gradient italic" style={{ fontFamily: "'Playfair Display', serif" }}>
-                  Waffle Da
-                </span>
-                <span className="block text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+                <div className="flex items-center gap-1.5">
+                  <span className="block text-xl font-bold text-gradient italic group-hover:opacity-90 transition-opacity" style={{ fontFamily: "'Playfair Display', serif" }}>
+                    Waffle Da
+                  </span>
+                  <span className="text-2xl animate-float group-hover:scale-110 transition-transform duration-300 inline-block" style={{ animationDuration: "3s" }}>🧇</span>
+                </div>
+                <span className="block text-[11px] uppercase tracking-[0.22em] text-muted-foreground mt-0.5">
                   Fresh bites in Bidholi
                 </span>
               </div>
