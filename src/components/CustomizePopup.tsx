@@ -49,21 +49,22 @@ const CustomizePopup = ({ item, onClose }: CustomizePopupProps) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-0 sm:p-4" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-md p-0 sm:p-4" onClick={onClose}>
       <div
-        className="bg-gradient-to-b from-card to-secondary w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl max-h-[85vh] flex flex-col shadow-[0_-10px_60px_-15px_rgba(0,0,0,0.2)] border border-border"
+        className="w-full sm:max-w-md rounded-t-3xl sm:rounded-[2rem] max-h-[88vh] flex flex-col glass-panel overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="relative flex items-center justify-between p-6 border-b border-border">
+        <div className="relative flex items-start justify-between gap-4 p-6 border-b border-border/60 soft-surface">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-1.5 rounded-full bg-muted mt-2 sm:hidden" />
-          <div>
-            <h2 className="text-xl font-bold text-foreground" style={{ fontFamily: "'Playfair Display', serif" }}>{item.name}</h2>
+          <div className="space-y-1">
+            <p className="section-heading">Customize item</p>
+            <h2 className="text-xl sm:text-2xl font-bold text-foreground leading-tight" style={{ fontFamily: "'Playfair Display', serif" }}>{item.name}</h2>
             <p className="text-sm text-muted-foreground mt-0.5">Base price: ₹{item.price}</p>
           </div>
           <button
             onClick={onClose}
-            className="p-2.5 rounded-full bg-secondary hover:bg-muted transition-colors"
+            className="p-2.5 rounded-full bg-secondary/80 hover:bg-secondary transition-colors border border-border/60"
           >
             <X className="w-4 h-4 text-foreground" />
           </button>
@@ -73,25 +74,25 @@ const CustomizePopup = ({ item, onClose }: CustomizePopupProps) => {
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {/* Size selector for items with 2 prices */}
           {item.price2 && (
-            <div>
-              <h3 className="font-semibold text-foreground mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>Select Size</h3>
+            <div className="space-y-3">
+              <h3 className="font-semibold text-foreground" style={{ fontFamily: "'Playfair Display', serif" }}>Select Size</h3>
               <div className="flex gap-3">
                 <button
                   onClick={() => setSelectedPrice(item.price)}
-                  className={`flex-1 py-3 rounded-xl text-sm font-medium border-2 transition-all ${
+                  className={`flex-1 py-3 rounded-2xl text-sm font-medium border-2 transition-all ${
                     selectedPrice === item.price
-                      ? "border-accent bg-accent/10 text-accent shadow-sm"
-                      : "border-border text-muted-foreground hover:border-accent/40"
+                      ? "border-accent bg-accent/10 text-accent shadow-md"
+                      : "border-border text-muted-foreground hover:border-accent/40 hover:bg-secondary/50"
                   }`}
                 >
                   {item.priceLabel} - ₹{item.price}
                 </button>
                 <button
                   onClick={() => setSelectedPrice(item.price2!)}
-                  className={`flex-1 py-3 rounded-xl text-sm font-medium border-2 transition-all ${
+                  className={`flex-1 py-3 rounded-2xl text-sm font-medium border-2 transition-all ${
                     selectedPrice === item.price2
-                      ? "border-accent bg-accent/10 text-accent shadow-sm"
-                      : "border-border text-muted-foreground hover:border-accent/40"
+                      ? "border-accent bg-accent/10 text-accent shadow-md"
+                      : "border-border text-muted-foreground hover:border-accent/40 hover:bg-secondary/50"
                   }`}
                 >
                   {item.priceLabel2} - ₹{item.price2}
@@ -101,19 +102,19 @@ const CustomizePopup = ({ item, onClose }: CustomizePopupProps) => {
           )}
 
           {/* Quantity */}
-          <div>
-            <h3 className="font-semibold text-foreground mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>Quantity</h3>
+          <div className="space-y-3">
+            <h3 className="font-semibold text-foreground" style={{ fontFamily: "'Playfair Display', serif" }}>Quantity</h3>
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="w-11 h-11 rounded-full border-2 border-border flex items-center justify-center hover:bg-secondary transition-colors"
+                className="w-11 h-11 rounded-full border-2 border-border flex items-center justify-center hover:bg-secondary transition-colors bg-card"
               >
                 <Minus className="w-4 h-4 text-muted-foreground" />
               </button>
-              <span className="text-xl font-bold w-8 text-center text-foreground">{quantity}</span>
+              <span className="text-xl font-bold w-10 text-center text-foreground">{quantity}</span>
               <button
                 onClick={() => setQuantity(quantity + 1)}
-                className="w-11 h-11 rounded-full bg-accent text-accent-foreground flex items-center justify-center hover:opacity-90 transition-opacity shadow-md"
+                className="w-11 h-11 rounded-full waffle-gradient-warm text-primary-foreground flex items-center justify-center hover:opacity-95 transition-opacity shadow-md"
               >
                 <Plus className="w-4 h-4" />
               </button>
@@ -123,9 +124,8 @@ const CustomizePopup = ({ item, onClose }: CustomizePopupProps) => {
           {/* Add-ons - Only for Waffles, Waffle Cakes, and Sweet Dish */}
           {["Waffles", "Waffle Cakes", "Sweet Dish"].includes(item.category) && (
             <>
-              {/* ₹20 Add-ons */}
-              <div>
-                <h3 className="font-semibold text-foreground mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>
+              <div className="space-y-3">
+                <h3 className="font-semibold text-foreground" style={{ fontFamily: "'Playfair Display', serif" }}>
                   Add-ons <span className="text-accent font-normal">@ ₹20</span>
                 </h3>
                 <div className="grid grid-cols-2 gap-2.5">
@@ -135,10 +135,10 @@ const CustomizePopup = ({ item, onClose }: CustomizePopupProps) => {
                       <button
                         key={addOn.id}
                         onClick={() => toggleAddOn(addOn)}
-                        className={`px-4 py-3 rounded-xl text-sm font-medium border-2 transition-all text-left ${
+                        className={`px-4 py-3 rounded-2xl text-sm font-medium border-2 transition-all text-left ${
                           isSelected
-                            ? "border-accent bg-accent/10 text-accent shadow-sm"
-                            : "border-border text-foreground hover:border-accent/40 hover:bg-secondary"
+                            ? "border-accent bg-accent/10 text-accent shadow-md"
+                            : "border-border text-foreground hover:border-accent/40 hover:bg-secondary/60"
                         }`}
                       >
                         {addOn.name}
@@ -148,9 +148,8 @@ const CustomizePopup = ({ item, onClose }: CustomizePopupProps) => {
                 </div>
               </div>
 
-              {/* ₹30 Add-ons */}
-              <div>
-                <h3 className="font-semibold text-foreground mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>
+              <div className="space-y-3">
+                <h3 className="font-semibold text-foreground" style={{ fontFamily: "'Playfair Display', serif" }}>
                   Add-ons <span className="text-accent font-normal">@ ₹30</span>
                 </h3>
                 <div className="grid grid-cols-2 gap-2.5">
@@ -160,10 +159,10 @@ const CustomizePopup = ({ item, onClose }: CustomizePopupProps) => {
                       <button
                         key={addOn.id}
                         onClick={() => toggleAddOn(addOn)}
-                        className={`px-4 py-3 rounded-xl text-sm font-medium border-2 transition-all text-left ${
+                        className={`px-4 py-3 rounded-2xl text-sm font-medium border-2 transition-all text-left ${
                           isSelected
-                            ? "border-accent bg-accent/10 text-accent shadow-sm"
-                            : "border-border text-foreground hover:border-accent/40 hover:bg-secondary"
+                            ? "border-accent bg-accent/10 text-accent shadow-md"
+                            : "border-border text-foreground hover:border-accent/40 hover:bg-secondary/60"
                         }`}
                       >
                         {addOn.name}
@@ -177,7 +176,7 @@ const CustomizePopup = ({ item, onClose }: CustomizePopupProps) => {
         </div>
 
         {/* Footer */}
-        <div className="p-6 border-t border-border bg-secondary/50">
+        <div className="p-6 border-t border-border/60 bg-secondary/40 backdrop-blur-sm">
           <div className="flex items-center justify-between mb-4">
             <span className="text-muted-foreground font-medium">Total</span>
             <span className="text-2xl font-bold text-foreground" style={{ fontFamily: "'Playfair Display', serif" }}>₹{totalPrice}</span>
