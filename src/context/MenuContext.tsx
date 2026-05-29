@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
-import { MenuItem, categories as defaultCategories } from "@/data/menuData";
+import { MenuItem, categories as defaultCategories, defaultMenuItems } from "@/data/menuData";
 import { supabase } from "@/integrations/supabase/client";
 
 interface MenuContextType {
@@ -39,12 +39,16 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children
       .select("*")
       .order("sort_order", { ascending: true });
 
-    if (data && !error) {
+    if (data && data.length > 0 && !error) {
       setMenuItems(data.map(mapDbToMenuItem));
       // Extract unique categories from DB items
       const dbCategories = Array.from(new Set(data.map((r: any) => r.category)));
       const merged = ["All", ...dbCategories.filter((c: string) => c !== "All")];
       setCategories(merged);
+    } else {
+      // Fallback to default local menu items if DB is empty or fails
+      setMenuItems(defaultMenuItems);
+      setCategories(defaultCategories);
     }
     setLoading(false);
   }, []);
