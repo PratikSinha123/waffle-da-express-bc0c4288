@@ -5,6 +5,7 @@ interface ShopStatusContextType {
   isShopOpen: boolean;
   loading: boolean;
   toggleShopStatus: () => Promise<void>;
+  refetchStatus: () => Promise<void>;
 }
 
 const ShopStatusContext = createContext<ShopStatusContextType | undefined>(undefined);
@@ -14,35 +15,48 @@ export const ShopStatusProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const [loading, setLoading] = useState(true);
 
   const fetchStatus = useCallback(async () => {
-    const { data } = await supabase
-      .from("settings")
-      .select("key, value")
-      .in("key", ["shop_open", "shop_status"]);
-    
-    if (data && data.length > 0) {
-      const openRow = data.find(r => r.key === "shop_open");
-      const statusRow = data.find(r => r.key === "shop_status");
+    try {
+      const { data } = await supabase
+        .from("settings")
+        .select("key, value")
+        .in("key", ["shop_open", "shop_status"]);
       
-      const openVal = openRow ? openRow.value : "true";
-      const statusVal = statusRow ? statusRow.value : "open";
+      if (data && data.length > 0) {
+        const openRow = data.find(r => r.key === "shop_open");
+        const statusRow = data.find(r => r.key === "shop_status");
+        
+        const openVal = openRow ? openRow.value : "true";
+        const statusVal = statusRow ? statusRow.value : "open";
 
-      setIsShopOpen(openVal === "true" && statusVal !== "closed");
+        setIsShopOpen(openVal === "true" && statusVal !== "closed");
+      }
+    } catch (e) {
+      console.error("Shop status fetch error:", e);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
 
   useEffect(() => {
     fetchStatus();
 
-    // Realtime subscription for settings table updates
+    // 1. Realtime subscription for settings table updates
     const channel = supabase
-      .channel("settings-realtime")
+      .channel(`settings-realtime-${Date.now()}`)
       .on("postgres_changes", { event: "*", schema: "public", table: "settings" }, () => {
         fetchStatus();
       })
       .subscribe();
 
-    return () => { supabase.removeChannel(channel); };
+    // 2. Continuous 3-second polling fallback for guaranteed instant sync without page refresh
+    const interval = setInterval(() => {
+      fetchStatus();
+    }, 3000);
+
+    return () => {
+      supabase.removeChannel(channel);
+      clearInterval(interval);
+    };
   }, [fetchStatus]);
 
   const toggleShopStatus = async () => {
@@ -58,7 +72,7 @@ export const ShopStatusProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   };
 
   return (
-    <ShopStatusContext.Provider value={{ isShopOpen, loading, toggleShopStatus }}>
+    <ShopStatusContext.Provider value={{ isShopOpen, loading, toggleShopStatus, refetchStatus: fetchStatus }}>
       {children}
     </ShopStatusContext.Provider>
   );

@@ -47,44 +47,54 @@ export const StallScheduleProvider: React.FC<{ children: React.ReactNode }> = ({
   const [loading, setLoading] = useState(true);
 
   const fetchData = useCallback(async () => {
-    setLoading(true);
-    const { data } = await supabase
-      .from("settings")
-      .select("key, value")
-      .in("key", ["stall_start_date", "stall_end_date", "stall_start_time", "stall_end_time", "stall_banner_title", "stall_banner_subtitle", "stall_banner_link_text", "stall_items_config"]);
+    try {
+      const { data } = await supabase
+        .from("settings")
+        .select("key, value")
+        .in("key", ["stall_start_date", "stall_end_date", "stall_start_time", "stall_end_time", "stall_banner_title", "stall_banner_subtitle", "stall_banner_link_text", "stall_items_config"]);
 
-    if (data) {
-      for (const row of data) {
-        if (row.key === "stall_start_date") setStallStartDate(row.value);
-        if (row.key === "stall_end_date") setStallEndDate(row.value);
-        if (row.key === "stall_start_time") setStallStartTime(row.value);
-        if (row.key === "stall_end_time") setStallEndTime(row.value);
-        if (row.key === "stall_banner_title") setBannerState(prev => ({ ...prev, title: row.value }));
-        if (row.key === "stall_banner_subtitle") setBannerState(prev => ({ ...prev, subtitle: row.value }));
-        if (row.key === "stall_banner_link_text") setBannerState(prev => ({ ...prev, linkText: row.value }));
-        if (row.key === "stall_items_config") {
-          try {
-            setStallItemsConfig(JSON.parse(row.value));
-          } catch { /* ignore parse errors */ }
+      if (data) {
+        for (const row of data) {
+          if (row.key === "stall_start_date") setStallStartDate(row.value);
+          if (row.key === "stall_end_date") setStallEndDate(row.value);
+          if (row.key === "stall_start_time") setStallStartTime(row.value);
+          if (row.key === "stall_end_time") setStallEndTime(row.value);
+          if (row.key === "stall_banner_title") setBannerState(prev => ({ ...prev, title: row.value }));
+          if (row.key === "stall_banner_subtitle") setBannerState(prev => ({ ...prev, subtitle: row.value }));
+          if (row.key === "stall_banner_link_text") setBannerState(prev => ({ ...prev, linkText: row.value }));
+          if (row.key === "stall_items_config") {
+            try {
+              setStallItemsConfig(JSON.parse(row.value));
+            } catch { /* ignore parse errors */ }
+          }
         }
       }
+    } catch (e) {
+      console.error("Stall schedule fetch error:", e);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
 
   useEffect(() => {
     fetchData();
 
-    // Live Realtime listener for Pop-up stall schedule & banner changes
+    // 1. Live Realtime listener for Pop-up stall schedule & banner changes
     const channel = supabase
-      .channel("stall-schedule-realtime")
+      .channel(`stall-schedule-realtime-${Date.now()}`)
       .on("postgres_changes", { event: "*", schema: "public", table: "settings" }, () => {
         fetchData();
       })
       .subscribe();
 
+    // 2. Continuous 3-second polling fallback for guaranteed instant sync
+    const interval = setInterval(() => {
+      fetchData();
+    }, 3000);
+
     return () => {
       supabase.removeChannel(channel);
+      clearInterval(interval);
     };
   }, [fetchData]);
 
