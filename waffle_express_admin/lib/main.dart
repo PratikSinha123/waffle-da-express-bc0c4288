@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'config/theme.dart';
 import 'providers/admin_provider.dart';
 import 'services/notification_service.dart';
@@ -23,6 +24,7 @@ class WaffleExpressAdminApp extends StatefulWidget {
 
 class _WaffleExpressAdminAppState extends State<WaffleExpressAdminApp> {
   bool _isLoggedIn = false;
+  bool _checkingAuth = true;
 
   @override
   void initState() {
@@ -30,15 +32,40 @@ class _WaffleExpressAdminAppState extends State<WaffleExpressAdminApp> {
     _checkInitialAuth();
   }
 
-  void _checkInitialAuth() {
-    final user = SupabaseService.instance.currentUser;
+  Future<void> _checkInitialAuth() async {
+    final prefs = await SharedPreferences.getInstance();
+    final persistentLoggedIn = prefs.getBool('is_admin_logged_in') ?? false;
+    final supabaseUser = SupabaseService.instance.currentUser != null;
+
     setState(() {
-      _isLoggedIn = user != null;
+      _isLoggedIn = persistentLoggedIn || supabaseUser;
+      _checkingAuth = false;
+    });
+  }
+
+  Future<void> _handleLogout() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('is_admin_logged_in', false);
+    setState(() {
+      _isLoggedIn = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_checkingAuth) {
+      return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.lightTheme,
+        home: const Scaffold(
+          backgroundColor: AppTheme.creamyBackground,
+          body: Center(
+            child: CircularProgressIndicator(color: AppTheme.primaryAmber),
+          ),
+        ),
+      );
+    }
+
     return ChangeNotifierProvider(
       create: (_) => AdminProvider()
         ..initRealtimeOrders()
@@ -51,11 +78,7 @@ class _WaffleExpressAdminAppState extends State<WaffleExpressAdminApp> {
         theme: AppTheme.lightTheme,
         home: _isLoggedIn
             ? MainNavigationScreen(
-                onLogout: () {
-                  setState(() {
-                    _isLoggedIn = false;
-                  });
-                },
+                onLogout: _handleLogout,
               )
             : LoginScreen(
                 onLoginSuccess: () {

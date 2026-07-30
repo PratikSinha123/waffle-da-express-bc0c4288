@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../config/theme.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -14,7 +15,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isLoading = false;
   String? _errorMessage;
 
-  void _handleLogin() {
+  Future<void> _handleLogin() async {
     setState(() {
       _isLoading = true;
       _errorMessage = null;
@@ -23,6 +24,12 @@ class _LoginScreenState extends State<LoginScreen> {
     final password = _passwordController.text.trim();
 
     if (password == 'waffle123') {
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('is_admin_logged_in', true);
+      } catch (e) {
+        debugPrint('SharedPreferences login error: $e');
+      }
       widget.onLoginSuccess();
     } else {
       setState(() {
