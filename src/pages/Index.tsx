@@ -35,9 +35,9 @@ const Index = () => {
           animate={{ scale: 1.05 }}
           transition={{ duration: 1.8, ease: "easeOut" }}
         >
-          <img src={wafflePatternBg} alt="Delicious waffles" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 to-black/30" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-black/20" />
+          <img src={heroImage} alt="Delicious waffles" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/45 to-black/20" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
         </motion.div>
 
         <div className="relative h-full max-w-7xl mx-auto px-6 sm:px-10 flex flex-col justify-center">

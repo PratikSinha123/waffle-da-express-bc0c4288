@@ -1,11 +1,9 @@
-import { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
-import { Capacitor } from "@capacitor/core";
 import { CartProvider } from "@/context/CartContext";
 import { OrderProvider } from "@/context/OrderContext";
 import { MenuProvider } from "@/context/MenuContext";
@@ -13,7 +11,6 @@ import { ShopStatusProvider } from "@/context/ShopStatusContext";
 import { StallScheduleProvider } from "@/context/StallScheduleContext";
 import { AuthProvider } from "@/context/AuthContext";
 import ProtectedRoute from "@/routes/ProtectedRoute";
-import NativeAdminGuard from "@/routes/NativeAdminGuard";
 import AdminLayout from "@/layouts/AdminLayout";
 import Navbar from "@/components/Navbar";
 import PageTransition from "@/components/PageTransition";
@@ -43,14 +40,6 @@ const queryClient = new QueryClient();
 
 const AnimatedRoutes = () => {
   const location = useLocation();
-  const navigate = useNavigate();
-
-  // If we're on mobile and at the root, auto-redirect to admin
-  useEffect(() => {
-    if (Capacitor.isNativePlatform() && location.pathname === "/") {
-      navigate("/admin", { replace: true });
-    }
-  }, [location.pathname, navigate]);
 
   return (
     <AnimatePresence mode="wait">
@@ -68,9 +57,9 @@ const AnimatedRoutes = () => {
         <Route path="/terms" element={<PageTransition><TermsPage /></PageTransition>} />
         <Route path="/refunds" element={<PageTransition><RefundsPage /></PageTransition>} />
 
-        {/* Admin Routes - Restricted to Native Mobile App */}
-        <Route path="/admin/login" element={<NativeAdminGuard><AdminLogin /></NativeAdminGuard>} />
-        <Route path="/admin" element={<NativeAdminGuard><ProtectedRoute><AdminLayout /></ProtectedRoute></NativeAdminGuard>}>
+        {/* Admin Routes */}
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
           <Route index element={<AdminDashboard />} />
           <Route path="orders" element={<AdminOrders />} />
           <Route path="products" element={<AdminProducts />} />
