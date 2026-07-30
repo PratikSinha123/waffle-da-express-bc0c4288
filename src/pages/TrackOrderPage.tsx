@@ -432,10 +432,10 @@ const TrackOrderPage = () => {
                       <div className="mt-4 pt-4 border-t border-border flex items-center justify-between">
                         <span className="text-xs text-muted-foreground">Have questions about your order?</span>
                         <a
-                          href="tel:9286702196"
+                          href="tel:8909286581"
                           className="px-3.5 py-1.5 rounded-xl bg-card border border-border text-foreground hover:text-primary hover:border-primary/40 text-xs font-semibold flex items-center gap-1.5 transition-all"
                         >
-                          <PhoneCall className="w-3.5 h-3.5 text-primary" /> Call Store
+                          <PhoneCall className="w-3.5 h-3.5 text-primary" /> Call Store (8909286581)
                         </a>
                       </div>
                     </div>
