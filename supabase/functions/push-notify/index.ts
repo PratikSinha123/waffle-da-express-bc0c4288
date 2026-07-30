@@ -24,7 +24,6 @@ async function generateVapidKeys() {
 }
 
 async function getOrCreateVapidKeys(supabase: any) {
-  // Check settings table for existing keys
   const { data: pubData } = await supabase
     .from("settings")
     .select("value")
@@ -44,7 +43,6 @@ async function getOrCreateVapidKeys(supabase: any) {
     };
   }
 
-  // Generate new keys
   const keys = await generateVapidKeys();
   await supabase.from("settings").upsert({ key: "vapid_public_key", value: keys.publicKey });
   await supabase.from("settings").upsert({ key: "vapid_private_key_jwk", value: JSON.stringify(keys.privateKeyJwk) });
@@ -76,7 +74,6 @@ async function createVapidJwt(privateKeyJwk: JsonWebKey, audience: string, subje
     new TextEncoder().encode(unsignedToken)
   );
 
-  // Convert DER signature to raw r||s format expected by Web Push
   const sigArray = new Uint8Array(signature);
   const sigBase64 = btoa(String.fromCharCode(...sigArray))
     .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
@@ -84,7 +81,6 @@ async function createVapidJwt(privateKeyJwk: JsonWebKey, audience: string, subje
   return `${unsignedToken}.${sigBase64}`;
 }
 
-// Send a single push notification
 async function sendPushNotification(
   subscription: { endpoint: string; p256dh: string; auth: string },
   payload: string,
@@ -156,9 +152,15 @@ serve(async (req) => {
       const adminFcmToken = fcmSetting?.value;
       let fcmSent = false;
 
-      if (adminFcmToken) {
+      const fcmTargets = [];
+      if (adminFcmToken) fcmTargets.push(adminFcmToken);
+      fcmTargets.push("/topics/admin_orders");
+
+      const fcmPayloadTitle = title || "🧇 NEW ORDER RECEIVED!";
+      const fcmPayloadBody = body || "Check order dashboard";
+
+      for (const target of fcmTargets) {
         try {
-          // Send high-priority FCM notification for Android background/killed state
           const fcmRes = await fetch("https://fcm.googleapis.com/fcm/send", {
             method: "POST",
             headers: {
@@ -166,17 +168,22 @@ serve(async (req) => {
               "Authorization": "key=AIzaSyAZ_KlBPzR4KHqYv3LXDpKjRgXo2587WzA",
             },
             body: JSON.stringify({
-              to: adminFcmToken,
+              to: target,
               priority: "high",
+              content_available: true,
+              time_to_live: 2419200,
               notification: {
-                title: title || "🧇 NEW ORDER RECEIVED!",
-                body: body || "Check order dashboard",
+                title: fcmPayloadTitle,
+                body: fcmPayloadBody,
                 sound: "default",
                 android_channel_id: "waffle_high_priority_orders_v2",
+                default_sound: true,
+                default_vibrate_timings: true,
+                visibility: "public",
               },
               data: {
-                title: title,
-                body: body,
+                title: fcmPayloadTitle,
+                body: fcmPayloadBody,
                 orderId: orderId,
                 click_action: "FLUTTER_NOTIFICATION_CLICK",
               },
@@ -189,7 +196,7 @@ serve(async (req) => {
           console.error("FCM send error:", e);
         }
       }
-      
+
       const { data: subscriptions } = await supabase
         .from("push_subscriptions")
         .select("*");
@@ -200,7 +207,7 @@ serve(async (req) => {
         });
       }
 
-      const payload = JSON.stringify({ title, body, orderId });
+      const payload = JSON.stringify({ title: fcmPayloadTitle, body: fcmPayloadBody, orderId });
       let sent = 0;
       const failedEndpoints: string[] = [];
 
@@ -216,7 +223,6 @@ serve(async (req) => {
           if (res.status === 201 || res.status === 200) {
             sent++;
           } else if (res.status === 404 || res.status === 410) {
-            // Subscription expired, clean up
             failedEndpoints.push(sub.endpoint);
           }
         } catch (e) {
@@ -224,7 +230,6 @@ serve(async (req) => {
         }
       }
 
-      // Clean up expired subscriptions
       if (failedEndpoints.length > 0) {
         await supabase
           .from("push_subscriptions")

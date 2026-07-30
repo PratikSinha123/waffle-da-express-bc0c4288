@@ -69,14 +69,16 @@ class NotificationService {
 
       await androidImplementation?.createNotificationChannel(highPriorityChannel);
       await androidImplementation?.requestNotificationsPermission();
-      await androidImplementation?.requestExactAlarmsPermission();
+      try {
+        await androidImplementation?.requestExactAlarmsPermission();
+      } catch (_) {}
     } catch (e) {
       debugPrint('Local notifications setup notice: $e');
     }
 
     _initialized = true;
 
-    // 2. Initialize Firebase & FCM asynchronously in background (do not block UI thread)
+    // 2. Initialize Firebase & FCM asynchronously in background
     _initFirebaseFcmInBackground();
   }
 
@@ -143,7 +145,9 @@ class NotificationService {
         .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
 
     final granted = await androidImplementation?.requestNotificationsPermission() ?? true;
-    await androidImplementation?.requestExactAlarmsPermission();
+    try {
+      await androidImplementation?.requestExactAlarmsPermission();
+    } catch (_) {}
 
     try {
       String? token = await FirebaseMessaging.instance.getToken();
@@ -180,6 +184,10 @@ class NotificationService {
     required String title,
     required String body,
   }) async {
+    if (!_initialized) {
+      await initialize();
+    }
+
     const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
       'waffle_high_priority_orders_v2',
       'High Priority Order Alerts',
