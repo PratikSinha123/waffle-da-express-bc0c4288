@@ -160,7 +160,6 @@ export const StallScheduleProvider: React.FC<{ children: React.ReactNode }> = ({
 };
 
 export const useStallSchedule = () => {
-  const context = useContext(ShopStatusContext);
   const stallContext = useContext(StallScheduleContext);
   if (!stallContext) throw new Error("useStallSchedule must be used within StallScheduleProvider");
   return stallContext;
