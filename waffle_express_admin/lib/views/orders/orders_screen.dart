@@ -167,6 +167,44 @@ class _OrderCardState extends State<_OrderCard> {
     }
   }
 
+  void _confirmDeleteOrder(BuildContext context, AdminProvider admin, String orderId) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Row(
+          children: [
+            Icon(Icons.warning_amber_rounded, color: Colors.redAccent),
+            SizedBox(width: 8),
+            Text('Delete Order?'),
+          ],
+        ),
+        content: Text('Are you sure you want to permanently delete order $orderId? This action cannot be undone.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('CANCEL', style: TextStyle(color: AppTheme.textMuted)),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+            onPressed: () async {
+              Navigator.of(ctx).pop();
+              await admin.deleteOrder(orderId);
+              if (mounted) {
+                ScaffoldMessenger.of(ctx).showSnackBar(
+                  SnackBar(
+                    content: Text('Order $orderId deleted successfully'),
+                    backgroundColor: Colors.redAccent,
+                  ),
+                );
+              }
+            },
+            child: const Text('DELETE', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final admin = context.read<AdminProvider>();
@@ -230,6 +268,11 @@ class _OrderCardState extends State<_OrderCard> {
                     order.status,
                     style: TextStyle(color: statusColor, fontWeight: FontWeight.bold, fontSize: 11),
                   ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.delete_outline, color: Colors.redAccent, size: 20),
+                  onPressed: () => _confirmDeleteOrder(context, admin, order.id),
+                  tooltip: 'Delete Order',
                 ),
                 Icon(
                   _expanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
@@ -330,6 +373,22 @@ class _OrderCardState extends State<_OrderCard> {
                         child: Text(st, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
                       );
                     }).toList(),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Delete Order Button
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.redAccent,
+                        side: const BorderSide(color: Colors.redAccent),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                      icon: const Icon(Icons.delete_forever, size: 18),
+                      label: const Text('DELETE ORDER PERMANENTLY', style: TextStyle(fontWeight: FontWeight.bold)),
+                      onPressed: () => _confirmDeleteOrder(context, admin, order.id),
+                    ),
                   ),
                 ],
               ),

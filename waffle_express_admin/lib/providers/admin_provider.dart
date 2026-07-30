@@ -213,6 +213,13 @@ class AdminProvider with ChangeNotifier {
     await _fetchOrdersSilently();
   }
 
+  Future<void> deleteOrder(String id) async {
+    await _service.deleteOrder(id);
+    _orders.removeWhere((o) => o.id == id);
+    _knownOrderIds.remove(id);
+    notifyListeners();
+  }
+
   Future<void> toggleMenuItemAvailability(String id, bool available) async {
     final idx = _menuItems.indexWhere((item) => item.id == id);
     if (idx != -1) {
