@@ -161,11 +161,12 @@ serve(async (req) => {
 
       for (const target of fcmTargets) {
         try {
+          const fcmServerKey = Deno.env.get("FCM_SERVER_KEY") || "";
           const fcmRes = await fetch("https://fcm.googleapis.com/fcm/send", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              "Authorization": "key=AIzaSyAZ_KlBPzR4KHqYv3LXDpKjRgXo2587WzA",
+              "Authorization": `key=${fcmServerKey}`,
             },
             body: JSON.stringify({
               to: target,
