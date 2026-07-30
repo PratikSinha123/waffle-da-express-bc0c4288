@@ -11,8 +11,12 @@ import 'views/main_navigation_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SupabaseService.initialize();
-  await NotificationService.instance.initialize();
   runApp(const WaffleExpressAdminApp());
+  
+  // Non-blocking async initialization for notification service after UI mounts
+  NotificationService.instance.initialize().catchError((e) {
+    debugPrint('Notification init notice: $e');
+  });
 }
 
 class WaffleExpressAdminApp extends StatefulWidget {
@@ -33,22 +37,35 @@ class _WaffleExpressAdminAppState extends State<WaffleExpressAdminApp> {
   }
 
   Future<void> _checkInitialAuth() async {
-    final prefs = await SharedPreferences.getInstance();
-    final persistentLoggedIn = prefs.getBool('is_admin_logged_in') ?? false;
-    final supabaseUser = SupabaseService.instance.currentUser != null;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final persistentLoggedIn = prefs.getBool('is_admin_logged_in') ?? false;
+      final supabaseUser = SupabaseService.instance.currentUser != null;
 
-    setState(() {
-      _isLoggedIn = persistentLoggedIn || supabaseUser;
-      _checkingAuth = false;
-    });
+      if (mounted) {
+        setState(() {
+          _isLoggedIn = persistentLoggedIn || supabaseUser;
+          _checkingAuth = false;
+        });
+      }
+    } catch (e) {
+      debugPrint('Auth check error: $e');
+      if (mounted) {
+        setState(() {
+          _checkingAuth = false;
+        });
+      }
+    }
   }
 
   Future<void> _handleLogout() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('is_admin_logged_in', false);
-    setState(() {
-      _isLoggedIn = false;
-    });
+    if (mounted) {
+      setState(() {
+        _isLoggedIn = false;
+      });
+    }
   }
 
   @override
