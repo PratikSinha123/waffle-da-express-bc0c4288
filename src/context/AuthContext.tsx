@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState } from "react";
 
 interface AuthContextType {
   isLoggedIn: boolean;
@@ -11,12 +11,13 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const ADMIN_PASSWORD = "waffle123";
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(() => localStorage.getItem("waffle_admin") === "true");
+  // Session storage only (resets when browser tab/window is closed or logged out)
+  const [isLoggedIn, setIsLoggedIn] = useState(() => sessionStorage.getItem("waffle_admin_session") === "true");
 
   const login = (password: string) => {
     if (password === ADMIN_PASSWORD) {
       setIsLoggedIn(true);
-      localStorage.setItem("waffle_admin", "true");
+      sessionStorage.setItem("waffle_admin_session", "true");
       return true;
     }
     return false;
@@ -24,6 +25,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = () => {
     setIsLoggedIn(false);
+    sessionStorage.removeItem("waffle_admin_session");
     localStorage.removeItem("waffle_admin");
   };
 
