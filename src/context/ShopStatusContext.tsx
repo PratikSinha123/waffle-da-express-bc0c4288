@@ -16,11 +16,17 @@ export const ShopStatusProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const fetchStatus = useCallback(async () => {
     const { data } = await supabase
       .from("settings")
-      .select("value")
-      .eq("key", "shop_open")
-      .single();
-    if (data) {
-      setIsShopOpen(data.value === "true");
+      .select("key, value")
+      .in("key", ["shop_open", "shop_status"]);
+    
+    if (data && data.length > 0) {
+      const openRow = data.find(r => r.key === "shop_open");
+      const statusRow = data.find(r => r.key === "shop_status");
+      
+      const openVal = openRow ? openRow.value : "true";
+      const statusVal = statusRow ? statusRow.value : "open";
+
+      setIsShopOpen(openVal === "true" && statusVal !== "closed");
     }
     setLoading(false);
   }, []);
@@ -28,13 +34,11 @@ export const ShopStatusProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   useEffect(() => {
     fetchStatus();
 
-    // Realtime subscription
+    // Realtime subscription for settings table updates
     const channel = supabase
       .channel("settings-realtime")
-      .on("postgres_changes", { event: "*", schema: "public", table: "settings" }, (payload) => {
-        if ((payload.new as any)?.key === "shop_open") {
-          setIsShopOpen((payload.new as any).value === "true");
-        }
+      .on("postgres_changes", { event: "*", schema: "public", table: "settings" }, () => {
+        fetchStatus();
       })
       .subscribe();
 
@@ -44,9 +48,13 @@ export const ShopStatusProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const toggleShopStatus = async () => {
     const newValue = !isShopOpen;
     setIsShopOpen(newValue);
-    await supabase
-      .from("settings")
-      .upsert({ key: "shop_open", value: String(newValue) } as any);
+    const openStr = newValue ? "true" : "false";
+    const statusStr = newValue ? "open" : "closed";
+
+    await Promise.all([
+      supabase.from("settings").upsert({ key: "shop_open", value: openStr } as any),
+      supabase.from("settings").upsert({ key: "shop_status", value: statusStr } as any),
+    ]);
   };
 
   return (

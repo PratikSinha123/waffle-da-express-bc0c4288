@@ -61,6 +61,8 @@ const Orders: React.FC = () => {
                   order.status === "Delivered" ? "bg-green-500/10 text-green-500" :
                   order.status === "Preparing" ? "bg-yellow-500/10 text-yellow-500" :
                   order.status === "Order Received" ? "bg-blue-500/10 text-blue-500" :
+                  order.status === "Out for Delivery" ? "bg-orange-500/10 text-orange-500" :
+                  order.status === "Can't be Delivered" ? "bg-red-500/10 text-red-500" :
                   "bg-secondary text-muted-foreground"
                 }`}>
                   {order.status}

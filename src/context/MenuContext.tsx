@@ -41,12 +41,10 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     if (data && data.length > 0 && !error) {
       setMenuItems(data.map(mapDbToMenuItem));
-      // Extract unique categories from DB items
       const dbCategories = Array.from(new Set(data.map((r: any) => r.category)));
       const merged = ["All", ...dbCategories.filter((c: string) => c !== "All")];
       setCategories(merged);
     } else {
-      // Fallback to default local menu items if DB is empty or fails
       setMenuItems(defaultMenuItems);
       setCategories(defaultCategories);
     }
@@ -55,11 +53,22 @@ export const MenuProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     fetchMenu();
+
+    // Live Realtime updates from Admin App changes
+    const channel = supabase
+      .channel("menu-items-realtime")
+      .on("postgres_changes", { event: "*", schema: "public", table: "menu_items" }, () => {
+        fetchMenu();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [fetchMenu]);
 
   const addMenuItem = async (item: Omit<MenuItem, "id">) => {
     const id = `custom-${Date.now()}`;
-    // Get max sort_order
     const maxSort = menuItems.length > 0 ? Math.max(...menuItems.map((_, i) => i)) + 1 : 0;
     
     const newItem: MenuItem = { ...item, id };

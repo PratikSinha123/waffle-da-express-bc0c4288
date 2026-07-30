@@ -145,13 +145,57 @@ serve(async (req) => {
     if (action === "send") {
       const { title, body, orderId } = await req.json();
       const keys = await getOrCreateVapidKeys(supabase);
+
+      // Fetch FCM device token from settings table
+      const { data: fcmSetting } = await supabase
+        .from("settings")
+        .select("value")
+        .eq("key", "admin_fcm_token")
+        .maybeSingle();
+
+      const adminFcmToken = fcmSetting?.value;
+      let fcmSent = false;
+
+      if (adminFcmToken) {
+        try {
+          // Send high-priority FCM notification for Android background/killed state
+          const fcmRes = await fetch("https://fcm.googleapis.com/fcm/send", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": "key=AIzaSyAZ_KlBPzR4KHqYv3LXDpKjRgXo2587WzA",
+            },
+            body: JSON.stringify({
+              to: adminFcmToken,
+              priority: "high",
+              notification: {
+                title: title || "🧇 NEW ORDER RECEIVED!",
+                body: body || "Check order dashboard",
+                sound: "default",
+                android_channel_id: "waffle_high_priority_orders_v2",
+              },
+              data: {
+                title: title,
+                body: body,
+                orderId: orderId,
+                click_action: "FLUTTER_NOTIFICATION_CLICK",
+              },
+            }),
+          });
+          if (fcmRes.ok || fcmRes.status === 200) {
+            fcmSent = true;
+          }
+        } catch (e) {
+          console.error("FCM send error:", e);
+        }
+      }
       
       const { data: subscriptions } = await supabase
         .from("push_subscriptions")
         .select("*");
 
       if (!subscriptions || subscriptions.length === 0) {
-        return new Response(JSON.stringify({ sent: 0 }), {
+        return new Response(JSON.stringify({ sent: fcmSent ? 1 : 0, fcmSent }), {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
@@ -161,6 +205,7 @@ serve(async (req) => {
       const failedEndpoints: string[] = [];
 
       for (const sub of subscriptions) {
+        if (sub.endpoint.startsWith("fcm:")) continue;
         try {
           const res = await sendPushNotification(
             { endpoint: sub.endpoint, p256dh: sub.p256dh, auth: sub.auth },
@@ -187,7 +232,7 @@ serve(async (req) => {
           .in("endpoint", failedEndpoints);
       }
 
-      return new Response(JSON.stringify({ sent, total: subscriptions.length }), {
+      return new Response(JSON.stringify({ sent: sent + (fcmSent ? 1 : 0), fcmSent, total: subscriptions.length }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }

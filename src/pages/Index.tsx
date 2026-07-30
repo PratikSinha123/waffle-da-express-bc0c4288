@@ -6,6 +6,7 @@ import wafflePatternBg from "@/assets/waffle-pattern-bg.jpg";
 import { useMenu } from "@/context/MenuContext";
 import { useStallSchedule } from "@/context/StallScheduleContext";
 import SEOHead from "@/components/SEOHead";
+import ShopClosedBanner from "@/components/ShopClosedBanner";
 
 const categoryIcons: Record<string, string> = {
   "Waffles": "🧇", "Waffle Cakes": "🎂", "Spiral Potatoes": "🥔",
@@ -59,23 +60,26 @@ const Index = () => {
             Waffle Da
           </motion.h1>
           <motion.p
-            className="text-base sm:text-lg text-white/80 max-w-lg mb-10 leading-relaxed"
+            className="text-xl sm:text-2xl text-white/80 max-w-xl mb-8 leading-relaxed font-light"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.8 }}
+            transition={{ duration: 0.8, delay: 0.7, ease: "easeOut" }}
           >
-            Handcrafted waffles, fluffy pancakes & creamy shakes — made fresh, served with love. 🧇
+            Freshly baked waffles, crispy burgers, artisanal shakes, and savory delights delivered hot to your door.
           </motion.p>
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 1.1, type: "spring", stiffness: 200 }}
+            className="flex flex-wrap items-center gap-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.9 }}
           >
             <Link
               to="/menu"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-full waffle-gradient-warm text-primary-foreground font-semibold text-lg hover:opacity-90 transition-all w-fit shadow-lg glow-accent hover:scale-[1.02]"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-primary text-primary-foreground font-semibold text-lg hover:bg-primary/90 transition-all duration-300 shadow-lg shadow-primary/20 hover:scale-105 active:scale-95"
             >
-              Order Now <ArrowRight className="w-5 h-5" />
+              <UtensilsCrossed className="w-5 h-5" />
+              Order Now
+              <ArrowRight className="w-5 h-5" />
             </Link>
           </motion.div>
         </div>
@@ -110,8 +114,11 @@ const Index = () => {
       )}
 
       {/* Explore Our Menu */}
-      <section className="py-20 px-4 bg-pattern-dots relative">
+      <section className="py-16 px-4 bg-pattern-dots relative">
         <div className="max-w-5xl mx-auto text-center">
+          <div className="mb-6 max-w-md mx-auto">
+            <ShopClosedBanner />
+          </div>
           <motion.span
             className="text-sm font-medium text-accent uppercase tracking-widest mb-2 block"
             initial={{ opacity: 0, y: 20 }}
@@ -119,164 +126,92 @@ const Index = () => {
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.5 }}
           >
-            What we serve
+            Taste Perfection
           </motion.span>
           <motion.h2
-            className="text-3xl sm:text-4xl font-bold text-foreground mb-2"
+            className="text-4xl sm:text-5xl font-bold text-foreground mb-4 italic"
             style={{ fontFamily: "'Playfair Display', serif" }}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            Explore Our <span className="text-gradient italic">Menu</span>
+            Explore Our Menu
           </motion.h2>
           <motion.p
-            className="text-muted-foreground mb-12"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
+            className="text-muted-foreground max-w-lg mx-auto mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            Tap a category to jump right in
+            From signature sweet waffles to mouth-watering burgers & shakes. Made fresh to order.
           </motion.p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             {menuCategories.map((cat, i) => (
               <motion.div
                 key={cat}
-                initial={{ opacity: 0, y: 30, scale: 0.9 }}
-                whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                viewport={{ once: true, margin: "-30px" }}
-                transition={{ duration: 0.4, delay: 0.05 * i }}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.4, delay: i * 0.05 }}
               >
                 <Link
                   to={`/menu?category=${encodeURIComponent(cat)}`}
-                  className="waffle-card-elevated p-5 text-center group block"
+                  className="group relative flex flex-col items-center p-6 rounded-3xl glass-card border border-border/50 hover:border-primary/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
                 >
-                  <span className="text-3xl mb-2 block group-hover:scale-125 transition-transform duration-300 animate-float" style={{ animationDelay: `${Math.random() * 2}s` }}>
-                    {categoryIcons[cat] || "🍽️"}
+                  <span className="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">
+                    {categoryIcons[cat] || "🧇"}
                   </span>
-                  <span className="font-semibold text-foreground text-sm block">{cat}</span>
-                  <span className="text-xs text-muted-foreground">{getCategoryCount(cat)} items</span>
+                  <h3 className="font-bold text-foreground text-lg mb-1 group-hover:text-primary transition-colors">
+                    {cat}
+                  </h3>
+                  <span className="text-xs text-muted-foreground">
+                    {getCategoryCount(cat)} items
+                  </span>
                 </Link>
               </motion.div>
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* Features */}
-      <section className="py-20 px-4 relative overflow-hidden">
-        <div className="absolute inset-0 waffle-gradient-soft" />
-        <div className="absolute inset-0 bg-pattern-waffle" />
-        <div className="relative max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6">
-          {[
-            { icon: UtensilsCrossed, title: "Fresh & Tasty", desc: "Made with premium ingredients, prepared fresh for every order", emoji: "✨" },
-            { icon: Truck, title: "Fast Delivery", desc: "Quick delivery right to your doorstep in minimum time", emoji: "🚀" },
-            { icon: Clock, title: "Track Live", desc: "Real-time order tracking so you know exactly when it arrives", emoji: "📍" },
-          ].map((feature, i) => (
-            <motion.div
-              key={feature.title}
-              className="waffle-card-elevated text-center p-8 bg-card/80 backdrop-blur-sm"
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.5, delay: 0.15 * i }}
-            >
-              <motion.div
-                className="w-16 h-16 rounded-2xl waffle-gradient-warm flex items-center justify-center mx-auto mb-5 glow-accent"
-                initial={{ scale: 0 }}
-                whileInView={{ scale: 1 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.4, delay: 0.15 * i + 0.2, type: "spring", stiffness: 200 }}
-              >
-                <feature.icon className="w-7 h-7 text-primary-foreground" />
-              </motion.div>
-              <h3 className="font-bold text-foreground text-lg mb-2">{feature.title} {feature.emoji}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{feature.desc}</p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* CTA Banner */}
-      <section className="py-16 px-4">
-        <div className="max-w-4xl mx-auto rounded-3xl waffle-gradient-warm p-10 sm:p-14 text-center relative overflow-hidden">
-          <div className="absolute inset-0 bg-pattern-waffle opacity-10" />
-          <div className="relative">
-            <h2 className="text-3xl sm:text-4xl font-bold text-primary-foreground mb-4 italic" style={{ fontFamily: "'Playfair Display', serif" }}>
-              Craving Something Sweet? 🧇
-            </h2>
-            <p className="text-primary-foreground/80 mb-8 max-w-md mx-auto">
-              Order now and get your favourite waffles delivered hot & fresh to your doorstep
-            </p>
+          <div className="mt-12">
             <Link
               to="/menu"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-card text-foreground font-semibold text-lg hover:bg-card/90 transition-all shadow-lg hover:scale-[1.02]"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-all duration-300 shadow-md shadow-primary/20 hover:scale-105"
             >
-              Browse Menu <ArrowRight className="w-5 h-5" />
+              View Full Menu <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-12 px-4 border-t border-border bg-pattern-dots">
-        <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8">
-          <div>
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-xl font-bold text-gradient italic" style={{ fontFamily: "'Playfair Display', serif" }}>Waffle Da</span>
-              <span className="text-xl">🧇</span>
+      {/* Highlights / Trust */}
+      <section className="py-16 px-4 soft-surface border-y border-border/50">
+        <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
+          <div className="flex flex-col items-center p-4">
+            <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 text-primary">
+              <UtensilsCrossed className="w-7 h-7" />
             </div>
-            <p className="text-sm text-muted-foreground mb-4">Delicious waffles, pancakes & shakes made with love in Bidholi.</p>
-            <div className="flex gap-3">
-              <a href="https://maps.google.com" target="_blank" rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-primary/10 transition-colors">
-                <MapPin className="w-4 h-4 text-primary" />
-              </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-primary/10 transition-colors">
-                <svg className="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
-                </svg>
-              </a>
-            </div>
+            <h3 className="font-bold text-foreground text-lg mb-1">Made Fresh To Order</h3>
+            <p className="text-sm text-muted-foreground">Every waffle batter is prepared fresh upon receiving your order.</p>
           </div>
-          <div>
-            <h3 className="text-lg font-bold text-foreground mb-4">Quick Links</h3>
-            <div className="space-y-2">
-              <Link to="/" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Home</Link>
-              <Link to="/menu" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Menu</Link>
-              <Link to="/cart" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Cart</Link>
-              <Link to="/offers" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Offers</Link>
+          <div className="flex flex-col items-center p-4">
+            <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 text-primary">
+              <Truck className="w-7 h-7" />
             </div>
-            <h3 className="text-lg font-bold text-foreground mb-4 mt-6">Policies</h3>
-            <div className="space-y-2">
-              <Link to="/contact" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Contact Us</Link>
-              <Link to="/terms" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Terms & Conditions</Link>
-              <Link to="/refunds" className="block text-sm text-muted-foreground hover:text-primary transition-colors">Refunds & Cancellations</Link>
-            </div>
+            <h3 className="font-bold text-foreground text-lg mb-1">Fast Campus Delivery</h3>
+            <p className="text-sm text-muted-foreground">Hot & crisp delivery directly to hostels & locations around Bidholi.</p>
           </div>
-          <div>
-            <h3 className="text-lg font-bold text-foreground mb-4">Contact & Timing</h3>
-            <div className="space-y-3">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Clock3 className="w-4 h-4 text-primary" /><span>Open: 5 PM – 5 AM</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Phone className="w-4 h-4 text-primary" />
-                <a href="tel:8909286581" className="hover:text-primary transition-colors">8909286581</a>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <MapPin className="w-4 h-4 text-primary" /><span>Bidholi, Dehradun</span>
-              </div>
+          <div className="flex flex-col items-center p-4">
+            <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 text-primary">
+              <Clock className="w-7 h-7" />
             </div>
+            <h3 className="font-bold text-foreground text-lg mb-1">Late Night Craving</h3>
+            <p className="text-sm text-muted-foreground">Open late hours for your study sessions and late night sweet teeth.</p>
           </div>
         </div>
-        <div className="max-w-5xl mx-auto mt-8 pt-6 border-t border-border text-center">
-          <p className="text-xs text-muted-foreground">© 2024 Waffle Da! All rights reserved.</p>
-        </div>
-      </footer>
+      </section>
     </div>
   );
 };

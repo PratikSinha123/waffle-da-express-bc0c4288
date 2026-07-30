@@ -61,7 +61,22 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     getDeliveryFeeAmount().then(setDeliveryFeeRate);
     const handler = () => { getDeliveryFeeAmount().then(setDeliveryFeeRate); };
     window.addEventListener("delivery-fee-change", handler);
-    return () => window.removeEventListener("delivery-fee-change", handler);
+
+    // Realtime listener for delivery_fee updates from Admin App
+    const channel = supabase
+      .channel("delivery-fee-realtime")
+      .on("postgres_changes", { event: "*", schema: "public", table: "settings" }, (payload) => {
+        if ((payload.new as any)?.key === "delivery_fee") {
+          const newFee = Number((payload.new as any).value);
+          if (!isNaN(newFee)) setDeliveryFeeRate(newFee);
+        }
+      })
+      .subscribe();
+
+    return () => {
+      window.removeEventListener("delivery-fee-change", handler);
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const addToCart = useCallback((item: CartItem) => {

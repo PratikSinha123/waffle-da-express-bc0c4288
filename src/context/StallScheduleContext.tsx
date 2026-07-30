@@ -74,6 +74,18 @@ export const StallScheduleProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     fetchData();
+
+    // Live Realtime listener for Pop-up stall schedule & banner changes
+    const channel = supabase
+      .channel("stall-schedule-realtime")
+      .on("postgres_changes", { event: "*", schema: "public", table: "settings" }, () => {
+        fetchData();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [fetchData]);
 
   const isStallActive = (() => {
@@ -128,7 +140,7 @@ export const StallScheduleProvider: React.FC<{ children: React.ReactNode }> = ({
     await saveStallConfig(newConfig);
   }, [stallItemsConfig, saveStallConfig]);
 
-  const updateStallItemPrice = useCallback(async (id: string, stallPrice?: number, stallPrice2?: number) => {
+  const updateStallItemPrice: (id: string, stallPrice?: number, stallPrice2?: number) => Promise<void> = useCallback(async (id: string, stallPrice?: number, stallPrice2?: number) => {
     const newConfig = stallItemsConfig.map(item =>
       item.id === id ? { ...item, stallPrice, stallPrice2 } : item
     );
@@ -148,7 +160,8 @@ export const StallScheduleProvider: React.FC<{ children: React.ReactNode }> = ({
 };
 
 export const useStallSchedule = () => {
-  const context = useContext(StallScheduleContext);
-  if (!context) throw new Error("useStallSchedule must be used within StallScheduleProvider");
-  return context;
+  const context = useContext(ShopStatusContext);
+  const stallContext = useContext(StallScheduleContext);
+  if (!stallContext) throw new Error("useStallSchedule must be used within StallScheduleProvider");
+  return stallContext;
 };

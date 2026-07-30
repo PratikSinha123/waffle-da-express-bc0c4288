@@ -13,6 +13,7 @@ import { ShopStatusProvider } from "@/context/ShopStatusContext";
 import { StallScheduleProvider } from "@/context/StallScheduleContext";
 import { AuthProvider } from "@/context/AuthContext";
 import ProtectedRoute from "@/routes/ProtectedRoute";
+import NativeAdminGuard from "@/routes/NativeAdminGuard";
 import AdminLayout from "@/layouts/AdminLayout";
 import Navbar from "@/components/Navbar";
 import PageTransition from "@/components/PageTransition";
@@ -67,9 +68,9 @@ const AnimatedRoutes = () => {
         <Route path="/terms" element={<PageTransition><TermsPage /></PageTransition>} />
         <Route path="/refunds" element={<PageTransition><RefundsPage /></PageTransition>} />
 
-        {/* Admin Routes */}
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
+        {/* Admin Routes - Restricted to Native Mobile App */}
+        <Route path="/admin/login" element={<NativeAdminGuard><AdminLogin /></NativeAdminGuard>} />
+        <Route path="/admin" element={<NativeAdminGuard><ProtectedRoute><AdminLayout /></ProtectedRoute></NativeAdminGuard>}>
           <Route index element={<AdminDashboard />} />
           <Route path="orders" element={<AdminOrders />} />
           <Route path="products" element={<AdminProducts />} />
