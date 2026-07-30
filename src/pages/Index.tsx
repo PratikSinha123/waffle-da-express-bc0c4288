@@ -29,13 +29,13 @@ const Index = () => {
     <div className="min-h-screen">
       <SEOHead title="Waffle Da! - Freshly Made Waffles & More | Order Online" description="Order delicious freshly made waffles, burgers, pizzas, and more from Waffle Da! Fast delivery to your doorstep. Browse our menu and order now." />
       
-      {/* Hero - Full screen underneath sticky navbar */}
+      {/* Hero - Full screen with smooth zoom animation */}
       <section className="relative h-[100vh] -mt-[4.25rem] overflow-hidden">
         <motion.div
           className="absolute inset-0"
-          initial={{ scale: 1.1 }}
-          animate={{ scale: 1.0 }}
-          transition={{ duration: 1.5, ease: "easeOut" }}
+          initial={{ scale: 1.2 }}
+          animate={{ scale: 1.05 }}
+          transition={{ duration: 1.8, ease: "easeOut" }}
         >
           <img src={wafflePatternBg} alt="Delicious waffles" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 to-black/30" />
@@ -45,9 +45,9 @@ const Index = () => {
         <div className="relative h-full max-w-7xl mx-auto px-6 sm:px-10 flex flex-col justify-center">
           <motion.div
             className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-primary/90 text-primary-foreground text-sm font-medium w-fit backdrop-blur-sm glow-accent"
-            initial={{ opacity: 1, x: -20 }}
+            initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
           >
             <Sparkles className="w-4 h-4" />
             Now in Bidholi
@@ -55,25 +55,25 @@ const Index = () => {
           <motion.h1
             className="text-5xl sm:text-7xl lg:text-8xl font-bold text-white mb-6 leading-[1.1] italic drop-shadow-lg"
             style={{ fontFamily: "'Playfair Display', serif" }}
-            initial={{ opacity: 1, y: 20 }}
+            initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
           >
             Waffle Da
           </motion.h1>
           <motion.p
-            className="text-xl sm:text-2xl text-white/90 max-w-xl mb-8 leading-relaxed font-light"
-            initial={{ opacity: 1, y: 20 }}
+            className="text-xl sm:text-2xl text-white/80 max-w-xl mb-8 leading-relaxed font-light"
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
+            transition={{ duration: 0.8, delay: 0.7, ease: "easeOut" }}
           >
             Freshly baked waffles, crispy burgers, artisanal shakes, and savory delights delivered hot to your door.
           </motion.p>
           <motion.div
             className="flex flex-wrap items-center gap-4"
-            initial={{ opacity: 1, y: 20 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ duration: 0.6, delay: 0.9 }}
           >
             <Link
               to="/menu"
@@ -86,7 +86,7 @@ const Index = () => {
           </motion.div>
         </div>
 
-        {/* Floating Scroll Indicator */}
+        {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-float">
           <div className="w-6 h-10 rounded-full border-2 border-white/40 flex items-start justify-center p-2">
             <div className="w-1.5 h-3 rounded-full bg-white/60" />
@@ -97,6 +97,7 @@ const Index = () => {
       {/* Pop-Up Stall Banner - only when active */}
       {isStallActive && (
         <section className="py-6 px-4 relative overflow-hidden waffle-gradient-warm">
+          <div className="absolute inset-0 bg-pattern-waffle opacity-10" />
           <div className="relative max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-4 text-center sm:text-left">
             <div className="w-12 h-12 rounded-full bg-primary-foreground/20 flex items-center justify-center shrink-0 backdrop-blur-sm">
               <CalendarDays className="w-6 h-6 text-primary-foreground" />
@@ -114,28 +115,50 @@ const Index = () => {
         </section>
       )}
 
-      {/* Explore Our Menu */}
+      {/* Explore Our Menu - Scroll-triggered animations */}
       <section className="py-16 px-4 bg-pattern-dots relative">
         <div className="max-w-5xl mx-auto text-center">
           <div className="mb-6 max-w-md mx-auto">
             <ShopClosedBanner />
           </div>
-          <span className="text-sm font-medium text-amber-500 uppercase tracking-widest mb-2 block">
+          <motion.span
+            className="text-sm font-medium text-amber-500 uppercase tracking-widest mb-2 block"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
             Taste Perfection
-          </span>
-          <h2
+          </motion.span>
+          <motion.h2
             className="text-4xl sm:text-5xl font-bold text-foreground mb-4 italic"
             style={{ fontFamily: "'Playfair Display', serif" }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
           >
             Explore Our Menu
-          </h2>
-          <p className="text-muted-foreground max-w-lg mx-auto mb-12">
+          </motion.h2>
+          <motion.p
+            className="text-muted-foreground max-w-lg mx-auto mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
             From signature sweet waffles to mouth-watering burgers & shakes. Made fresh to order.
-          </p>
+          </motion.p>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-            {menuCategories.map((cat) => (
-              <div key={cat}>
+            {menuCategories.map((cat, i) => (
+              <motion.div
+                key={cat}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.04 }}
+              >
                 <Link
                   to={`/menu?category=${encodeURIComponent(cat)}`}
                   className="group relative flex flex-col items-center p-6 rounded-3xl glass-card border border-border/50 hover:border-primary/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
@@ -150,7 +173,7 @@ const Index = () => {
                     {getCategoryCount(cat)} items
                   </span>
                 </Link>
-              </div>
+              </motion.div>
             ))}
           </div>
 
@@ -168,27 +191,47 @@ const Index = () => {
       {/* Highlights / Trust */}
       <section className="py-16 px-4 soft-surface border-y border-border/50">
         <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
-          <div className="flex flex-col items-center p-4">
+          <motion.div 
+            className="flex flex-col items-center p-4"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
             <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 text-primary">
               <UtensilsCrossed className="w-7 h-7" />
             </div>
             <h3 className="font-bold text-foreground text-lg mb-1">Made Fresh To Order</h3>
             <p className="text-sm text-muted-foreground">Every waffle batter is prepared fresh upon receiving your order.</p>
-          </div>
-          <div className="flex flex-col items-center p-4">
+          </motion.div>
+
+          <motion.div 
+            className="flex flex-col items-center p-4"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
             <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 text-primary">
               <Truck className="w-7 h-7" />
             </div>
             <h3 className="font-bold text-foreground text-lg mb-1">Fast Campus Delivery</h3>
             <p className="text-sm text-muted-foreground">Hot & crisp delivery directly to hostels & locations around Bidholi.</p>
-          </div>
-          <div className="flex flex-col items-center p-4">
+          </motion.div>
+
+          <motion.div 
+            className="flex flex-col items-center p-4"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
             <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 text-primary">
               <Clock className="w-7 h-7" />
             </div>
             <h3 className="font-bold text-foreground text-lg mb-1">Late Night Craving</h3>
             <p className="text-sm text-muted-foreground">Open late hours for your study sessions and late night sweet teeth.</p>
-          </div>
+          </motion.div>
         </div>
       </section>
     </div>
