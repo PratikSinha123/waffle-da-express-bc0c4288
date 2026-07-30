@@ -3,7 +3,6 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { AnimatePresence } from "framer-motion";
 import { CartProvider } from "@/context/CartContext";
 import { OrderProvider } from "@/context/OrderContext";
 import { MenuProvider } from "@/context/MenuContext";
@@ -13,7 +12,6 @@ import { AuthProvider } from "@/context/AuthContext";
 import ProtectedRoute from "@/routes/ProtectedRoute";
 import AdminLayout from "@/layouts/AdminLayout";
 import Navbar from "@/components/Navbar";
-import PageTransition from "@/components/PageTransition";
 import Index from "./pages/Index";
 import MenuPage from "./pages/MenuPage";
 import CartPage from "./pages/CartPage";
@@ -38,39 +36,37 @@ import AdminSettings from "./pages/admin/Settings";
 
 const queryClient = new QueryClient();
 
-const AnimatedRoutes = () => {
+const AppRoutes = () => {
   const location = useLocation();
 
   return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        {/* Customer Routes */}
-        <Route path="/" element={<PageTransition><Index /></PageTransition>} />
-        <Route path="/menu" element={<PageTransition><MenuPage /></PageTransition>} />
-        <Route path="/stall-menu" element={<PageTransition><StallMenuPage /></PageTransition>} />
-        <Route path="/cart" element={<PageTransition><CartPage /></PageTransition>} />
-        <Route path="/checkout" element={<PageTransition><CheckoutPage /></PageTransition>} />
-        <Route path="/track-order" element={<PageTransition><TrackOrderPage /></PageTransition>} />
-        <Route path="/offers" element={<PageTransition><OffersPage /></PageTransition>} />
-        <Route path="/payment-status" element={<PageTransition><PaymentStatusPage /></PageTransition>} />
-        <Route path="/contact" element={<PageTransition><ContactPage /></PageTransition>} />
-        <Route path="/terms" element={<PageTransition><TermsPage /></PageTransition>} />
-        <Route path="/refunds" element={<PageTransition><RefundsPage /></PageTransition>} />
+    <Routes location={location}>
+      {/* Customer Routes */}
+      <Route path="/" element={<Index />} />
+      <Route path="/menu" element={<MenuPage />} />
+      <Route path="/stall-menu" element={<StallMenuPage />} />
+      <Route path="/cart" element={<CartPage />} />
+      <Route path="/checkout" element={<CheckoutPage />} />
+      <Route path="/track-order" element={<TrackOrderPage />} />
+      <Route path="/offers" element={<OffersPage />} />
+      <Route path="/payment-status" element={<PaymentStatusPage />} />
+      <Route path="/contact" element={<ContactPage />} />
+      <Route path="/terms" element={<TermsPage />} />
+      <Route path="/refunds" element={<RefundsPage />} />
 
-        {/* Admin Routes */}
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
-          <Route index element={<AdminDashboard />} />
-          <Route path="orders" element={<AdminOrders />} />
-          <Route path="products" element={<AdminProducts />} />
-          <Route path="customers" element={<AdminCustomers />} />
-          <Route path="offers" element={<AdminOffers />} />
-          <Route path="settings" element={<AdminSettings />} />
-        </Route>
+      {/* Admin Routes */}
+      <Route path="/admin/login" element={<AdminLogin />} />
+      <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
+        <Route index element={<AdminDashboard />} />
+        <Route path="orders" element={<AdminOrders />} />
+        <Route path="products" element={<AdminProducts />} />
+        <Route path="customers" element={<AdminCustomers />} />
+        <Route path="offers" element={<AdminOffers />} />
+        <Route path="settings" element={<AdminSettings />} />
+      </Route>
 
-        <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
-      </Routes>
-    </AnimatePresence>
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 };
 
@@ -87,7 +83,7 @@ const App = () => (
                   <Sonner />
                   <BrowserRouter>
                     <Navbar />
-                    <AnimatedRoutes />
+                    <AppRoutes />
                   </BrowserRouter>
                 </OrderProvider>
               </CartProvider>
