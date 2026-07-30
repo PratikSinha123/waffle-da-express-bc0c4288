@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, UtensilsCrossed, Truck, Clock, Sparkles, CalendarDays } from "lucide-react";
 import { motion } from "framer-motion";
 import heroImage from "@/assets/hero-waffles.jpg";
+import wafflePatternBg from "@/assets/waffle-pattern-bg.jpg";
 import { useMenu } from "@/context/MenuContext";
 import { useStallSchedule } from "@/context/StallScheduleContext";
 import SEOHead from "@/components/SEOHead";
@@ -36,9 +37,9 @@ const Index = () => {
           animate={{ scale: 1.0 }}
           transition={{ duration: 1.5, ease: "easeOut" }}
         >
-          <img src={heroImage} alt="Delicious waffles" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/45 to-black/20" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
+          <img src={wafflePatternBg} alt="Delicious waffles" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 to-black/30" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-black/20" />
         </motion.div>
 
         <div className="relative h-full max-w-7xl mx-auto px-6 sm:px-10 flex flex-col justify-center">
