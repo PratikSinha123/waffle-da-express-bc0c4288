@@ -30,7 +30,6 @@ class NotificationService {
   Future<void> initialize() async {
     if (_initialized) return;
 
-    // 1. Initialize Local Notifications Plugin first (Fast, Offline)
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
 
@@ -57,17 +56,18 @@ class NotificationService {
       final androidImplementation = _notificationsPlugin
           .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
       
-      const AndroidNotificationChannel highPriorityChannel = AndroidNotificationChannel(
-        'waffle_high_priority_orders_v2',
-        'High Priority Order Alerts',
-        description: 'Heads-up popups and loud ring chimes for incoming orders',
+      const AndroidNotificationChannel loudOrderChannel = AndroidNotificationChannel(
+        'waffle_loud_order_alarm_v4',
+        'Loud Order Ring Alerts',
+        description: 'Loud bell chime and popup alert for incoming orders',
         importance: Importance.max,
         playSound: true,
+        sound: RawResourceAndroidNotificationSound('order_chime'),
         enableVibration: true,
         showBadge: true,
       );
 
-      await androidImplementation?.createNotificationChannel(highPriorityChannel);
+      await androidImplementation?.createNotificationChannel(loudOrderChannel);
       await androidImplementation?.requestNotificationsPermission();
       try {
         await androidImplementation?.requestExactAlarmsPermission();
@@ -77,8 +77,6 @@ class NotificationService {
     }
 
     _initialized = true;
-
-    // 2. Initialize Firebase & FCM asynchronously in background
     _initFirebaseFcmInBackground();
   }
 
@@ -160,7 +158,7 @@ class NotificationService {
 
     await showHighPriorityNotification(
       title: '🔔 NOTIFICATION FORCE CHECK',
-      body: 'Background & Killed app notification system is 100% active on this device!',
+      body: 'Loud chime notification system is 100% active on this device!',
     );
 
     return granted;
@@ -175,8 +173,8 @@ class NotificationService {
 
   Future<void> showTestNotification() async {
     await showHighPriorityNotification(
-      title: '🔔 TEST NOTIFICATION BANNER',
-      body: 'Waffle Express Admin status bar banner & chime sound are 100% working!',
+      title: '🔔 LOUD ORDER CHIME TEST',
+      body: 'Waffle Express Admin loud bell chime and popup alert are working!',
     );
   }
 
@@ -188,39 +186,83 @@ class NotificationService {
       await initialize();
     }
 
-    const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
-      'waffle_high_priority_orders_v2',
-      'High Priority Order Alerts',
-      channelDescription: 'Heads-up popups and loud ring chimes for incoming orders',
+    // Android: Maximum priority with aggressive buzzer & vibration (Swiggy/Zomato style)
+    final AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+      'waffle_loud_order_alarm_v4',
+      'Loud Order Ring Alerts',
+      channelDescription: 'Loud bell chime and popup alert for incoming orders - CRITICAL ALERTS',
       importance: Importance.max,
       priority: Priority.max,
       icon: '@mipmap/ic_launcher',
-      ticker: 'New Order Alert',
+      largeIcon: const DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
+      ticker: '🧇 NEW ORDER!',
       fullScreenIntent: true,
       visibility: NotificationVisibility.public,
       playSound: true,
+      sound: const RawResourceAndroidNotificationSound('order_chime'),
       enableVibration: true,
+      // Aggressive vibration pattern: buzzer-like effect
+      // Pattern: [delay, vibrate, pause, vibrate, pause, long_vibrate]
+      vibrationPattern: Int64List.fromList([0, 1000, 100, 1000, 100, 1500]),
       channelShowBadge: true,
       category: AndroidNotificationCategory.alarm,
-      audioAttributesUsage: AudioAttributesUsage.notificationRingtone,
-      styleInformation: BigTextStyleInformation(''),
-    );
-
-    const NotificationDetails platformDetails = NotificationDetails(
-      android: androidDetails,
-      iOS: DarwinNotificationDetails(
-        presentAlert: true,
-        presentSound: true,
-        presentBadge: true,
-        interruptionLevel: InterruptionLevel.critical,
+      audioAttributesUsage: AudioAttributesUsage.alarm,
+      // Keep notification at top of notification drawer
+      onlyAlertOnce: false,
+      autoCancel: false,
+      // Show as heads-up notification
+      setAsGroupSummary: true,
+      groupKey: 'waffle_orders',
+      chronometerCountDown: false,
+      // Ensure notification persists
+      ongoing: false,
+      styleInformation: const BigTextStyleInformation(
+        '',
+        htmlFormatBigText: true,
+        contentTitle: '',
       ),
+      // Add action buttons
+      actions: <AndroidNotificationAction>[
+        const AndroidNotificationAction(
+          'check_order',
+          'Check Order',
+          cancelNotification: false,
+          showsUserInterface: true,
+        ),
+        const AndroidNotificationAction(
+          'snooze_15',
+          'Snooze 15s',
+          cancelNotification: false,
+        ),
+      ],
     );
 
-    await _notificationsPlugin.show(
-      id: DateTime.now().millisecondsSinceEpoch.remainder(100000),
-      title: title,
-      body: body,
-      notificationDetails: platformDetails,
+    // iOS: Critical alert that bypasses silent/DND mode (like Swiggy/Zomato)
+    final DarwinNotificationDetails iOsDetails = DarwinNotificationDetails(
+      presentAlert: true,
+      presentSound: true,
+      presentBadge: true,
+      interruptionLevel: InterruptionLevel.critical,
+      sound: 'order_chime.wav',
+      badgeNumber: 1,
+      subtitle: 'Critical Order Alert',
     );
+
+    final NotificationDetails platformDetails = NotificationDetails(
+      android: androidDetails,
+      iOS: iOsDetails,
+    );
+
+    try {
+      await _notificationsPlugin.show(
+        id: DateTime.now().millisecondsSinceEpoch.remainder(100000),
+        title: title,
+        body: body,
+        notificationDetails: platformDetails,
+      );
+      debugPrint('✅ High-priority notification shown: $title');
+    } catch (e) {
+      debugPrint('❌ Notification error: $e');
+    }
   }
 }
