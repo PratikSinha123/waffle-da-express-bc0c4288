@@ -4,6 +4,13 @@
 -- https://supabase.com/dashboard/project/_/sql/new
 -- ========================================================
 
+-- SECURITY IMPROVEMENTS:
+-- - Public (anonymous) users can only INSERT orders and SELECT all data
+-- - Write operations (UPDATE, DELETE, INSERT) on offers, settings, and menu_items
+--   require authentication
+-- - This ensures only admin users can manage menu, settings, and offers
+-- - Customers can still place orders and track them via SELECT
+
 -- 1. CREATE ORDERS TABLE
 CREATE TABLE IF NOT EXISTS public.orders (
   id TEXT PRIMARY KEY,
@@ -30,10 +37,26 @@ DROP POLICY IF EXISTS "Anyone can view orders" ON public.orders;
 DROP POLICY IF EXISTS "Anyone can update orders" ON public.orders;
 DROP POLICY IF EXISTS "Anyone can delete orders" ON public.orders;
 
-CREATE POLICY "Anyone can place orders" ON public.orders FOR INSERT TO anon, authenticated WITH CHECK (true);
-CREATE POLICY "Anyone can view orders" ON public.orders FOR SELECT TO anon, authenticated USING (true);
-CREATE POLICY "Anyone can update orders" ON public.orders FOR UPDATE TO anon, authenticated USING (true);
-CREATE POLICY "Anyone can delete orders" ON public.orders FOR DELETE TO anon, authenticated USING (true);
+-- Customers can insert orders
+CREATE POLICY "Customers can place orders" ON public.orders
+  FOR INSERT TO anon, authenticated
+  WITH CHECK (true);
+
+-- Customers can view all orders (order tracking)
+CREATE POLICY "Anyone can view orders" ON public.orders
+  FOR SELECT TO anon, authenticated
+  USING (true);
+
+-- Only authenticated users can update orders
+CREATE POLICY "Authenticated users can update orders" ON public.orders
+  FOR UPDATE TO authenticated
+  USING (true)
+  WITH CHECK (true);
+
+-- Only authenticated users can delete orders
+CREATE POLICY "Authenticated users can delete orders" ON public.orders
+  FOR DELETE TO authenticated
+  USING (true);
 
 ALTER PUBLICATION supabase_realtime ADD TABLE public.orders;
 
@@ -57,10 +80,26 @@ DROP POLICY IF EXISTS "Anyone can create offers" ON public.offers;
 DROP POLICY IF EXISTS "Anyone can update offers" ON public.offers;
 DROP POLICY IF EXISTS "Anyone can delete offers" ON public.offers;
 
-CREATE POLICY "Anyone can view offers" ON public.offers FOR SELECT TO anon, authenticated USING (true);
-CREATE POLICY "Anyone can create offers" ON public.offers FOR INSERT TO anon, authenticated WITH CHECK (true);
-CREATE POLICY "Anyone can update offers" ON public.offers FOR UPDATE TO anon, authenticated USING (true);
-CREATE POLICY "Anyone can delete offers" ON public.offers FOR DELETE TO anon, authenticated USING (true);
+-- Public can view offers
+CREATE POLICY "Anyone can view offers" ON public.offers
+  FOR SELECT TO anon, authenticated
+  USING (true);
+
+-- Only authenticated users can create offers
+CREATE POLICY "Authenticated users can create offers" ON public.offers
+  FOR INSERT TO authenticated
+  WITH CHECK (true);
+
+-- Only authenticated users can update offers
+CREATE POLICY "Authenticated users can update offers" ON public.offers
+  FOR UPDATE TO authenticated
+  USING (true)
+  WITH CHECK (true);
+
+-- Only authenticated users can delete offers
+CREATE POLICY "Authenticated users can delete offers" ON public.offers
+  FOR DELETE TO authenticated
+  USING (true);
 
 ALTER PUBLICATION supabase_realtime ADD TABLE public.offers;
 
@@ -77,9 +116,21 @@ DROP POLICY IF EXISTS "Anyone can view settings" ON public.settings;
 DROP POLICY IF EXISTS "Anyone can update settings" ON public.settings;
 DROP POLICY IF EXISTS "Anyone can insert settings" ON public.settings;
 
-CREATE POLICY "Anyone can view settings" ON public.settings FOR SELECT TO anon, authenticated USING (true);
-CREATE POLICY "Anyone can update settings" ON public.settings FOR UPDATE TO anon, authenticated USING (true);
-CREATE POLICY "Anyone can insert settings" ON public.settings FOR INSERT TO anon, authenticated WITH CHECK (true);
+-- Public can view settings (for shop status, delivery fee, etc.)
+CREATE POLICY "Anyone can view settings" ON public.settings
+  FOR SELECT TO anon, authenticated
+  USING (true);
+
+-- Only authenticated users can update settings
+CREATE POLICY "Authenticated users can update settings" ON public.settings
+  FOR UPDATE TO authenticated
+  USING (true)
+  WITH CHECK (true);
+
+-- Only authenticated users can insert settings
+CREATE POLICY "Authenticated users can insert settings" ON public.settings
+  FOR INSERT TO authenticated
+  WITH CHECK (true);
 
 INSERT INTO public.settings (key, value) VALUES ('delivery_fee', '25'), ('shop_status', 'open') ON CONFLICT (key) DO NOTHING;
 
@@ -108,10 +159,26 @@ DROP POLICY IF EXISTS "Anyone can insert menu items" ON public.menu_items;
 DROP POLICY IF EXISTS "Anyone can update menu items" ON public.menu_items;
 DROP POLICY IF EXISTS "Anyone can delete menu items" ON public.menu_items;
 
-CREATE POLICY "Anyone can view menu items" ON public.menu_items FOR SELECT TO anon, authenticated USING (true);
-CREATE POLICY "Anyone can insert menu items" ON public.menu_items FOR INSERT TO anon, authenticated WITH CHECK (true);
-CREATE POLICY "Anyone can update menu items" ON public.menu_items FOR UPDATE TO anon, authenticated USING (true);
-CREATE POLICY "Anyone can delete menu items" ON public.menu_items FOR DELETE TO anon, authenticated USING (true);
+-- Public can view menu items
+CREATE POLICY "Anyone can view menu items" ON public.menu_items
+  FOR SELECT TO anon, authenticated
+  USING (true);
+
+-- Only authenticated users can insert menu items
+CREATE POLICY "Authenticated users can insert menu items" ON public.menu_items
+  FOR INSERT TO authenticated
+  WITH CHECK (true);
+
+-- Only authenticated users can update menu items
+CREATE POLICY "Authenticated users can update menu items" ON public.menu_items
+  FOR UPDATE TO authenticated
+  USING (true)
+  WITH CHECK (true);
+
+-- Only authenticated users can delete menu items
+CREATE POLICY "Authenticated users can delete menu items" ON public.menu_items
+  FOR DELETE TO authenticated
+  USING (true);
 
 ALTER PUBLICATION supabase_realtime ADD TABLE public.menu_items;
 

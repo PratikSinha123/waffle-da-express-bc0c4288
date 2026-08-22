@@ -109,7 +109,9 @@ class AdminProvider with ChangeNotifier {
 
   void _startPollingTimer() {
     _pollingTimer?.cancel();
-    _pollingTimer = Timer.periodic(const Duration(milliseconds: 2000), (_) {
+    // Increased from 2s to 10s interval to reduce battery drain
+    // Realtime subscriptions handle urgent updates
+    _pollingTimer = Timer.periodic(const Duration(seconds: 10), (_) {
       _fetchOrdersSilently();
       _fetchSettingsSilently();
       _fetchMenuItemsSilently();
