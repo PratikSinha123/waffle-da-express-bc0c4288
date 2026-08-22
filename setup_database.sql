@@ -33,9 +33,12 @@ CREATE TABLE IF NOT EXISTS public.orders (
 ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "Anyone can place orders" ON public.orders;
+DROP POLICY IF EXISTS "Customers can place orders" ON public.orders;
 DROP POLICY IF EXISTS "Anyone can view orders" ON public.orders;
 DROP POLICY IF EXISTS "Anyone can update orders" ON public.orders;
+DROP POLICY IF EXISTS "Authenticated users can update orders" ON public.orders;
 DROP POLICY IF EXISTS "Anyone can delete orders" ON public.orders;
+DROP POLICY IF EXISTS "Authenticated users can delete orders" ON public.orders;
 
 -- Customers can insert orders
 CREATE POLICY "Customers can place orders" ON public.orders
@@ -77,8 +80,11 @@ ALTER TABLE public.offers ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "Anyone can view offers" ON public.offers;
 DROP POLICY IF EXISTS "Anyone can create offers" ON public.offers;
+DROP POLICY IF EXISTS "Authenticated users can create offers" ON public.offers;
 DROP POLICY IF EXISTS "Anyone can update offers" ON public.offers;
+DROP POLICY IF EXISTS "Authenticated users can update offers" ON public.offers;
 DROP POLICY IF EXISTS "Anyone can delete offers" ON public.offers;
+DROP POLICY IF EXISTS "Authenticated users can delete offers" ON public.offers;
 
 -- Public can view offers
 CREATE POLICY "Anyone can view offers" ON public.offers
@@ -114,7 +120,9 @@ ALTER TABLE public.settings ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "Anyone can view settings" ON public.settings;
 DROP POLICY IF EXISTS "Anyone can update settings" ON public.settings;
+DROP POLICY IF EXISTS "Authenticated users can update settings" ON public.settings;
 DROP POLICY IF EXISTS "Anyone can insert settings" ON public.settings;
+DROP POLICY IF EXISTS "Authenticated users can insert settings" ON public.settings;
 
 -- Public can view settings (for shop status, delivery fee, etc.)
 CREATE POLICY "Anyone can view settings" ON public.settings
@@ -156,8 +164,11 @@ ALTER TABLE public.menu_items ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "Anyone can view menu items" ON public.menu_items;
 DROP POLICY IF EXISTS "Anyone can insert menu items" ON public.menu_items;
+DROP POLICY IF EXISTS "Authenticated users can insert menu items" ON public.menu_items;
 DROP POLICY IF EXISTS "Anyone can update menu items" ON public.menu_items;
+DROP POLICY IF EXISTS "Authenticated users can update menu items" ON public.menu_items;
 DROP POLICY IF EXISTS "Anyone can delete menu items" ON public.menu_items;
+DROP POLICY IF EXISTS "Authenticated users can delete menu items" ON public.menu_items;
 
 -- Public can view menu items
 CREATE POLICY "Anyone can view menu items" ON public.menu_items

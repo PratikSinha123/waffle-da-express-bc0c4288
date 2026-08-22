@@ -210,17 +210,9 @@ class NotificationService {
       // Keep notification at top of notification drawer
       onlyAlertOnce: false,
       autoCancel: false,
-      // Show as heads-up notification
-      setAsGroupSummary: true,
-      groupKey: 'waffle_orders',
       chronometerCountDown: false,
       // Ensure notification persists
       ongoing: false,
-      styleInformation: const BigTextStyleInformation(
-        '',
-        htmlFormatBigText: true,
-        contentTitle: '',
-      ),
       // Add action buttons
       actions: <AndroidNotificationAction>[
         const AndroidNotificationAction(

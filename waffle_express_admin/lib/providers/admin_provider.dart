@@ -13,6 +13,7 @@ class AdminProvider with ChangeNotifier {
 
   List<OrderModel> _orders = [];
   Set<String> _knownOrderIds = {};
+  bool _seeded = false;
   List<MenuItemModel> _menuItems = [];
   List<OfferModel> _offers = [];
   Map<String, String> _settings = {};
@@ -122,8 +123,9 @@ class AdminProvider with ChangeNotifier {
     try {
       final freshOrders = await _service.fetchOrders();
 
-      if (_knownOrderIds.isEmpty) {
+      if (!_seeded) {
         // Initial load - store existing order IDs without spamming notifications
+        _seeded = true;
         _knownOrderIds = freshOrders.map((o) => o.id).toSet();
         _orders = freshOrders;
         notifyListeners();
