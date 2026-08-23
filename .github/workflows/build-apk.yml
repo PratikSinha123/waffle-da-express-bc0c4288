@@ -27,7 +27,7 @@ jobs:
       - name: Build APK
         run: cd waffle_express_admin && flutter build apk --release
         env:
-          GRADLE_OPTS: "-Dorg.gradle.file.watch=false"
+          GRADLE_OPTS: "-Dorg.gradle.file.watch=false -Dorg.gradle.vfs.watch=false"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
