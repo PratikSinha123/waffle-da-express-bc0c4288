@@ -25,7 +25,7 @@ jobs:
         run: cd waffle_express_admin && flutter pub get
 
       - name: Build APK
-        run: cd waffle_express_admin && flutter build apk --release --verbose 2>&1 | tail -100
+        run: cd waffle_express_admin && flutter build apk --release
         env:
           GRADLE_OPTS: "-Dorg.gradle.file.watch=false -Dorg.gradle.vfs.watch=false -Dorg.gradle.parallel=false"
 
