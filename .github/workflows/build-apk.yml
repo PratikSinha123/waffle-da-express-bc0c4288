@@ -30,6 +30,12 @@ jobs:
           flutter clean
           flutter pub get
           flutter build apk --release --no-tree-shake-icons
+
+          # Check where the APK actually is
+          echo "=== Searching for APK ==="
+          find . -name "*.apk" -type f
+          echo "=== Checking expected location ==="
+          ls -la build/app/outputs/flutter-apk/ || echo "Path not found"
         env:
           GRADLE_OPTS: "-Dorg.gradle.file.watch=false -Dorg.gradle.vfs.watch=false -Dorg.gradle.parallel=false -Dorg.gradle.caching=false"
 
